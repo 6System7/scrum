@@ -47,7 +47,7 @@ app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 
 //Start server and listen on port 8080
-app.listen(8080,function(){
+app.listen(process.env.PORT || 8080,function(){
   console.log("Live at Port 8080");
 });
 
