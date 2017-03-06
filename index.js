@@ -2,19 +2,14 @@
 var express = require("express");
 var app = express();
 var MongoClient = require('mongodb').MongoClient
-var router = express.Router();
 var path = __dirname + "/";
-
-var express = require('express');
-var app = express();
 var savedRes;
 
 var db_URI = "mongodb://john:6system7@ds119220.mlab.com:19220/heroku_q2dllfgh";
-
 var db;
+
 // Use connect method to connect to the Server
 MongoClient.connect(db_URI, function(err, dbIN) {
-    //assert.equal(null, err);
     if (err) {
         console.log("Failed to connect to database", err);
     } else {
@@ -23,53 +18,60 @@ MongoClient.connect(db_URI, function(err, dbIN) {
     }
 });
 
-
-//Router to direct requests
-router.use(function (req,res,next) {
-  next();
+//Direct requests to various urls
+app.get("/", function(req, res) {
+    if (err) {
+        res.sendFile(path + "404.html");
+    } else {
+        res.sendFile(path + "home.html");
+    }
 });
 
-//If request to /function
-//router.get("/function",function(req,res){
-//    savedRes = res;
-//});
-
-//Direct requests to various urls
-router.get("/",function(req,res){
-    //res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:8080');
-    db.collection("users").find().toArray(function(err, results) {
+app.get("/getPosts", function(req, res) {
+    db.collection("posts").find().toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
         if(err) {
-            res.sendFile(path + "home.html");
+            res.send(JSON.stringify({"error": err}));
         } else {
-            res.setHeader("Content-Type", "application/json");
             res.send(JSON.stringify(results));
         }
     });
 });
-router.get("/home.html",function(req,res){
-    //res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:8080');
+
+app.get("/getUsers", function(req, res) {
+    db.collection("users").find().toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if(err) {
+            res.send(JSON.stringify({"error": err}));
+        } else {
+            res.send(JSON.stringify(results));
+        }
+    });
+});
+
+app.get("/home.html", function(req, res) {
     res.sendFile(path + "home.html");
 });
-router.get("/findfood.html",function(req,res){
-    //res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:8080');
+
+app.get("/findfood.html", function(req, res) {
     res.sendFile(path + "findfood.html");
 });
-router.get("/postfood.html",function(req,res){
-    //res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:8080');
+
+app.get("/postfood.html", function(req, res) {
     res.sendFile(path + "postfood.html");
 });
-router.get("/account.html",function(req,res){
-    //res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:8080');
+
+app.get("/account.html", function(req, res) {
     res.sendFile(path + "account.html");
 });
 
 
 //Send initial files to use such as bootstrap
-app.use("/",router);
+app.use("/", router);
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 
 //Start server and listen on port 8080
-app.listen(process.env.PORT || 8080,function(){
-  console.log("Live at Port 8080");
+app.listen(process.env.PORT || 8080, function() {
+    console.log("Live at Port 8080");
 });
