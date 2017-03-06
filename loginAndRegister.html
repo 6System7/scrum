@@ -39,8 +39,8 @@
             <li><a href="home.html">Home</a></li>
             <li><a href="postfood.html">Post Food</a></li>
             <li><a href="findfood.html">Find Food</a></li>
-            <li><a href="loginAndRegister.html.html">Find Food</a></li>
-            <li class="active"><a href="account.html">Account Settings</a></li>
+            <li class="active"><a href="loginAndRegister.html.html">Login & Register</a></li>
+            <li><a href="account.html">Account Settings</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -50,11 +50,45 @@
         
     <!--Initial data when landing on page-->
       <div class="scrumFormat">
-        <h1>Scrum Account Settings Page</h1>
-        <p class="lead">Todo:<br>- Account settings such as delete account, modify accoutn details, etc.</p>
-          
+        <h1>Scrum Login & Register Page</h1>
+        <p class="lead">Todo:<br>- Login and Register System</p>
+
           <!-- Account settings such as Delete account, Modify account details, etc. -->
                 
+      </div>
+
+      <div class="scrumFormat">
+        <div class="panel panel-default">
+          <div class="panel-heading">Register</div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="usernameRegisterInput">Username:</label>
+              <input type="text" class="form-control" id="usernameRegisterInput">
+            </div>
+            <div class="form-group">
+              <label for="passwordRegisterInput">Password:</label>
+              <input type="password" class="form-control" id="passwordRegisterInput">
+            </div>
+            <button class="btn btn-primary" type="submit" id="registerButton">Register</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="scrumFormat">
+        <div class="panel panel-default">
+          <div class="panel-heading">Login</div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label for="usernameLoginInput">Username:</label>
+              <input type="text" class="form-control" id="usernameLoginInput">
+            </div>
+            <div class="form-group">
+              <label for="passwordLoginInput">Password:</label>
+              <input type="password" class="form-control" id="passwordLoginInput">
+            </div>
+            <button class="btn btn-primary" type="submit" id="LoginButton">Login</button>
+          </div>
+        </div>
       </div>
 
     </div><!-- /.container -->
