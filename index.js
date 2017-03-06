@@ -18,6 +18,10 @@ MongoClient.connect(db_URI, function(err, database_object) {
     }
 });
 
+//Send initial files to use such as bootstrap
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
+
 //Direct requests to various urls
 app.get("/", function(req, res) {
     res.sendFile(path + "home.html");
@@ -61,11 +65,9 @@ app.get("/account.html", function(req, res) {
     res.sendFile(path + "account.html");
 });
 
-
-//Send initial files to use such as bootstrap
-// app.use("/", router);
-app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
-app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
+app.get("*", function(req, res) {
+    res.sendFile(path + "404.html");
+});
 
 //Start server and listen on port 8080
 app.listen(process.env.PORT || 8080, function() {
