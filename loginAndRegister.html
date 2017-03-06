@@ -38,8 +38,8 @@
           <ul class="nav navbar-nav">
             <li><a href="home.html">Home</a></li>
             <li><a href="postfood.html">Post Food</a></li>
-            <li class="active"><a href="findfood.html">Find Food</a></li>
-            <li><a href="loginAndRegister.html">Login & Register</a></li>
+            <li><a href="findfood.html">Find Food</a></li>
+            <li class="active"><a href="loginAndRegister.html">Login & Register</a></li>
             <li><a href="account.html">Account Settings</a></li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -50,15 +50,51 @@
         
     <!--Initial data when landing on page-->
       <div class="scrumFormat">
-        <h1>Scrum Find Food Page</h1>
-        <p class="lead">Todo:<br>- Load results by location (done by gps?)<br>- Filter and sort results<br>- Load details for food post<br>- Instant messaging service (possibly in seperate page?)<br>- Display results in interactive map</p>  
-          
-        <!-- Load results by location (done by gps?) -->
-        <!-- Filter and sort results -->
-        <!-- Load details for food post -->
-        <!-- Instant messaging service (possibility in seperate page?) -->
-        <!-- Display results on interactive map -->
-                
+        <h1>Scrum Login & Register Page</h1>
+      </div>
+
+      <div class="scrumFormat">
+        <div class="col-xs-6">
+          <p>* fields are required</p>
+          <div class="panel panel-default">
+            <div class="panel-heading">Login</div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="usernameLoginInput">Username:</label>
+                <input type="text" class="form-control" id="usernameLoginInput">
+              </div>
+              <div class="form-group">
+                <label for="passwordLoginInput">Password:</label>
+                <input type="password" class="form-control" id="passwordLoginInput">
+              </div>
+              <button class="btn btn-primary" type="submit" id="LoginButton">Login</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">Register</div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="usernameRegisterInput">*Username:</label>
+                <input type="text" class="form-control" id="usernameRegisterInput">
+              </div>
+              <div class="form-group">
+                <label for="passwordRegisterInput">*Password:</label>
+                <input type="password" class="form-control" id="passwordRegisterInput">
+              </div>
+              <div class="form-group">
+                <label for="confirmPasswordRegisterInput">*Confirm Password:</label>
+                <input type="password" class="form-control" id="confirmPasswordRegisterInput">
+              </div>
+              <div class="form-group">
+                <label for="emailRegisterInput">*Email:</label>
+                <input type="email" class="form-control" id="emailRegisterInput">
+              </div>
+              <button class="btn btn-primary" type="submit" id="registerButton">Register</button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div><!-- /.container -->

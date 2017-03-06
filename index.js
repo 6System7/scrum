@@ -87,6 +87,10 @@ app.get("/postfood.html", function(req, res) {
     res.sendFile(path + "postfood.html");
 });
 
+app.get("/loginAndRegister.html", function(req, res) {
+    res.sendFile(path + "loginAndRegister.html");
+});
+
 app.get("/account.html", function(req, res) {
     res.sendFile(path + "account.html");
 });
