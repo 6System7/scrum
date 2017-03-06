@@ -37,7 +37,14 @@ router.use(function (req,res,next) {
 //Direct requests to various urls
 router.get("/",function(req,res){
     //res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:8080');
-    res.sendFile(path + "home.html");
+    db.collection("users").find().toArray(function(err, results) {
+        if(err) {
+            res.sendFile(path + "home.html");
+        } else {
+            res.setHeader("Content-Type", "application/json");
+            res.send(JSON.stringify(results));
+        }
+    });
 });
 router.get("/home.html",function(req,res){
     //res.setHeader('Access-Control-Allow-Origin','http://127.0.0.1:8080');
