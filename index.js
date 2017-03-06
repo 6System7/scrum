@@ -4,6 +4,11 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient
 var path = __dirname + "/";
 var savedRes;
+var bodyParser = require('body-parser')
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
+    extended: true
+}));
 
 var db_URI = "mongodb://john:6system7@ds119220.mlab.com:19220/heroku_q2dllfgh";
 var db;
@@ -27,11 +32,30 @@ app.get("/", function(req, res) {
     res.sendFile(path + "home.html");
 });
 
+app.post("/addPost", function(req, res) {
+    var post;
+    console.log(req);
+    post.title = req.body.title;
+    post.description = req.body.description;
+    post.image = req.body.img;
+    post.location = req.body.location;
+
+    db.collection("posts").save(post, function(err, results) {
+        if (err) {
+            console.log("Saving post failed: " + err.toString());
+        } else {
+            console.log("Saving post success");
+        }
+    });
+});
+
 app.get("/getPosts", function(req, res) {
     db.collection("posts").find().toArray(function(err, results) {
         res.setHeader("Content-Type", "application/json");
-        if(err) {
-            res.send(JSON.stringify({"error": err}));
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
         } else {
             res.send(JSON.stringify(results));
         }
@@ -41,8 +65,10 @@ app.get("/getPosts", function(req, res) {
 app.get("/getUsers", function(req, res) {
     db.collection("users").find().toArray(function(err, results) {
         res.setHeader("Content-Type", "application/json");
-        if(err) {
-            res.send(JSON.stringify({"error": err}));
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
         } else {
             res.send(JSON.stringify(results));
         }
