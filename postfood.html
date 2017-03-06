@@ -16,6 +16,8 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
+
+    <script type="text/javascript" src="postfood.js"></script>
 </head>
 
 <body>
@@ -54,7 +56,7 @@
         </div>
         <div>
             <!-- Create/Edit posts -->
-            <form id="frmPost" action="#" onclick="sendPostData()">
+            <form id="frmPost" action="#">
                 <div class="form-group">
                     <label for="txtTitle">Post Title</label>
                     <input type="text" name="title" class="form-control" id="txtTitle">
@@ -69,9 +71,9 @@
                 </div>
                 <div class="form-group">
                     <label for="txtImg">Picture of item</label>
-                    <input type="file" name="img" accept="image/*" id="txtImg">
+                    <input type="file" name="img" class="form-control" accept="image/*" id="txtImg">
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="button" class="btn btn-default" onclick="sendPostData()">Submit</button>
             </form>
             <!-- TODO Barcode scanning capability -->
         </div>
@@ -82,7 +84,6 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/js/bootstrap.min.js"></script>
-    <script src="postfood.js"></script>
 </body>
 
 </html>

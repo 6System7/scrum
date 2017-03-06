@@ -26,6 +26,7 @@ MongoClient.connect(db_URI, function(err, database_object) {
 //Send initial files to use such as bootstrap
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
+app.use(express.static('scripts'))
 
 //Direct requests to various urls
 app.get("/", function(req, res) {
