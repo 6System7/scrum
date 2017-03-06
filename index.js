@@ -67,7 +67,7 @@ app.get("/account.html", function(req, res) {
 
 
 //Send initial files to use such as bootstrap
-app.use("/", router);
+// app.use("/", router);
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 
