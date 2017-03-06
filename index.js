@@ -9,22 +9,18 @@ var db_URI = "mongodb://john:6system7@ds119220.mlab.com:19220/heroku_q2dllfgh";
 var db;
 
 // Use connect method to connect to the Server
-MongoClient.connect(db_URI, function(err, dbIN) {
+MongoClient.connect(db_URI, function(err, database_objects) {
     if (err) {
         console.log("Failed to connect to database", err);
     } else {
         console.log("Connected correctly to server");
-        db = dbIN;
+        db = database_object;
     }
 });
 
 //Direct requests to various urls
 app.get("/", function(req, res) {
-    if (err) {
-        res.sendFile(path + "404.html");
-    } else {
-        res.sendFile(path + "home.html");
-    }
+    res.sendFile(path + "home.html");
 });
 
 app.get("/getPosts", function(req, res) {
