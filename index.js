@@ -34,8 +34,7 @@ app.get("/", function(req, res) {
 });
 
 app.post("/addPost", function(req, res) {
-    var post;
-    console.log(req);
+    var post = {};
     post.title = req.body.title;
     post.description = req.body.description;
     post.image = req.body.img;

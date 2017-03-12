@@ -1,5 +1,11 @@
 function sendPostData() {
+    // TODO valiate inputs
+    // TODO actually upload chosen image and make it storable in database
+    
     var formData = $("#frmPost").serializeArray();
+    $('#frmPost').find("input[type=text], textarea").val("");
+    $('#frmPost').find("input[type=file]").val("");
+
     var indexedArray = {};
 
     $.map(formData, function(n, i) {
@@ -13,7 +19,6 @@ function sendPostData() {
         dataType: "json",
         success: function(data) {
             console.log("Success when posting");
-            //var obj = jQuery.parseJSON(data);
         },
         error: function() {
             console.log("Failed when posting");
