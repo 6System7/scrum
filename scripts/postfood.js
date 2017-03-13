@@ -55,7 +55,7 @@ function sendPostData() {
         $.map(formData, function(n, i) {
             indexedArray[n['name']] = n['value'];
         });
-        indexedArray.img = $("#imgPreview").attr("src");
+        indexedArray.image = $("#imgPreview").attr("src");
         $("#imgPreview").attr("src", "");
 
         if (marker) {
