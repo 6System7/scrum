@@ -9,18 +9,14 @@ var dataURLToBlob = function(dataURL) {
             type: contentType
         });
     }
-
     var parts = dataURL.split(BASE64_MARKER);
     var contentType = parts[0].split(':')[1];
     var raw = window.atob(parts[1]);
     var rawLength = raw.length;
-
     var uInt8Array = new Uint8Array(rawLength);
-
     for (var i = 0; i < rawLength; ++i) {
         uInt8Array[i] = raw.charCodeAt(i);
     }
-
     return new Blob([uInt8Array], {
         type: contentType
     });
@@ -28,7 +24,6 @@ var dataURLToBlob = function(dataURL) {
 
 function sendPostData() {
     // TODO valiate inputs
-    // TODO actually upload chosen image and make it storable in database
 
     var formData = $("#frmPost").serializeArray();
     $("#frmPost").find("input[type=text], textarea").val("");
@@ -55,7 +50,7 @@ function sendPostData() {
     });
 }
 
-function previewFile() { // TODO test
+function previewFile() {
     var preview = $("#imgPreview");
     var file = document.querySelector("input[type=file]").files[0];
     var reader = new FileReader();
