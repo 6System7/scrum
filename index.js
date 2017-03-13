@@ -34,11 +34,8 @@ app.get("/", function(req, res) {
 });
 
 app.post("/addPost", function(req, res) {
-    var post = {};
-    post.title = req.body.title;
-    post.description = req.body.description;
-    post.image = req.body.img; // TODO save image and send path to image to database (instead of storing image in database)
-    post.location = req.body.location;
+    var post = req.body.postToPost;
+    // TODO save image and send path to image to database (instead of storing image in database)
 
     db.collection("posts").save(post, function(err, results) {
         if (err) {

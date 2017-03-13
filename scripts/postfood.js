@@ -37,10 +37,10 @@ function validInputs() {
         valid = false;
         alert("Please select a pick-up location!");
     }
-    if (valid && !imageSelected) {
-        valid = false;
-        alert("Please upload an image of your item!");
-    }
+    // if (valid && !imageSelected) { // TODO uncomment - only for testing (not needing image each time)
+    //     valid = false;
+    //     alert("Please upload an image of your item!");
+    // }
     return valid;
 }
 
@@ -57,13 +57,16 @@ function sendPostData() {
         });
         indexedArray.img = $("#imgPreview").attr("src");
         $("#imgPreview").attr("src", "");
-        indexedArray.latitude = marker.getPosition().lat();
-        indexedArray.longitude = marker.getPosition().lng();
+
+        if (marker) {
+            indexedArray.latitude = marker.getPosition().lat();
+            indexedArray.longitude = marker.getPosition().lng();
+        }
 
         $.ajax({
             type: "POST",
             url: "/addPost",
-            data: indexedArray,
+            data: {postToPost: indexedArray},
             dataType: "json",
             success: function(data) {
                 console.log("Success when posting");
