@@ -16,7 +16,7 @@ var db;
 // Use connect method to connect to the Server
 MongoClient.connect(db_URI, function(err, database_object) {
     if (err) {
-        console.log("Failed to connect to database", err);
+        console.log("Failed to connect to database\n", err);
     } else {
         console.log("Connected correctly to server");
         db = database_object;
