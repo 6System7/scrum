@@ -7,11 +7,11 @@ function sendPostData() {
     $("#frmPost").find("input[type=file]").val("");
 
     var indexedArray = {};
-
     $.map(formData, function(n, i) {
         indexedArray[n['name']] = n['value'];
     });
-    indexedArray.img = $("#frmPost").find("input[type=file]").val();
+    indexedArray.img = $("#imgPreview").attr("src");
+    $("#imgPreview").attr("src", "");
 
     $.ajax({
         type: "POST",
