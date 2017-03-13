@@ -62,6 +62,23 @@ app.get("/getPosts", function(req, res) {
     });
 });
 
+app.post("/addUser", function(req, res) {
+    var user = {};
+    user.username = req.body.username;
+    user.passwordsha1 = req.body.passwordsha1;
+    user.rating = req.body.rating;
+    user.realname = req.body.realname;
+    user.email = req.body.email;
+
+    db.collection("users").save(user, function(err, results) {
+        if (err) {
+            console.log("Saving user failed: " + err.toString());
+        } else {
+            console.log("Saving user success");
+        }
+    });
+});
+
 app.get("/getUsers", function(req, res) {
     db.collection("users").find().toArray(function(err, results) {
         res.setHeader("Content-Type", "application/json");

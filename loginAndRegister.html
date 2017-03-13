@@ -15,12 +15,12 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
-      
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="loginAndRegister.js"></script>
   </head>
 
   <body>
-      
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
       
     <!--Bootstrap Navigation Bar-->
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -76,6 +76,14 @@
             <div class="panel-body">
               <p>* fields are required</p>
               <div class="form-group">
+                <label for="firstNameRegisterInput">*First Name:</label>
+                <input type="text" class="form-control" id="firstNameRegisterInput">
+              </div>
+              <div class="form-group">
+                <label for="lastNameRegisterInput">*Last Name:</label>
+                <input type="text" class="form-control" id="lastNameRegisterInput">
+              </div>
+              <div class="form-group">
                 <label for="usernameRegisterInput">*Username:</label>
                 <input type="text" class="form-control" id="usernameRegisterInput">
               </div>
@@ -83,6 +91,7 @@
                 <label for="passwordRegisterInput">*Password:</label>
                 <input type="password" class="form-control" id="passwordRegisterInput">
               </div>
+              <p>Password must be longer than 8 characters (and contain numbers)</p>
               <div class="form-group">
                 <label for="confirmPasswordRegisterInput">*Confirm Password:</label>
                 <input type="password" class="form-control" id="confirmPasswordRegisterInput">
@@ -98,13 +107,6 @@
       </div>
 
     </div><!-- /.container -->
-      
-    <script type="text/javascript">
-        
-        //Add necessary code here.
-                
-    </script>
-      
       
     <!-- Bootstrap core JavaScript
     ================================================== -->
