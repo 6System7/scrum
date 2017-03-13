@@ -20,7 +20,7 @@
     <script type="text/javascript" src="loginAndRegister.js"></script>
   </head>
 
-  <body>
+  <>
       
 
       
@@ -107,6 +107,24 @@
           </div>
         </div>
       </div>
+
+      <script type="text/javascript">
+        $(document).on("click", "#registerButton", function() {
+        console.log("Pressed");
+        var username = $("#usernameRegisterInput").val();
+        var password = $("#passwordRegisterInput").val();
+        var confirmPassword = $("#confirmPasswordRegisterInput").val();
+        var firstName = $("#firstNameRegisterInput").val();
+        var lastName = $("#lastNameRegisterInput").val();
+        var email = $("#emailRegisterInput").val();
+        if(registerFieldsValid(username, password, confirmPassword, firstName, lastName, email)){
+        console.log("All fields valid!");
+        registerUser(username, password, confirmPassword, firstName, lastName, email);
+        } else {
+        console.log("Fields not Valid!");
+        }
+        });
+      </script>
 
     </div><!-- /.container -->
       
