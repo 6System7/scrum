@@ -1,10 +1,10 @@
 //Get required packages
 var express = require("express");
 var app = express();
-var MongoClient = require('mongodb').MongoClient
+var MongoClient = require('mongodb').MongoClient;
 var path = __dirname + "/";
 var savedRes;
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
     extended: true
@@ -26,7 +26,7 @@ MongoClient.connect(db_URI, function(err, database_object) {
 //Send initial files to use such as bootstrap
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
-app.use(express.static('scripts'))
+app.use(express.static('scripts'));
 
 //Direct requests to various urls
 app.get("/", function(req, res) {
