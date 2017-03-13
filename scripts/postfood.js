@@ -22,32 +22,51 @@ var dataURLToBlob = function(dataURL) {
     });
 }
 
-function sendPostData() {
-    // TODO valiate inputs
-
-    var formData = $("#frmPost").serializeArray();
-    $("#frmPost").find("input[type=text], textarea").val("");
-    $("#frmPost").find("input[type=file]").val("");
-
-    var indexedArray = {};
-    $.map(formData, function(n, i) {
-        indexedArray[n['name']] = n['value'];
-    });
-    indexedArray.img = $("#imgPreview").attr("src");
-    $("#imgPreview").attr("src", "");
-
-    $.ajax({
-        type: "POST",
-        url: "/addPost",
-        data: indexedArray,
-        dataType: "json",
-        success: function(data) {
-            console.log("Success when posting");
-        },
-        error: function() {
-            console.log("Failed when posting");
+function validInputs() {
+    var valid = true;
+    $("#frmPost :input[type=text], textarea").each(function() {
+        if (valid) {
+            if ($.trim($(this).val()) == "") {
+                valid = false;
+                // TODO nicer alert?
+                alert($(this).attr("name") + " cannot be empty!");
+            }
         }
     });
+    if (valid && !imageSelected) {
+        valid = false;
+        alert("Please upload an image of your item!");
+    }
+    return valid;
+}
+
+function sendPostData() {
+    if (validInputs()) {
+
+        var formData = $("#frmPost").serializeArray();
+        $("#frmPost").find("input[type=text], textarea").val("");
+        $("#frmPost").find("input[type=file]").val("");
+
+        var indexedArray = {};
+        $.map(formData, function(n, i) {
+            indexedArray[n['name']] = n['value'];
+        });
+        indexedArray.img = $("#imgPreview").attr("src");
+        $("#imgPreview").attr("src", "");
+
+        $.ajax({
+            type: "POST",
+            url: "/addPost",
+            data: indexedArray,
+            dataType: "json",
+            success: function(data) {
+                console.log("Success when posting");
+            },
+            error: function() {
+                console.log("Failed when posting");
+            }
+        });
+    }
 }
 
 function previewFile() {
@@ -92,8 +111,10 @@ function previewFile() {
     }
 }
 
+var imageSelected = false;
 $(document).ready(function() {
     $("input:file").change(function() {
+        imageSelected = true;
         previewFile();
     });
 });
