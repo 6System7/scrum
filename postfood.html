@@ -13,18 +13,27 @@
 
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
+    <!-- jQuery -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
+    <!-- Map for location selection -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCW6XlFsL0Ik5e5xDECavIvI24400NMx2g"></script>
+    <!-- Bootstrap core JS -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Our own JS -->
     <script type="text/javascript" src="postfood.js"></script>
-
+    <!-- Additional CSS -->
     <style type="text/css">
         #imgPreview {
             margin: 5px;
             /*float: right;*/
             max-height: 200px;
+        }
+
+        #map {
+            width: 400px;
+            height: 250px;
         }
     </style>
 </head>
@@ -68,15 +77,21 @@
             <form id="frmPost" action="#">
                 <div class="form-group">
                     <label for="txtTitle">Post Title</label>
-                    <input type="text" name="Post Title" class="form-control" id="txtTitle">
+                    <input type="text" name="title" class="form-control" id="txtTitle" data-hr="Post Title">
                 </div>
                 <div class="form-group">
                     <label for="txtDescription">Description</label>
-                    <input type="text" name="Description" class="form-control" id="txtDescription">
+                    <input type="text" name="description" class="form-control" id="txtDescription" data-hr="Post Description">
                 </div>
                 <div class="form-group">
                     <label for="txtLocation">Pick-up location</label>
-                    <input type="text" name="Pick-up location" class="form-control" id="txtLocation">
+                    <p>Click a new location, or drag the marker to change location.</p>
+
+                    <div id="map"></div>
+                    <form method="post" action="#">
+                        Latitude: <input type="text" id="lat" readonly="yes">
+                        Longitude: <input type="text" id="lng" readonly="yes">
+                    </form>
                 </div>
                 <div class="form-group">
                     <label for="txtImg">Picture of item</label>
@@ -85,15 +100,9 @@
                 </div>
                 <button type="button" class="btn btn-default" onclick="sendPostData()">Submit</button>
             </form>
-            <!-- TODO Barcode scanning capability -->
         </div>
     </div>
     <!-- /.container -->
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="/js/bootstrap.min.js"></script>
 </body>
 
 </html>
