@@ -7,21 +7,28 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="Group Project Assignment" content="">
     <meta name="gttg22" content="">
-
-    <title>SCRUM - Food sharing app</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="findFoodTwo.js"></script>
+          <!-- Bootstrap core CSS -->
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
+      
+      <link href="/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
+    <link  rel="stylesheet" type="text/css" href= "findFoodCSSTest.css" >
+
+
+    <title>SCRUM - Food sharing app</title>
+
+
       
   </head>
 
   <body>
       
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script> 
-      
+
     <!--Bootstrap Navigation Bar-->
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -49,7 +56,7 @@
     <div class="container">
         
     <!--Initial data when landing on page-->
-      <div class="scrumFormat">
+      <div class="scrumFormat" id = "testing">
         <h1>Scrum Find Food Page</h1>
         <p class="lead">Todo:<br>- Load results by location (done by gps?)<br>- Filter and sort results<br>- Load details for food post<br>- Instant messaging service (possibly in seperate page?)<br>- Display results in interactive map</p>  
           
@@ -62,18 +69,109 @@
       </div>
 
     </div><!-- /.container -->
-      
-    <script type="text/javascript">
-        
-        //Add necessary code here.
+    <div class="row-fluid">
+        <div id="filters" class="col-sm-4">
+            <!-- Big labels made at: http://www.fontgeneral.com/big-text-maker/
+        ░▄███▄░░▄███▄░░██░░░██░░██░██▄░▄██░██▄░██░▄███▄
+        ██▀░▀▀░██▀░▀██░██░░░██░░██░██▀█▀██░███▄██░▀█▄▀▀
+        ██▄░▄▄░██▄░▄██░██░░░██░░██░██░░░██░██▀███░▄▄▀█▄
+        ░▀███▀░░▀███▀░░████░▀████▀░██░░░██░██░░██░▀███▀ -->
+        <button id="btnUpdate" type="button" class="btn btn-default">
+                <h4 class="panel-title">Search</h4>
+            </button>
+                <br>
+                <br>
+               <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapseBasic">
+                                Basic
+                            </a>
+                        </h4>
+                        </div>
+                        <div id="collapseBasic" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="lblKeyWord">Key Word</span>
+                                    <input id="txtKeyWord" type="text" class="form-control" placeholder="Please enter a keyword" aria-describedby="lblKeyWord">
+                                </div>
+                                </div>
+                                
+                            </div>
+                        </div>
                 
-    </script>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapseGPPractice">
+                                 Meal Type
+                            </a>
+                        </h4>
+                        </div>
+                        <div id="collapseGPPractice" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <label class="checkbox-inline"><input type="checkbox" value="">Breakfast</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">Lunch</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">Dinner</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse10">
+                                    Type - Country
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapse10" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <label class="checkbox-inline"><input type="checkbox" value="">Italian</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">Chinese</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">Thai</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">French</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">Spanish</label>
+                                <label class="checkbox-inline"><input type="checkbox" value="">British</label>
+                                <!-- TODO more than one option possible? Is this built in-->
+                            </div>
+                        </div>
+
+        </div>    
+            
+        </div> <!-- end of columns -->
+        <div id = "table-of-food" class = col-sm-8>
+            <table class="table table-responsive table-striped table-bordered">
+                    <thead id = "table-header-food">
+                        <tr id="tHeadFoodRow">
+                            <th> Title</th>
+                            <th> Description</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="tBodyFood">
+                        <tr> 
+                            <td> test</td>
+                            <td> test</td>
+     
+                        </tr>
+                    </tbody>
+                </table>
+            
+        </div>
+
+
+
+      
+      
+    
       
       
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
+
+      </div>
+      
   </body>
 </html>
