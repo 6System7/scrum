@@ -1,6 +1,7 @@
 //Get required packages
 var express = require("express");
-var MongoClient = require('mongodb').MongoClient;
+var MongoClient = require("mongodb").MongoClient;
+var fs = require("fs");
 var app = express();
 var path = __dirname + "/";
 var savedRes;
@@ -27,6 +28,7 @@ MongoClient.connect(db_URI, function(err, database_object) {
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use(express.static('scripts'));
+app.use(express.static('post-images'));
 
 //Direct requests to various urls
 app.get("/", function(req, res) {
@@ -35,7 +37,35 @@ app.get("/", function(req, res) {
 
 app.post("/addPost", function(req, res) {
     var post = req.body.postToPost;
-    // TODO save image and send path to image to database (instead of storing image in database)
+
+    if (post.image) {
+        var regex = /^data:.+\/(.+);base64,(.*)$/;
+        var matches = post.image.match(regex);
+        var ext = "." + matches[1];
+        var data = matches[2];
+        var buffer = new Buffer(data, 'base64');
+
+        var fileName = "img" + Date.now();
+        var additional = "";
+        var counter = 1;
+        while (fs.existsSync("post-images/" + fileName + additional + ext)) {
+            additional = "(" + counter + ")";
+            counter ++;
+        }
+        fileName += additional + ext;
+
+        post.image = fileName;
+
+        fs.writeFile("post-images/" + fileName, buffer, "binary", function(err) {
+            if (err) {
+                throw err;
+            } else {
+                console.log("File saved as post-images/" + fileName);
+            }
+        });
+    } else {
+        console.log("No image attached");
+    }
 
     db.collection("posts").save(post, function(err, results) {
         if (err) {

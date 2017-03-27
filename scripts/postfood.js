@@ -23,12 +23,13 @@ var dataURLToBlob = function(dataURL) {
 }
 
 function validInputs() {
+    // TODO - nicer alerts in this section?
+
     var valid = true;
     $("#frmPost :input[type=text], textarea").each(function() {
         if (valid) {
             if ($.trim($(this).val()) == "" && $(this).attr("readonly") != "yes") {
                 valid = false;
-                // TODO nicer alert?
                 alert($(this).attr("data-hr") + " cannot be empty!");
             }
         }
@@ -37,7 +38,7 @@ function validInputs() {
         valid = false;
         alert("Please select a pick-up location!");
     }
-    // if (valid && !imageSelected) { // TODO uncomment - only for testing (not needing image each time)
+    // if (valid && !imageSelected) { // TODO Mike - uncomment - only commented for testing (not needing image each time)
     //     valid = false;
     //     alert("Please upload an image of your item!");
     // }
@@ -46,7 +47,6 @@ function validInputs() {
 
 function sendPostData() {
     if (validInputs()) {
-
         var formData = $("#frmPost").serializeArray();
         $("#frmPost").find("input[type=text], textarea").val("");
         $("#frmPost").find("input[type=file]").val("");
@@ -55,6 +55,7 @@ function sendPostData() {
         $.map(formData, function(n, i) {
             indexedArray[n['name']] = n['value'];
         });
+
         indexedArray.image = $("#imgPreview").attr("src");
         $("#imgPreview").attr("src", "");
 
@@ -66,15 +67,22 @@ function sendPostData() {
         $.ajax({
             type: "POST",
             url: "/addPost",
-            data: {postToPost: indexedArray},
+            data: {
+                postToPost: indexedArray
+            },
             dataType: "json",
             success: function(data) {
                 console.log("Success when posting");
             },
             error: function() {
-                console.log("Failed when posting");
+                // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
+                // console.log("Failed when posting");
+                // alert("Could not add post\nPlease try again soon!");
             }
         });
+
+        // THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT CLEARED
+        location.reload();
     }
 }
 
@@ -106,8 +114,7 @@ function previewFile() {
             canvas.height = height;
             canvas.getContext('2d').drawImage(image, 0, 0, width, height);
             var dataUrl = canvas.toDataURL('image/jpeg');
-            var resizedImage = dataURLToBlob(dataUrl);
-
+            // var resizedImage = dataURLToBlob(dataUrl);
             preview.attr("src", dataUrl);
         }
         image.src = reader.result;
@@ -194,14 +201,13 @@ $(document).ready(function() {
     getNotifications();
 });
 
-// TODO quagga.js for barcode
+// TODO Mike - quagga.js for barcode
 
 
-function getNotifications(){
+function getNotifications() {
     userID = "Bob Smith";
     typeOfMessage = " has sent you a <strong> message </strong>" //TODO will contain link to message
     typeOfMessageImage = " glyphicon glyphicon-envelope"
     newNotif = "<li class='notification'><span class='glyphicon glyphicon-envelope' align = 'inline'> </span>" + userID + typeOfMessage + "</li>";
- document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', newNotif);
-    
+    document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', newNotif);
 }

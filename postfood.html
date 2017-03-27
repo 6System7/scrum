@@ -55,21 +55,22 @@
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                <li class="dropdown dropdown-notifications" >
-                <!--Todo: want to make it pull left. --> 
-            <a href="#notifications-panel" class="dropdown-toggle" data-toggle = "dropdown" id = "notificationsButton"> 
-            
-              <i data-count="2" class="glyphicon glyphicon-comment "></i>
-            </a>
-              <ul class = "dropdown-menu" id = "notificationsPanel">
-                <div class="container">
-                  <h3>Notifications</h3>  
-                    <!-- where the notifications will be put -->
-                    <ul class = "notifications" id = "notificationList">
-                    </ul>
-                </div><!--/.nav-collapse -->
-                </ul>
-            </li>
+                    <li class="dropdown dropdown-notifications">
+                        <!--Todo: want to make it pull left. -->
+                        <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton">
+
+                            <i data-count="2" class="glyphicon glyphicon-comment "></i>
+                        </a>
+                        <ul class="dropdown-menu" id="notificationsPanel">
+                            <div class="container">
+                                <h3>Notifications</h3>
+                                <ul class="notifications" id="notificationList">
+                                    <!-- where the notifications will be put -->
+                                </ul>
+                            </div>
+                            <!--/.nav-collapse -->
+                        </ul>
+                    </li>
                     <li><a href="home.html">Home</a></li>
                     <li class="active"><a href="postfood.html">Post Food</a></li>
                     <li><a href="findfood.html">Find Food</a></li>
@@ -104,13 +105,12 @@
 
                     <div id="map"></div>
                     <form method="post" action="#">
-                        Latitude: <input type="text" id="lat" readonly="yes">
-                        Longitude: <input type="text" id="lng" readonly="yes">
+                        Latitude: <input type="text" id="lat" readonly="yes"> Longitude: <input type="text" id="lng" readonly="yes">
                     </form>
                 </div>
                 <div class="form-group">
                     <label for="txtImg">Picture of item</label>
-                    <input type="file" name="img" class="form-control" accept="image/*" id="txtImg">
+                    <input type="file" name="img" class="form-control" accept="image/jpg, image/jpeg, image/png" id="txtImg">
                     <img id="imgPreview" src="" alt="">
                 </div>
                 <button type="button" class="btn btn-default" onclick="sendPostData()">Submit</button>
