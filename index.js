@@ -94,7 +94,7 @@ app.post("/addUser", function(req, res) {
     var user = {};
     user.username = req.body.username;
     user.passwordsha1 = sha1(req.body.password);
-    user.rating = req.body.rating;
+    user.rating = Number(req.body.rating);
     user.realname = req.body.realname;
     user.email = req.body.email;
 
