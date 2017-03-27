@@ -1,5 +1,6 @@
 //Get required packages
 var express = require("express");
+var sha1 = require('sha1');
 var MongoClient = require("mongodb").MongoClient;
 var fs = require("fs");
 var app = express();
@@ -92,7 +93,7 @@ app.get("/getPosts", function(req, res) {
 app.post("/addUser", function(req, res) {
     var user = {};
     user.username = req.body.username;
-    user.passwordsha1 = req.body.passwordsha1;
+    user.passwordsha1 = sha1(req.body.password);
     user.rating = req.body.rating;
     user.realname = req.body.realname;
     user.email = req.body.email;

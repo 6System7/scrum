@@ -9,46 +9,79 @@ $(document).on("click", "#registerButton", function() {
     var firstName = $("#firstNameRegisterInput").val();
     var lastName = $("#lastNameRegisterInput").val();
     var email = $("#emailRegisterInput").val();
-    if(registerFieldsValid(username, password, confirmPassword, firstName, lastName, email)){
-        console.log("All fields valid!");
-        registerUser(username, password, 3, firstName  + " " + lastName, email);
-    } else {
-        console.log("Fields not Valid!");
-    }
+    $.getJSON("/getUsers", function(jsonData){
+        if(registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email)){
+            console.log("All fields valid!");
+            registerUser(username, password, 3, firstName  + " " + lastName, email);
+        } else {
+            console.log("Fields not Valid!");
+        }
+    });
 });
 
-function registerFieldsValid(username, password, confirmPassword, firstName, lastName, email){
+function registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email){
+    
+    var invalidField = false;
+    
+    // USERNAME CHECKS
+    if(username === ""){ invalidField = true; }
 
-    if(username == ""){ return false; }
+    for(var i = 0; i < jsonData.length; i++) {
+        var userData = jsonData[i];
+        var usernameDB = userData.username;
+        if (username === usernameDB) {
+            console.log("Username taken");
+            invalidField = true;
+            break;
+        }
+    }
 
-    $.getJSON("/getUsers", function(data) {
-        $.each(data, function(username, password, rating, realname, email) {
-           if(username === username){
-               return false;
-           }
-        });
-    });
+    // PASSWORD CHECKS
+    if(password === ""){ console.log("Password is Blank"); invalidField = true; }
 
-    if(password === ""){ console.log("Password is Blank"); return false; }
-    if(password.length < 8 ){ console.log("Password needs to be 8 characters or longer"); return false; }
-    //if(password.contains(digit) == false){ return false; }
+    if(password.length < 8 ){ console.log("Password needs to be 8 characters or longer"); invalidField = true; }
 
-    if(confirmPassword !== password){ console.log("Confirm Password must match Password"); return false; }
+    var passwordContainsNumbers = false;
+    for(var digit = 0; digit < 10; digit++) {
+        passwordContainsNumbers = password.includes(digit);
+        if (passwordContainsNumbers === true) {
+            break;
+        }
+    }
+    if(!passwordContainsNumbers){
+        console.log("Password must contain numbers");
+        invalidField = true;
+    }
 
-    if(firstName === ""){ console.log("First Name is Blank"); return false; }
+    //CONFIRM PASSWORD CHECKS
+    if(confirmPassword !== password){ console.log("Confirm Password must match Password"); invalidField = true; }
 
-    if(lastName === ""){ console.log("Last Name is Blank"); return false; }
+    // FIRST AND LAST NAME CHECKS
+    if(firstName === ""){ console.log("First Name is Blank"); invalidField = true; }
 
-    if(email === ""){ console.log("Email is Blank"); return false; }
+    if(lastName === ""){ console.log("Last Name is Blank"); invalidField = true; }
 
-    return true;
+    // EMAIL CHECKS
+    if(email === ""){ console.log("Email is Blank"); invalidField = true; }
+
+    for(var i = 0; i < jsonData.length; i++) {
+        var userData = jsonData[i];
+        var emailDB = userData.email;
+        if(email === emailDB){
+            console.log("Email already used");
+            invalidField = true;
+            break;
+        }
+    }
+
+    return !invalidField;
 }
 
-function registerUser(username, passwordsha1, rating, realname, email){
+function registerUser(username, password, rating, realname, email){
 
     console.log("Sending user registration request...");
 
-    var userData = {username: username, passwordsha1: passwordsha1, rating: rating, realname: realname, email: email};
+    var userData = {username: username, password: password, rating: rating, realname: realname, email: email};
 
     $.ajax({
         type: "POST",
