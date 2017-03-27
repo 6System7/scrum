@@ -11,7 +11,7 @@ $(document).on("click", "#registerButton", function() {
     var email = $("#emailRegisterInput").val();
     if(registerFieldsValid(username, password, confirmPassword, firstName, lastName, email)){
         console.log("All fields valid!");
-        registerUser(username, password, confirmPassword, firstName, lastName, email);
+        registerUser(username, password, 3, firstName  + " " + lastName, email);
     } else {
         console.log("Fields not Valid!");
     }
@@ -23,23 +23,23 @@ function registerFieldsValid(username, password, confirmPassword, firstName, las
 
     $.getJSON("/getUsers", function(data) {
         $.each(data, function(username, password, rating, realname, email) {
-           if(username == username){
+           if(username === username){
                return false;
            }
         });
     });
 
-    if(password == ""){ console.log("Password is Blank"); return false; }
+    if(password === ""){ console.log("Password is Blank"); return false; }
     if(password.length < 8 ){ console.log("Password needs to be 8 characters or longer"); return false; }
     //if(password.contains(digit) == false){ return false; }
 
-    if(confirmPassword != password){ console.log("Confirm Password must match Password"); return false; }
+    if(confirmPassword !== password){ console.log("Confirm Password must match Password"); return false; }
 
-    if(firstName == ""){ console.log("First Name is Blank"); return false; }
+    if(firstName === ""){ console.log("First Name is Blank"); return false; }
 
-    if(lastName == ""){ console.log("Last Name is Blank"); return false; }
+    if(lastName === ""){ console.log("Last Name is Blank"); return false; }
 
-    if(email == ""){ console.log("Email is Blank"); return false; }
+    if(email === ""){ console.log("Email is Blank"); return false; }
 
     return true;
 }
