@@ -38,3 +38,5 @@ jspm_packages
 
 # JetBrains configs
 .idea/
+
+.DS_Store
