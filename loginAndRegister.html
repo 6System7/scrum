@@ -61,12 +61,16 @@
               <div class="form-group">
                 <label for="usernameLoginInput">Username:</label>
                 <input type="text" class="form-control" id="usernameLoginInput">
+                <div id="usernameLoginFeedback"></div>
               </div>
               <div class="form-group">
                 <label for="passwordLoginInput">Password:</label>
                 <input type="password" class="form-control" id="passwordLoginInput">
+                <div id="passwordLoginFeedback"></div>
               </div>
-              <button class="btn btn-primary" type="submit" id="LoginButton">Login</button>
+              <button class="btn btn-primary" type="submit" id="loginButton">Login</button>
+              <br><br>
+              <div id="loginFeedback"></div>
             </div>
           </div>
         </div>
@@ -75,32 +79,41 @@
             <div class="panel-heading">Register</div>
             <div class="panel-body">
               <p>* fields are required</p>
-              <div class="form-group">
+              <div class="form-group" id="firstNameRegisterGroup">
                 <label for="firstNameRegisterInput">*First Name:</label>
                 <input type="text" class="form-control" id="firstNameRegisterInput">
+                <div id="firstNameRegisterFeedback"></div>
               </div>
-              <div class="form-group">
+              <div class="form-group" id="lastNameRegisterGroup">
                 <label for="lastNameRegisterInput">*Last Name:</label>
                 <input type="text" class="form-control" id="lastNameRegisterInput">
+                <div id="lastNameRegisterFeedback"></div>
               </div>
-              <div class="form-group">
+              <div class="form-group" id="usernameRegisterGroup">
                 <label for="usernameRegisterInput">*Username:</label>
                 <input type="text" class="form-control" id="usernameRegisterInput">
+                <div id="usernameRegisterFeedback"></div>
               </div>
-              <div class="form-group">
+              <div class="form-group" id="passwordRegisterGroup">
                 <label for="passwordRegisterInput">*Password:</label>
+                <br>
+                <small p>Password must be longer than 8 characters (and contain numbers)</small p>
                 <input type="password" class="form-control" id="passwordRegisterInput">
+                <div id="passwordRegisterFeedback"></div>
               </div>
-              <p>Password must be longer than 8 characters (and contain numbers)</p>
-              <div class="form-group">
+              <div class="form-group" id="confirmPasswordRegisterGroup">
                 <label for="confirmPasswordRegisterInput">*Confirm Password:</label>
                 <input type="password" class="form-control" id="confirmPasswordRegisterInput">
+                <div id="confirmPasswordRegisterFeedback"></div>
               </div>
-              <div class="form-group">
+              <div class="form-group" id="emailRegisterGroup">
                 <label for="emailRegisterInput">*Email:</label>
                 <input type="email" class="form-control" id="emailRegisterInput">
+                <div id="emailRegisterFeedback"></div>
               </div>
               <button class="btn btn-primary" type="submit" id="registerButton">Register</button>
+              <br><br>
+              <div id="registerFeedback"></div>
             </div>
           </div>
         </div>

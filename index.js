@@ -28,6 +28,7 @@ MongoClient.connect(db_URI, function(err, database_object) {
 //Send initial files to use such as bootstrap
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
+app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
 
@@ -118,6 +119,13 @@ app.get("/getUsers", function(req, res) {
             res.send(JSON.stringify(results));
         }
     });
+});
+
+app.get("/sha1", function(req, res){
+    var inputString = req.query.string;
+    if(inputString !== undefined) {
+        res.send(sha1(inputString));
+    }
 });
 
 app.get("/home.html", function(req, res) {
