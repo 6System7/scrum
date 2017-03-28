@@ -42,7 +42,7 @@ $(document).on("click", "#loginButton", function() {
 
 function processLogin(username, password){
     console.log("Logged in successfully");
-    //Save Username in local storage
+    localStorage.username = username;
     //Save Authkey in local storage
     $("#loginFeedback").append("<p class='text-success'>Logged in Successfully!</p>");
 }
