@@ -16,6 +16,11 @@ $(document).ready(function(){
                         var y = size.toString();
                         var p2 = p2 + ("<td>" + x[l] + "</td>");
                     };
+                    if (size == 4){
+                        var y = size.toString();
+                        var p2 = p2 + ("<td> <img src='" + x[l] + "' ></td>");
+                    };
+                    
                 };
                 p2 = p2 + " </tr>";
                 document.getElementById("tBodyFood").insertAdjacentHTML('beforeEnd', p2);      
