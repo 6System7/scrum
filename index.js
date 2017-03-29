@@ -1,6 +1,7 @@
 //Get required packages
 var express = require("express");
 var sha1 = require('sha1');
+var ip = require('ip');
 var MongoClient = require("mongodb").MongoClient;
 var fs = require("fs");
 var app = express();
@@ -95,6 +96,7 @@ app.post("/addUser", function(req, res) {
     var user = {};
     user.username = req.body.username;
     user.passwordsha1 = sha1(req.body.password);
+    user.authkey = req.body.authkey;
     user.rating = Number(req.body.rating);
     user.realname = req.body.realname;
     user.email = req.body.email;
@@ -121,11 +123,31 @@ app.get("/getUsers", function(req, res) {
     });
 });
 
+app.post("/editUser", function(req, res){
+    var username = req.body.username;
+    var updateField = req.body.field;
+    var newValue = req.body.newValue;
+    var updateData = {};
+    updateData[updateField] = newValue;
+    if(username !== undefined && updateField !== undefined && newValue !== undefined) {
+        db.collection("users").update({"username": username}, {$set: updateData}, function(err, results){
+            if (err) {
+                console.log("Updating user failed: " + err.toString());
+            } else {
+                console.log("Updating user success");
+            }
+        });
+    }
+});
+
 app.get("/sha1", function(req, res){
     var inputString = req.query.string;
     if(inputString !== undefined) {
         res.send(sha1(inputString));
     }
+});
+app.get("/getIP", function(req, res){
+    res.send(ip.address());
 });
 
 app.get("/home.html", function(req, res) {

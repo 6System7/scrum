@@ -43,11 +43,36 @@ $(document).on("click", "#loginButton", function() {
 function processLogin(username, password){
     console.log("Logged in successfully");
     localStorage.username = username;
-    //Save Authkey in local storage
+    saveAuthKey(username);
     $("#loginFeedback").append("<p class='text-success'>Logged in Successfully!</p>");
 }
 
+function saveAuthKey(username){
+
+    var authkey = genAuthKey(username);
+    var updateData = {username: username, field: "authkey", newValue: authkey};
+
+    $.ajax({
+        type: "POST",
+        url: "/editUser",
+        data: updateData,
+        dataType: "json",
+        success: function() {
+            console.log("Success when posting");
+        },
+        error: function() {
+            console.log("Failed when posting");
+        }
+    });
+
+    localStorage.authkey = authkey;
+
+}
+
 $(document).on("click", "#registerButton", function() {
+
+    //Email Verification
+
     console.log("Register Button Pressed");
     var username = $("#usernameRegisterInput").val();
     var password = $("#passwordRegisterInput").val();
@@ -58,7 +83,7 @@ $(document).on("click", "#registerButton", function() {
     $.getJSON("/getUsers", function(jsonData){
         if(registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email)){
             console.log("All fields valid!");
-            registerUser(username, password, 3, firstName  + " " + lastName, email);
+            registerUser(username, password, "", 3, firstName  + " " + lastName, email);
         } else {
             console.log("Fields not Valid!");
         }
@@ -176,11 +201,11 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     }
 }
 
-function registerUser(username, password, rating, realname, email){
+function registerUser(username, password, authkey, rating, realname, email){
 
     console.log("Sending user registration request...");
 
-    var userData = {username: username, password: password, rating: rating, realname: realname, email: email};
+    var userData = {username: username, password: password, authkey: authkey, rating: rating, realname: realname, email: email};
 
     $.ajax({
         type: "POST",
