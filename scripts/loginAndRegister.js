@@ -1,3 +1,4 @@
+/* LOGIN SYSTEM **/
 $(document).on("click", "#loginButton", function() {
 
     var username = $("#usernameLoginInput").val();
@@ -64,6 +65,7 @@ function saveAuthKey(username){
 
 }
 
+/* REGISTER SYSTEM **/
 $(document).on("click", "#registerButton", function() {
 
     console.log("Register Button Pressed");
@@ -230,3 +232,18 @@ function sendEmailConfirmation(username, password, emailAddress, realname){
     console.log("Confirmation Email Sent");
 
 }
+
+/* Enter key submission **/
+$(document).ready(function() {
+    $(window).keydown(function(event){
+        if(event.keyCode === 13) {
+            event.preventDefault();
+            if(document.activeElement.parentElement.parentElement.id === "loginPanel"){
+                document.getElementById("loginButton").click();
+            }
+            if(document.activeElement.parentElement.parentElement.id === "registerPanel"){
+                document.getElementById("registerButton").click();
+            }
+        }
+    });
+});
