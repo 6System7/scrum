@@ -2,6 +2,7 @@
 var express = require("express");
 var sha1 = require('sha1');
 var ip = require('ip');
+var nodemailer = require('nodemailer');
 var MongoClient = require("mongodb").MongoClient;
 var fs = require("fs");
 var app = express();
@@ -32,6 +33,15 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
+
+//Set up email system
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: "6system7@gmail.com",
+        pass: "6System7LovesOats"
+    }
+});
 
 //Direct requests to various urls
 app.get("/", function(req, res) {
@@ -146,8 +156,30 @@ app.get("/sha1", function(req, res){
         res.send(sha1(inputString));
     }
 });
+
 app.get("/getIP", function(req, res){
     res.send(ip.address());
+});
+
+app.post("/sendEmail", function(req, res){
+    var toAddress = req.body.toAddress;
+    var subject = req.body.subject;
+    var message = req.body.message;
+
+    var mailOptions = {
+        from: '"Scrum App" <noreply@scrum.com>',
+        to: toAddress,
+        subject: subject,
+        text: message
+    };
+
+    transporter.sendMail(mailOptions, function(err, info) {
+       if(err){
+           console.log("Error when sending mail: " + err.toString());
+       }
+       console.log("Email sent: " + info.response);
+    });
+
 });
 
 app.get("/home.html", function(req, res) {

@@ -56,13 +56,7 @@ function saveAuthKey(username){
         type: "POST",
         url: "/editUser",
         data: updateData,
-        dataType: "json",
-        success: function() {
-            console.log("Success when posting");
-        },
-        error: function() {
-            console.log("Failed when posting");
-        }
+        dataType: "json"
     });
 
     localStorage.authkey = authkey;
@@ -70,8 +64,6 @@ function saveAuthKey(username){
 }
 
 $(document).on("click", "#registerButton", function() {
-
-    //Email Verification
 
     console.log("Register Button Pressed");
     var username = $("#usernameRegisterInput").val();
@@ -196,7 +188,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
         $("#registerFeedback").append("<p class='text-danger'>Error in registration, please review and try again!</p>");
         return false;
     } else {
-        $("#registerFeedback").append("<p class='text-success'>Registered Successfully! You have been sent an email to verify your account.</p>");
+        $("#registerFeedback").append("<p class='text-success'>Registered Successfully! You have been sent a confirmation email.</p>");
         return true;
     }
 }
@@ -211,13 +203,29 @@ function registerUser(username, password, authkey, rating, realname, email){
         type: "POST",
         url: "/addUser",
         data: userData,
-        dataType: "json",
-        success: function(data) {
-            console.log("Success when posting");
-        },
-        error: function() {
-            console.log("Failed when posting");
-        }
+        dataType: "json"
     });
+
+    sendEmailConfirmation(username, password, email, realname);
+}
+
+function sendEmailConfirmation(username, password, emailAddress, realname){
+
+    var subject = "Scrum App - Email confirmation";
+    var message = "Dear " + realname + '\n' +
+        "Welcome to to the Scrum App! Below are your account details: " + '\n \n' +
+        "Username: " + username + '\n' +
+        "Password: " + password + '\n' +
+        '\n' +
+        "Best wishes," + '\n' +
+        "Scrum Bot";
+
+    $.ajax({
+        type: "POST",
+        url: "/sendEmail",
+        data: {toAddress: emailAddress, subject: subject, message: message}
+    });
+
+    console.log("Confirmation Email Sent");
 
 }
