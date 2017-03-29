@@ -45,6 +45,7 @@ function processLogin(username, password){
     localStorage.username = username;
     saveAuthKey(username);
     $("#loginFeedback").append("<p class='text-success'>Logged in Successfully!</p>");
+    getUsername();
 }
 
 function saveAuthKey(username){

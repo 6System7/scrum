@@ -1,9 +1,11 @@
-$(function getUsername(){
+$(getUsername());
+
+function getUsername(){
     var username = localStorage.username;
     if(username !== "" || undefined){
         $("#navbarUsername").text(username);
     }
-});
+}
 
 function genAuthKey(username){
 
