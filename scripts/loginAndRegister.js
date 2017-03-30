@@ -98,36 +98,47 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
 
     // USERNAME CHECKS
     if(username === ""){
-        $("#usernameRegisterGroup").addClass("form-group has-error has-feedback");
+        $("#usernameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#usernameRegisterFeedback").append("<p class='text-danger'>Username can't be blank</p>");
         invalidField = true;
+    } else {
+        $("#usernameRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
+    var usernameAvailable = false;
     for(var i = 0; i < jsonData.length; i++) {
         var userData = jsonData[i];
         var usernameDB = userData.username;
         if (username === usernameDB) {
             console.log("Username taken");
-            $("#usernameRegisterGroup").addClass("form-group has-error has-feedback");
+            usernameAvailable = false;
+            $("#usernameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
             $("#usernameRegisterFeedback").append("<p class='text-danger'>Username taken</p>");
             invalidField = true;
             break;
         }
     }
+    if(usernameAvailable){
+        $("#usernameRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
+    }
 
     // PASSWORD CHECKS
     if(password === ""){
         console.log("Password is Blank");
-        $("#passwordRegisterGroup").addClass("form-group has-error");
+        $("#passwordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#passwordRegisterFeedback").append("<p class='text-danger'>Password can't be blank</p>");
         invalidField = true;
+    } else {
+        $("#passwordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     if(password.length < 8 ){
         console.log("Password needs to be 8 characters or longer");
-        $("#passwordRegisterGroup").addClass("form-group has-error");
+        $("#passwordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#passwordRegisterFeedback").append("<p class='text-danger'>Password has to be 8+ characters</p>");
         invalidField = true;
+    } else {
+        $("#passwordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     var passwordContainsNumbers = false;
@@ -139,52 +150,67 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     }
     if(!passwordContainsNumbers){
         console.log("Password must contain numbers");
-        $("#passwordRegisterGroup").addClass("form-group has-error");
+        $("#passwordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#passwordRegisterFeedback").append("<p class='text-danger'>Password must contain at least 1 number</p>");
         invalidField = true;
+    } else {
+        $("#passwordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     //CONFIRM PASSWORD CHECKS
     if(confirmPassword !== password){
         console.log("Confirm Password must match Password");
-        $("#confirmPasswordRegisterGroup").addClass("form-group has-error");
+        $("#confirmPasswordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#confirmPasswordRegisterFeedback").append("<p class='text-danger'>Confirm Password must match Password</p>");
         invalidField = true;
+    } else {
+        $("#confirmPasswordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     // FIRST AND LAST NAME CHECKS
     if(firstName === ""){
-        $("#firstNameRegisterGroup").addClass("form-group has-error");
+        $("#firstNameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#firstNameRegisterFeedback").append("<p class='text-danger'>First Name can't be blank</p>");
         console.log("First Name is Blank");
         invalidField = true;
+    } else {
+        $("#firstNameRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     if(lastName === ""){
-        $("#lastNameRegisterGroup").addClass("form-group has-error");
+        $("#lastNameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#lastNameRegisterFeedback").append("<p class='text-danger'>Last Name can't be blank</p>");
         console.log("Last Name is Blank");
         invalidField = true;
+    } else {
+        $("#lastNameRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     // EMAIL CHECKS
     if(email === ""){
         console.log("Email is Blank");
-        $("#emailRegisterGroup").addClass("form-group has-error");
+        $("#emailRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
         $("#emailRegisterFeedback").append("<p class='text-danger'>Email can't be blank</p>");
         invalidField = true;
+    } else {
+        $("#emailRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
+    var emailAvailable = true;
     for(var i = 0; i < jsonData.length; i++) {
         var userData = jsonData[i];
         var emailDB = userData.email;
         if(email === emailDB){
             console.log("Email already used");
-            $("#emailRegisterGroup").addClass("form-group has-error");
+            emailAvailable = false;
+            $("#emailRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
             $("#usernameRegisterFeedback").append("<p class='text-danger'>Email given has already been used</p>");
             invalidField = true;
             break;
         }
+    }
+    if(emailAvailable){
+        $("#emailRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     if(invalidField){
