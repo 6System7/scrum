@@ -84,7 +84,7 @@ function checkNearbyFoods(){
                 };
                 dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
                 if (dist < 6000){
-                     p2 = "<li class='notification'><div class='panel panel-default'> <div class = 'panel-body'>  New food post in your local area! \n " + p2 + " is this far away : " + dist.toString() + "</div></div></li>";
+                     p2 = "<li class='notification'><div class='panel panel-default'><div class = 'panel-header'> New food post in your local area!'</div><div class = 'panel-body'>  p2 + ' is this far away : " + dist.toString() + "</div></div></li>";
                     document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', p2 );                     
                 } 
             }; 
