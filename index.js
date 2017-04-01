@@ -63,7 +63,7 @@ app.post("/addPost", function(req, res) {
         var counter = 1;
         while (fs.existsSync("post-images/" + fileName + additional + ext)) {
             additional = "(" + counter + ")";
-            counter ++;
+            counter++;
         }
         fileName += additional + ext;
 
@@ -133,14 +133,18 @@ app.get("/getUsers", function(req, res) {
     });
 });
 
-app.post("/editUser", function(req, res){
+app.post("/editUser", function(req, res) {
     var username = req.body.username;
     var updateField = req.body.field;
     var newValue = req.body.newValue;
     var updateData = {};
     updateData[updateField] = newValue;
-    if(username !== undefined && updateField !== undefined && newValue !== undefined) {
-        db.collection("users").update({"username": username}, {$set: updateData}, function(err, results){
+    if (username !== undefined && updateField !== undefined && newValue !== undefined) {
+        db.collection("users").update({
+            "username": username
+        }, {
+            $set: updateData
+        }, function(err, results) {
             if (err) {
                 console.log("Updating user failed: " + err.toString());
             } else {
@@ -150,18 +154,18 @@ app.post("/editUser", function(req, res){
     }
 });
 
-app.get("/sha1", function(req, res){
+app.get("/sha1", function(req, res) {
     var inputString = req.query.string;
-    if(inputString !== undefined) {
+    if (inputString !== undefined) {
         res.send(sha1(inputString));
     }
 });
 
-app.get("/getIP", function(req, res){
+app.get("/getIP", function(req, res) {
     res.send(ip.address());
 });
 
-app.post("/sendEmail", function(req, res){
+app.post("/sendEmail", function(req, res) {
     var toAddress = req.body.toAddress;
     var subject = req.body.subject;
     var message = req.body.message;
@@ -174,10 +178,10 @@ app.post("/sendEmail", function(req, res){
     };
 
     transporter.sendMail(mailOptions, function(err, info) {
-       if(err){
-           console.log("Error when sending mail: " + err.toString());
-       }
-       console.log("Email sent: " + info.response);
+        if (err) {
+            console.log("Error when sending mail: " + err.toString());
+        }
+        console.log("Email sent: " + info.response);
     });
 
 });
