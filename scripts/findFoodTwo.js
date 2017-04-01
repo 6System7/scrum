@@ -6,30 +6,76 @@ $(document).ready(function(){
         dataType: "json",
         success: function(data){
             var dataReturned = JSON.parse(JSON.stringify(data));
-            for(var property in dataReturned) {
+            
+            for(var property=0; property < dataReturned.length; property++) {
+                
                 var size = 0;
                 var x = dataReturned[property];
-                var p1 = "<tr>"
-                var p2 = p1;
+                //var p1 = "<div class='w3-card-4'>"
+                //var p2 = "";
+                var title = "";
+                var description = "";
+                var img = "";
+                var distance = "";
+                var lat = 0;
+                var long = 0;
                 for (var l in x){
                     size++;
-                    if(size == 2 || size == 3){
-                        var y = size.toString();
-                        var p2 = p2 + ("<td>" + x[l] + "</td>");
+                    if(size == 2){
+                        title = x[l].toString();
+                    } 
+                    else if (size == 3){
+                        description = x[l].toString();
+                       // var y = size.toString();
+                       // var p2 = p2 + ("<td>" + x[l] + "</td>");
                     };
                     if (size == 4){
-                        var y = size.toString();
-                        var p2 = p2 + ("<td> <img src='" + x[l] + "' ></td>");
+                        img = x[l].toString();
+                        img = '<img src="' + img + '">';
+                        
+                        if (img == '<img src="">'){
+                   
+                            img = '<div class = "text-center"><br><span class="glyphicon glyphicon-picture" >  </span></div>'
+                        }
                     };
-                    
+                    if(size == 5){
+                        lat = x[l];
+                    }
+                    if(size == 6){
+                        long = x[l];
+                    }
                 };
-                p2 = p2 + " </tr>";
-                document.getElementById("tBodyFood").insertAdjacentHTML('beforeEnd', p2);      
+                memberLang = 0;
+                memberLong = 0;
+                if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(pos) {
+                            memberLang = pos.coords.latitue;
+                            memberLong = pos.coords.longitude;
+                        });
+                    } else {
+                        memberLang = 54.775250;
+                        memberLong = -1.584852;
+                        alert("ERROR : Using default location");
+                }
+                dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
+                
+                p2 = '<div class="w3-card-4">' + img + '<div class="w3-container w3-center"><h4>' + title + '</h4><p>' + description + '</p></div></div><br>'; 
+                
+                colNum = property;
+                colNum = colNum % 3;
+                //colNum = ((property) % 4);
+                //alert(property);
+               // alert("here" + colNum.toString());
+                
+                var str = "column" + colNum.toString();
+              
+               document.getElementById(str).insertAdjacentHTML('beforeEnd', p2);   
             }; 
         }
     })
     $("#btnUpdate").click(function(){
         // TODO
+        refreshTable(dataset);
     })
  
     
@@ -84,7 +130,7 @@ function checkNearbyFoods(){
                 };
                 dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
                 if (dist < 6000){
-                     p2 = "<li class='notification'><div class='panel panel-default'><div class = 'panel-header'> New food post in your local area!'</div><div class = 'panel-body'>  p2 + ' is this far away : " + dist.toString() + "</div></div></li>";
+                    p2 = "<li class='notification'><div class='panel panel-default'><div class = 'panel-heading'> New food post in your local area!'</div><div class = 'panel-body'>" +  p2 + " is this far away : " + dist.toString() + "</div></div></li>";
                     document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', p2 );                     
                 } 
             }; 
@@ -114,6 +160,12 @@ function updateSlider(slideValue){
     document.getElementById("distLabel").innerHTML = "Search radius(km): " + slideValue;
 }
 
+function sortColumn(colToSortId){
+    if (colToSortId == "colDistance"){
+        
+        
+    }
+}
 
 /*
   <li class="notification">
@@ -151,3 +203,4 @@ function updateSlider(slideValue){
         //};
      //end of function (data)
               
+

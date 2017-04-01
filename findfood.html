@@ -15,6 +15,7 @@
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link href="/css/scrumFormat.css" rel="stylesheet">
     <link href="/css/findFoodCSSTest.css" rel="stylesheet">
       
@@ -26,6 +27,7 @@
     <script src="/js/bootstrap.min.js"></script>
     <script type = "text/javascript" src="findFoodTwo.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
+
       
     
 
@@ -55,9 +57,11 @@
             <i data-count = "2" class="glyphicon glyphicon-bell"></i>
               <!--<i data-count="2" class="glyphicon glyphicon-comment "></i>-->
             </a>
+                
               <ul class = "dropdown-menu" id = "notificationsPanel">
                 <div class="container" id = "allNotifs">
-                  <h3>Notifications</h3>  
+                  <h3>Notifications</h3> 
+                    
                     <div class="panel-group" id ="groupNotifPanels">
                     <!-- where the notifications will be put -->
                     <ul class = "list-unstyled" id = "notificationList">
@@ -65,7 +69,7 @@
                     </div>
                 </div><!--/.nav-collapse -->
                 </ul>
-            </li>
+           
               
             
             <li><a href="home.html">Home</a></li>
@@ -98,7 +102,7 @@
 
     </div><!-- /.container -->
     <div class="row-fluid">
-        <div id="filters" class="col-sm-4">
+        <div id="filters" class="col-sm-3">
             <!-- Big labels made at: http://www.fontgeneral.com/big-text-maker/
         ░▄███▄░░▄███▄░░██░░░██░░██░██▄░▄██░██▄░██░▄███▄
         ██▀░▀▀░██▀░▀██░██░░░██░░██░██▀█▀██░███▄██░▀█▄▀▀
@@ -173,28 +177,46 @@
                                 <!-- TODO more than one option possible? Is this built in-->
                             </div>
                         </div>
-
-        </div>    
+                    </div>
+                    
             
         </div> <!-- end of columns -->
-        <div id = "table-of-food" class = col-sm-8>
-            <table class="table table-responsive table-striped table-bordered">
-                    <thead id = "table-header-food">
-                        <tr id="tHeadFoodRow">
-                            <th> Title</th>
-                            <th> Description</th>
-                            <th> Image </th>
-                            
-                        </tr>
-                    </thead>
-                    <tbody id="tBodyFood">
-                    </tbody>
-                </table>
-            
+      
+        <div class="col-sm-3" id = "column0">
+          <div class="w3-card-4">
+            <img src="https://res-3.cloudinary.com/simpleview/image/upload/c_fill,f_auto,h_480,q_65,w_708/v1/clients/norway/kayaking_in_reine_lofoten_norway_2_1_e9050661-f349-4d95-bb31-8d4cd40ff0ea.jpg" alt="Norway" style="width:100%">
+            <div class="w3-container w3-center">
+            <h4> Norway Image </h4>
+              <p>The Troll's tongue in Hardanger, Norway</p>
+            </div>
+          </div>
+          <br>
+        </div>  <!-- First column end-->
+        <div class="col-sm-3" id="column1">
+          <div class="w3-card-4" >
+            <img src="https://res-3.cloudinary.com/simpleview/image/upload/c_fill,f_auto,h_480,q_65,w_708/v1/clients/norway/kayaking_in_reine_lofoten_norway_2_1_e9050661-f349-4d95-bb31-8d4cd40ff0ea.jpg" alt="Norway" style="width:100%">
+            <div class="w3-container w3-center">
+            <h4> Norway Image </h4>
+              <p>The Troll's tongue in Hardanger, Norway</p>
+            </div>
+          </div>
+          <br>
+        </div>  <!-- Second column end-->
+        <div class="col-sm-3" id="column2">
+          <div class="w3-card-4">
+            <img src="https://res-3.cloudinary.com/simpleview/image/upload/c_fill,f_auto,h_480,q_65,w_708/v1/clients/norway/kayaking_in_reine_lofoten_norway_2_1_e9050661-f349-4d95-bb31-8d4cd40ff0ea.jpg" alt="Norway" style="width:100%">
+            <div class="w3-container w3-center">
+            <h4> Norway Image </h4>
+              <p>The Troll's tongue in Hardanger, Norway</p>
+            </div>
+          </div>
+          <br>
+        </div> <!-- Third column end--> 
+        
         </div>
+       
 
-
-      </div>
+    
       
   </body>
 </html>
