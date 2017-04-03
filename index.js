@@ -3,6 +3,7 @@ var express = require("express");
 var sha1 = require('sha1');
 var ip = require('ip');
 var nodemailer = require('nodemailer');
+var uuidV4 = require('uuid/v4');
 var MongoClient = require("mongodb").MongoClient;
 var fs = require("fs");
 var app = express();
@@ -49,6 +50,7 @@ app.get("/", function(req, res) {
     res.sendFile(path + "home.html");
 });
 
+// POSTS
 app.post("/addPost", function(req, res) {
     var post = req.body.postToPost;
 
@@ -103,6 +105,7 @@ app.get("/getPosts", function(req, res) {
     });
 });
 
+// USERS
 app.post("/addUser", function(req, res) {
     var user = {};
     user.username = req.body.username;
@@ -114,9 +117,11 @@ app.post("/addUser", function(req, res) {
 
     db.collection("users").save(user, function(err, results) {
         if (err) {
+            res.send(err.toString());
             console.log("Saving user failed: " + err.toString());
         } else {
-            console.log("Saving user success");
+            res.send(results);
+            console.log("Saved user successfully");
         }
     });
 });
@@ -147,14 +152,17 @@ app.post("/editUser", function(req, res) {
             $set: updateData
         }, function(err, results) {
             if (err) {
+                res.send(err.toString());
                 console.log("Updating user failed: " + err.toString());
             } else {
+                res.send(results);
                 console.log("Updating user success");
             }
         });
     }
 });
 
+// FUNCTIONS
 app.get("/sha1", function(req, res) {
     var inputString = req.query.string;
     if (inputString !== undefined) {
@@ -166,7 +174,106 @@ app.get("/getIP", function(req, res) {
     res.send(ip.address());
 });
 
+app.get("/getUUID", function(req, res) {
+    res.send(uuidV4());
+});
+
+// RESET TOKENS
+app.post("/addResetToken", function(req, res) {
+    var tokenData = {};
+    tokenData.resetToken = req.body.resetToken;
+    tokenData.username = req.body.username;
+    tokenData.expirationDate = req.body.expirationDate;
+
+    db.collection("resetTokens").find().toArray(function(err, results) {
+
+        var tokenExists = false;
+        for (var i = 0; i < results.length; i++) {
+            var jsonResult = results[i];
+            if (jsonResult.username === tokenData.username) {
+                tokenExists = true;
+            }
+        }
+
+        if (tokenExists) {
+            db.collection("resetTokens").remove({username: tokenData.username}, function (err, results) {
+                if (err) {
+                    console.log("Deleting token failed: " + err.toString());
+                } else {
+                    console.log("Deleted pre-existing token successfully");
+                }
+            });
+        }
+
+        db.collection("resetTokens").save(tokenData, function (err, results) {
+            if (err) {
+                res.send(err.toString());
+                console.log("Saving reset token failed: " + err.toString());
+            } else {
+                res.send(results);
+                console.log("Saved reset token successfully");
+            }
+        });
+    });
+
+});
+
+app.get("/getResetTokens", function(req, res) {
+    db.collection("resetTokens").find().toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
+        } else {
+            res.send(JSON.stringify(results));
+        }
+    });
+});
+
+app.post("/deleteResetToken", function(req, res){
+    var resetToken = req.body.resetToken;
+
+    db.collection("resetTokens").remove({resetToken: resetToken}, function(err, results){
+        if (err) {
+            res.send(err.toString());
+            console.log("Deleting token failed: " + err.toString());
+        } else {
+            res.send(results);
+            console.log("Deleted token successfully");
+        }
+    });
+});
+
+app.post("/cleanResetTokens", function(req, res){
+    db.collection("resetTokens").find().toArray(function(err, results) {
+
+        var currentDate = new Date(Date.now());
+        var deleteCount = 0;
+
+        for (var i = 0; i < results.length; i++) {
+            var jsonResult = results[i];
+            if (jsonResult.expirationDate < currentDate) {
+                deleteCount++;
+                db.collection("resetTokens").remove({resetToken: jsonResult.resetToken}, function(err, results){
+                    if (err) {
+                        console.log("Deleting token failed: " + err.toString());
+                    } else {
+                        console.log("Deleted token " + jsonResult.resetToken + " successfully");
+                    }
+                });
+            }
+        }
+
+        res.send("Deleted " + deleteCount + " expired Reset Token entries");
+        console.log("Finished cleaning with " + deleteCount + " deletions");
+
+    });
+});
+
+// EMAIL
 app.post("/sendEmail", function(req, res) {
+    console.log("Request to send email made...");
     var toAddress = req.body.toAddress;
     var subject = req.body.subject;
     var message = req.body.message;
@@ -181,12 +288,17 @@ app.post("/sendEmail", function(req, res) {
     transporter.sendMail(mailOptions, function(err, info) {
         if (err) {
             console.log("Error when sending mail: " + err.toString());
+            res.send(err.toString());
+        } else {
+            console.log("Email sent: " + info.response);
+            res.send(info)
         }
-        console.log("Email sent: " + info.response);
+
     });
 
 });
 
+// WEB PAGES
 app.get("/home.html", function(req, res) {
     res.sendFile(path + "home.html");
 });
@@ -206,6 +318,11 @@ app.get("/postfood.html", function(req, res) {
 app.get("/loginAndRegister.html", function(req, res) {
     res.sendFile(path + "loginAndRegister.html");
 });
+
+app.get("/resetPassword.html", function(req, res) {
+    res.sendFile(path + "resetPassword.html");
+});
+
 
 app.get("/account.html", function(req, res) {
     res.sendFile(path + "account.html");
