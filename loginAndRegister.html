@@ -59,7 +59,7 @@
                 </div><!--/.nav-collapse -->
                 </ul>
             <li><a href="home.html">Home</a></li>
-            <li><a href="postfood.html">Post Food</a></li>
+            <li><a href="postManagement.html">Manage Posts</a></li>
             <li><a href="findfood.html">Find Food</a></li>
             <li class="active"><a href="loginAndRegister.html">Login & Register</a></li>
             <li><a href="account.html">Account Settings</a></li>
@@ -79,7 +79,9 @@
       </div>
 
       <div class="scrumFormat">
-        <div class="col-xs-6">
+
+        <div id="leftColumn" class="col-xs-6">
+
           <div class="panel panel-default">
             <div class="panel-heading">Login</div>
             <div id="loginPanel"  class="panel-body">
@@ -98,8 +100,36 @@
               <div id="loginFeedback"></div>
             </div>
           </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">Recover Username</div>
+            <div id="recoverUsernamePanel"  class="panel-body">
+              <div class="form-group">
+                <label for="usernameRecoverInput">Recover Username:</label>
+                <input type="text" class="form-control" id="usernameRecoverInput">
+                <div id="usernameRecoverFeedback"></div>
+              </div>
+              <button class="btn btn-primary" type="submit" id="recoverUsernameButton">Recover</button>
+              <br>
+            </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">Reset Password</div>
+            <div id="resetPasswordPanel"  class="panel-body">
+              <div class="form-group">
+                <label for="passwordResetInput">Reset Password:</label>
+                <input type="password" class="form-control" id="passwordResetInput">
+                <div id="passwordResetFeedback"></div>
+              </div>
+              <button class="btn btn-primary" type="submit" id="resetPasswordButton">Reset</button>
+              <br>
+            </div>
+          </div>
+
         </div>
-        <div class="col-xs-6">
+
+        <div id="rightColumn" class="col-xs-6">
           <div class="panel panel-default">
             <div class="panel-heading">Register</div>
             <div id="registerPanel" class="panel-body">
@@ -122,7 +152,7 @@
               <div class="form-group" id="passwordRegisterGroup">
                 <label for="passwordRegisterInput">*Password:</label>
                 <br>
-                <small p>Password must be longer than 8 characters (and contain numbers)</small p>
+                <small>Password must be longer than 8 characters (and contain numbers)</small>
                 <input type="password" class="form-control" id="passwordRegisterInput">
                 <div id="passwordRegisterFeedback"></div>
               </div>
@@ -142,6 +172,7 @@
             </div>
           </div>
         </div>
+
       </div>
 
     </div><!-- /.container -->

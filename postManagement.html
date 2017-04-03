@@ -13,19 +13,16 @@
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
-
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
-      
-  </head>
+     </head>
 
-  <body>
-      
+  <body>  
     <!--Bootstrap Navigation Bar-->
-        <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -40,29 +37,30 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-              <li class="dropdown dropdown-notifications" >
+              
+            <li class="dropdown dropdown-notifications" >
                 <!--Todo: want to make it pull left. --> 
             <a href="#notifications-panel" class="dropdown-toggle" data-toggle = "dropdown" id = "notificationsButton"> 
-            <i data-count = "2" class="glyphicon glyphicon-bell"></i>
-              <!--<i data-count="2" class="glyphicon glyphicon-comment "></i>-->
+            
+              <i data-count="2" class="glyphicon glyphicon-bell "></i>
             </a>
-                
               <ul class = "dropdown-menu" id = "notificationsPanel">
-                <div class="container" id = "allNotifs">
-                  <h3>Notifications</h3> 
-                    
-                    <div class="panel-group" id ="groupNotifPanels">
+                <div class="container">
+                  <h3>Notifications</h3>  
                     <!-- where the notifications will be put -->
-                    <ul class = "list-unstyled" id = "notificationList">
+                    <ul class = "notifications" id = "notificationList">
                     </ul>
-                    </div>
                 </div><!--/.nav-collapse -->
                 </ul>
+            </li>
             <li><a href="home.html">Home</a></li>
-            <li><a href="postManagement.html">Manage Posts</a></li>
+            <li class="active"><a href="postManagement.html">Manage Posts</a></li>
             <li><a href="findfood.html">Find Food</a></li>
             <li><a href="loginAndRegister.html">Login & Register</a></li>
-            <li class="active"><a href="account.html">Account Settings</a></li>
+              <li><a href="account.html">Account Settings</a></li>
+            
+                
+
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a id="navbarUsername" href="loginAndRegister.html">Not Logged in</a></li>
@@ -75,10 +73,24 @@
         
     <!--Initial data when landing on page-->
       <div class="scrumFormat">
-        <h1>Scrum Account Settings Page</h1>
-        <p class="lead">Todo:<br>- Account settings such as delete account, modify account details, etc.</p>
+        <h1>Scrum Home Page</h1>
+        <p class="lead">Place holder text, insert welcome message here.<br>Place holder text, insert scrum description here.<br></p>
+
+
+
+        <form action="/postfood.html">
+          <button class="btn btn-primary" type="submit" id="createPostButton">Create Post</button>
+        </form>
+
+        <br>
+        <p>Todo:
+          <br>- Post management shiz</p>
           
-          <!-- Account settings such as Delete account, Modify account details, etc. -->
+        <!-- A large picture -->
+        <!-- Link to download from app store? -->
+        <!-- About us small details -->
+        <!-- Log in and Register system (Potentially in it's own page?) -->
+        <!-- Notifications/Recomendations -->
                 
       </div>
 

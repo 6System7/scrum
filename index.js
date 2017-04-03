@@ -195,6 +195,10 @@ app.get("/findfood.html", function(req, res) {
     res.sendFile(path + "findfood.html");
 });
 
+app.get("/postManagement.html", function(req, res) {
+    res.sendFile(path + "postManagement.html");
+});
+
 app.get("/postfood.html", function(req, res) {
     res.sendFile(path + "postfood.html");
 });
