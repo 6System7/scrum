@@ -64,6 +64,17 @@ function sendPostData() {
             indexedArray.longitude = marker.getPosition().lng();
         }
 
+        if (localStorage.username) {
+            indexedArray.username = localStorage.username;
+        } else {
+            alert("SUBMITTING WHILE NOT LOGGED IN");
+        }
+
+        // TODO copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
+        // Remove any post from localStorage to exit edit mode having submitted the edited post
+        localStorage.removeItem("postToEdit");
+
+        console.log("Submitting post as follows", indexedArray)
         $.ajax({
             type: "POST",
             url: "/addPost",
@@ -198,6 +209,10 @@ $(document).ready(function() {
         previewFile();
     });
     getNotifications();
+
+    if (localStorage.postToEdit) {
+        // TODO load post data into form
+    }
 });
 
 function getNotifications() {
