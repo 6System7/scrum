@@ -1,9 +1,11 @@
-$(getUsername());
+window.onload = getUsername;
 
 function getUsername(){
     var username = localStorage.username;
     if(username !== "" || undefined){
         $("#navbarUsername").text(username);
+    } else {
+        $("#navbarUsername").text("Not Logged In");
     }
 }
 

@@ -259,6 +259,56 @@ function sendEmailConfirmation(username, password, emailAddress, realname){
 
 }
 
+/* Recover Username **/
+$(document).on("click", "#recoverUsernameButton", function() {
+
+    $("#recoverUsernameFeedback").html("");
+    var email = $("#recoverUsernameInput").val();
+
+    $.getJSON("/getUsers", function(jsonData){
+
+        var emailValid = false;
+        var username = "";
+        for(var i = 0; i < jsonData.length; i++){
+            var userData = jsonData[i];
+            if(userData.email === email){
+                emailValid = true;
+                username = userData.username;
+                break;
+            }
+        }
+
+        if(emailValid){
+            sendRecoverUsernameEmail(email, username);
+            $("#recoverUsernameFeedback").append("<p class='text-success'>Email sent with Username to given address (assuming address is valid)</p>");
+        } else {
+            $("#recoverUsernameFeedback").append("<p class='text-danger'>Email address is not registered!</p>");
+        }
+
+    });
+
+});
+
+function sendRecoverUsernameEmail(emailAddress, username){
+
+    var subject = "Scrum App - Username Recovery";
+    var message = "As requested here is the username you registered with: " + '\n \n' +
+        "Username: " + username + '\n' +
+        '\n' +
+        "If you didn't request this email then just ignore it" + '\n'+
+        "Best wishes," + '\n' +
+        "Scrum Bot";
+
+    $.ajax({
+        type: "POST",
+        url: "/sendEmail",
+        data: {toAddress: emailAddress, subject: subject, message: message}
+    });
+
+    console.log("Username Recovery Email Sent");
+
+}
+
 /* Enter key submission **/
 $(document).ready(function() {
     $(window).keydown(function(event){
@@ -269,6 +319,12 @@ $(document).ready(function() {
             }
             if(document.activeElement.parentElement.parentElement.id === "registerPanel"){
                 document.getElementById("registerButton").click();
+            }
+            if(document.activeElement.parentElement.parentElement.id === "recoverUsernamePanel"){
+                document.getElementById("recoverUsernameButton").click();
+            }
+            if(document.activeElement.parentElement.parentElement.id === "resetPasswordPanel"){
+                document.getElementById("resetPasswordButton").click();
             }
         }
     });
