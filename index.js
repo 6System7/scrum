@@ -33,6 +33,7 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
+app.use(express.static('brand-images'));
 
 //Set up email system
 var transporter = nodemailer.createTransport({
