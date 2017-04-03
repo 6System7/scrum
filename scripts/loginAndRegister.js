@@ -309,6 +309,92 @@ function sendRecoverUsernameEmail(emailAddress, username){
 
 }
 
+/* Reset Password **/
+$(document).on("click", "#resetPasswordButton", function() {
+
+    $("#resetPasswordFeedback").html("");
+    var username = $("#resetPasswordInput").val();
+
+    $.getJSON("/getUsers", function(jsonData){
+
+        var usernameValid = false;
+        var email = "";
+        for(var i = 0; i < jsonData.length; i++){
+            var userData = jsonData[i];
+            if(userData.username === username){
+                usernameValid = true;
+                email = userData.email;
+                break;
+            }
+        }
+
+        if(usernameValid){
+            var resetToken = genResetPasswordLink(username);
+            var resetLink = "scrumfun.herokuapp.com/resetPassword.html?token=" + resetToken;
+            sendResetPasswordEmail(email, username, resetLink);
+            $("#resetPasswordFeedback").append("<p class='text-success'>Email sent with Reset Link to address registered with given username (assuming address is valid)</p>");
+        } else {
+            $("#resetPasswordFeedback").append("<p class='text-danger'>Username is not registered!</p>");
+        }
+
+    });
+
+});
+
+function genResetPasswordLink(username){
+
+    var currentDate = new Date(Date.now());
+    const HOUR_MULTIPLIER = 60*60*1000;
+    var expirationDate = currentDate.getTime() + (24*HOUR_MULTIPLIER);
+
+    var uuid = $.ajax({
+        url: "/getUUID",
+        async: false
+    }).responseText;
+
+    var resetToken = $.ajax({
+        url: "/sha1",
+        data: {string: uuid + " scrum " + expirationDate},
+        async: false
+    }).responseText;
+
+    var resetData = {resetToken: resetToken, username: username, expirationDate: expirationDate};
+
+    console.log("adding reset token...");
+    $.ajax({
+        type: "POST",
+        url: "/addResetToken",
+        data: resetData,
+        dataType: "json"
+    });
+
+    return resetToken;
+
+}
+
+function sendResetPasswordEmail(emailAddress, username, resetLink){
+
+    var subject = "Scrum App - Username Recovery";
+    var message = "Dear " + username + '\n' +
+        "As requested here is a link to reset your password: " + '\n \n' +
+        "Link: " + resetLink + '\n' +
+        '\n' +
+        "This link will expire in 24 hours" + '\n'+
+        "If you didn't request this email then just ignore it" + '\n'+
+        "Best wishes," + '\n' +
+        "Scrum Bot";
+
+    console.log("ajax call to send email...");
+    $.ajax({
+        type: "POST",
+        url: "/sendEmail",
+        data: {toAddress: emailAddress, subject: subject, message: message}
+    });
+
+    console.log("Username Recovery Email Sent");
+
+}
+
 /* Enter key submission **/
 $(document).ready(function() {
     $(window).keydown(function(event){
