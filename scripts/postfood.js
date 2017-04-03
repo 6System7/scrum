@@ -94,9 +94,9 @@ function previewFile() {
     reader.onloadend = function() {
         var image = new Image();
         image.onload = function() {
-            // Resize image down to 200x200 maximum
+            // Resize image down
             var canvas = document.createElement('canvas'),
-                max_size = 200,
+                max_size = 380,
                 width = image.width,
                 height = image.height;
             if (width > height) {
@@ -128,7 +128,6 @@ function previewFile() {
 }
 
 function initMap(lat, lng) {
-
     //The center location of our map. DURHAM IS 54.775250, -1.584852
     var centerOfMap = new google.maps.LatLng(lat, lng);
 
@@ -175,8 +174,8 @@ function markerLocation() {
     //Get location.
     var currentLocation = marker.getPosition();
     //Add lat and lng values to a field that we can save.
-    document.getElementById('lat').value = currentLocation.lat(); //latitude
-    document.getElementById('lng').value = currentLocation.lng(); //longitude
+    $("#lat").val(currentLocation.lat()); //latitude
+    $("#lng").val(currentLocation.lng()); //longitude
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
@@ -201,9 +200,6 @@ $(document).ready(function() {
     getNotifications();
 });
 
-// TODO Mike - quagga.js for barcode
-
-
 function getNotifications() {
     userID = "Bob Smith";
     typeOfMessage = " has sent you a <strong> message </strong>" //TODO will contain link to message
@@ -211,3 +207,5 @@ function getNotifications() {
     newNotif = "<li class='notification'><span class='glyphicon glyphicon-envelope' align = 'inline'> </span>" + userID + typeOfMessage + "</li>";
     document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', newNotif);
 }
+
+// TODO Mike - quagga.js for barcode
