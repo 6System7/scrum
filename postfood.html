@@ -42,8 +42,6 @@
 </head>
 
 <body>
-
-
     <!--Bootstrap Navigation Bar-->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
         <div class="container">
@@ -81,7 +79,7 @@
                     <li><a href="home.html">Home</a></li>
                     <li><a href="postManagement.html">Manage Posts</a></li>
                     <li><a href="findfood.html">Find Food</a></li>
-                    <li><a href="loginAndRegister.html">Login & Register</a></li>
+                    <li><a href="loginAndRegister.html">Login &amp; Register</a></li>
                     <li><a href="account.html">Account Settings</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -93,14 +91,13 @@
     </nav>
 
     <div class="container">
-
         <!--Initial data when landing on page-->
         <div class="scrumFormat">
-            <h1>Post a food item</h1>
+            <h1 id="pageTitleH1">Post a food item</h1>
         </div>
-        <div class="row">
-            <!-- Create/Edit posts -->
-            <form id="frmPost" action="#">
+        <form id="frmPost" action="#">
+            <div class="row">
+                <!-- Create/Edit posts -->
                 <div class="col-md-8">
                     <div class="form-group">
                         <label for="txtTitle">Post Title</label>
@@ -113,7 +110,6 @@
                     <div class="form-group">
                         <label for="txtLocation">Pick-up location</label>
                         <p>Click a new location, or drag the marker to change location.</p>
-
                         <div id="map"></div>
                         <form method="post" action="#">
                             Latitude: <input type="text" id="lat" readonly="yes"> Longitude: <input type="text" id="lng" readonly="yes">
@@ -124,37 +120,72 @@
                         <input type="file" name="img" class="form-control" accept="image/jpg, image/jpeg, image/png" id="txtImg">
                         <img id="imgPreview" src="" alt="">
                     </div>
+                    <input type="checkbox" name="collection" id="chkCollectionOnly">Collection only</input>
+                    <br/>
+                    <input type="checkbox" name="business" id="chkBusiness">Business</input>
+                    <br/>
                 </div>
                 <div class="col-md-4">
-                    <!-- TODO Make the above on the left side, the below on the right side, except for small screens (grid layout hype) -->
                     <div class="panel panel-default">
                         <div class="panel-heading">Meal Type</div>
-                        <div class="panel-body">Breakfast/Lunch/Dinner (will be check/radio boxes)</div>
+                        <div class="panel-body">
+                            <select name="mealtype">
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">Type By Country</div>
-                        <div class="panel-body">Italian/Chinese/Thai/French/Spanish/British (other?) (will be check/radio boxes)</div>
+                        <div class="panel-body">
+                            <select name="mealtypecountry">
+                                <option value="british">British</option>
+                                <option value="chinese">Chinese</option>
+                                <option value="french">French</option>
+                                <option value="italian">Italian</option>
+                                <option value="spanish">Spanish</option>
+                                <option value="thai">Thai</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">Type Of Food</div>
-                        <div class="panel-body">Dairy/Meat/Veg/Fruit/Sweets/Snacks (other?) (will be check/radio boxes)</div>
+                        <div class="panel-body">
+                            <select name="mealtypefood">
+                                <option value="dairy">Dairy</option>
+                                <option value="meat">Meat</option>
+                                <option value="fruit">Fruit</option>
+                                <option value="vegetables">Vegetables</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="sweets">Sweets</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">Size/Weight</div>
-                        <div class="panel-body">Small/Light // Medium // Large/Heavy (other?) (will be check/radio boxes)</div>
+                        <div class="panel-body">
+                            <select name="mealweight">
+                                <option value="small">Small/Light</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large/Heavy</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">Expiration Date</div>
-                        <div class="panel-body">Soon(&lt;1 week)/Medium/Long(&gt;1 month) (will be check/radio boxes)</div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">Other</div>
-                        <div class="panel-body">Collection only // Business (will be check/radio boxes)</div>
+                        <div class="panel-body">
+                            <select name="mealexpires">
+                                <option value="close">Imminent (&lt;1 week)</option>
+                                <option value="medium">Soon (1 week to 1 month)</option>
+                                <option value="far">Distant (&gt;1 month)</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-default" onclick="sendPostData()">Submit</button>
-            </form>
-        </div>
+            </div>
+            <button type="button" class="btn btn-default" onclick="sendPostData()">Submit</button>
+        </form>
     </div>
     <!-- /.container -->
 </body>

@@ -64,6 +64,13 @@ function sendPostData() {
             indexedArray.longitude = marker.getPosition().lng();
         }
 
+        if (localStorage.username) {
+            indexedArray.username = localStorage.username;
+        } else {
+            alert("SUBMITTING WHILE NOT LOGGED IN");
+        }
+
+        console.log("Submitting post as follows", indexedArray)
         $.ajax({
             type: "POST",
             url: "/addPost",
