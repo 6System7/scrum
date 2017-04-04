@@ -140,6 +140,7 @@ $(document).on("click", "#changePasswordButton", function() {
         if(updateSuccess) {
             changePasswordFeedbackSelector.append("<p class='text-success'>Password changed successfully, redirecting to login page...</p>");
             window.setTimeout(function() {
+                localStorage.removeItem("resetToken");
                 window.open("/loginAndRegister.html","_self")
             }, 3000);
         } else {

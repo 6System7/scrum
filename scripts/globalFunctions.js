@@ -1,5 +1,12 @@
 window.onload = getUsername;
 
+function redirectCheck(){
+    if(!authKeyCheck(localStorage.username)){
+        //alert("You need to be logged in to access this page!");
+        window.open("/loginAndRegister.html","_self");
+    }
+}
+
 function getUsername(){
     var username = localStorage.username;
     if(username !== "" || undefined){
@@ -29,7 +36,13 @@ function genAuthKey(username){
 }
 
 function authKeyCheck(username){
-    return username === genAuthKey(username);
+    if(localStorage.authkey === genAuthKey(username)){
+        return true;
+    } else {
+        localStorage.username = "";
+        localStorage.authkey = "";
+        return false;
+    }
 }
 
 
