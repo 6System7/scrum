@@ -1,7 +1,7 @@
 window.onload = getUsername;
 
 function redirectCheck(){
-    if(!authKeyCheck(localStorage.username)){
+    if(!authKeyCheck()){
         //alert("You need to be logged in to access this page!");
         window.open("/loginAndRegister.html","_self");
     }
@@ -35,10 +35,11 @@ function genAuthKey(username){
 
 }
 
-function authKeyCheck(username){
-    if(localStorage.authkey === genAuthKey(username)){
+function authKeyCheck(){
+    if(localStorage.authkey === genAuthKey(localStorage.username)){
         return true;
     } else {
+        alert("authkey expired");
         localStorage.username = "";
         localStorage.authkey = "";
         return false;
