@@ -110,9 +110,9 @@ app.post("/addUser", function(req, res) {
     var user = {};
     user.username = req.body.username;
     user.passwordsha1 = sha1(req.body.password);
-    user.authkey = req.body.authkey;
+    user.authkey = req.body.authKey;
     user.rating = Number(req.body.rating);
-    user.realname = req.body.realname;
+    user.realname = req.body.realName;
     user.email = req.body.email;
 
     db.collection("users").save(user, function(err, results) {

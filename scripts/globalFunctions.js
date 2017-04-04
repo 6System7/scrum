@@ -3,9 +3,9 @@ window.onload = getUsername;
 function getUsername(){
     var username = localStorage.username;
     if(username !== "" || undefined){
-        $("#navbarUsername").text(username);
+        $("#navBarUsername").text(username);
     } else {
-        $("#navbarUsername").text("Not Logged In");
+        $("#navBarUsername").text("Not Logged In");
     }
 }
 
@@ -19,17 +19,16 @@ function genAuthKey(username){
         async: false
     }).responseText;
 
-    var authkey = $.ajax({
+    // return authKey
+    return $.ajax({
         url: "/sha1",
         data: {string: ("scrum " + username + " " + formattedDate + " " + userIP)},
         async: false
     }).responseText;
 
-    return authkey;
-
 }
 
-function authkeyCheck(username){
+function authKeyCheck(username){
     return username === genAuthKey(username);
 }
 
@@ -40,13 +39,14 @@ function getNotifications() {
     checkNearbyFoods()
 }
 
+// <#JC> Does this need to be in GlobalFunctions? <#JC>
 // eventually pass in distance as parameter?
 function checkNearbyFoods(){
     memberLang = 0;
     memberLong = 0;
     if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(pos) {
-                memberLang = pos.coords.latitue;
+                memberLang = pos.coords.latitude;
                 memberLong = pos.coords.longitude;
             });
         } else {

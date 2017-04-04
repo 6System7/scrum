@@ -3,8 +3,7 @@ $(checkToken(getTokenFromURL()));
 function getTokenFromURL(){
     console.log("Getting token from url...");
     var query = window.location.search;
-    var token = query.split("=")[1];
-    return token;
+    return query.split("=")[1];
 }
 
 function checkToken(token){
@@ -47,7 +46,8 @@ function checkToken(token){
 
 function loadResetForm(){
 
-    $("#pageContent").html("");
+    var pageContentSelector = $("#pageContent");
+    pageContentSelector.html("");
     $(
         "<div class='panel panel-default'>" +
         "<div class='panel-heading'>Change Password</div>" +
@@ -67,35 +67,43 @@ function loadResetForm(){
         "<div id='changePasswordFeedback'></div>" +
         "</div>" +
         "</div>"
-    ).appendTo($("#pageContent"));
+    ).appendTo(pageContentSelector);
 }
 
 $(document).on("click", "#changePasswordButton", function() {
 
     var invalidField = false;
-    $("#newPasswordFeedback").html("");
-    $("#confirmNewPasswordFeedback").html("");
+    var newPasswordFeedbackSelector = $("#newPasswordFeedback");
+    var confirmPasswordFeedbackSelector = $("#confirmNewPasswordFeedback");
+    var newPasswordGroupSelector = $("#newPasswordGroup");
+    var confirmPasswordGroupSelector = $("#confirmNewPasswordGroup");
+    newPasswordFeedbackSelector.html("");
+    confirmPasswordFeedbackSelector.html("");
     var password = $("#newPasswordInput").val();
     var confirmPassword = $("#confirmNewPasswordInput").val();
 
     //PASSWORD CHECKS
     if(password === ""){
         console.log("Password is Blank");
-        $("#newPasswordGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#newPasswordFeedback").append("<p class='text-danger'>Password can't be blank</p>");
+        newPasswordGroupSelector.removeClass("form-group has-success").addClass("form-group has-error");
+        newPasswordFeedbackSelector.append("<p class='text-danger'>Password can't be blank</p>");
         invalidField = true;
     } else {
-        $("#newPasswordGroup").removeClass("form-group has-error").addClass("form-group has-success");
+        newPasswordGroupSelector.removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     if(password.length < 8 ){
         console.log("Password needs to be 8 characters or longer");
-        $("#newPasswordGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#newPasswordFeedback").append("<p class='text-danger'>Password has to be 8+ characters</p>");
+        newPasswordGroupSelector.removeClass("form-group has-success").addClass("form-group has-error");
+        newPasswordFeedbackSelector.append("<p class='text-danger'>Password has to be 8+ characters</p>");
         invalidField = true;
     } else {
-        $("#newPasswordGroup").removeClass("form-group has-error").addClass("form-group has-success");
+        newPasswordGroupSelector.removeClass("form-group has-error").addClass("form-group has-success");
     }
+
+    /**
+     * @param password.includes          Whether password contains the digit or not
+     */
 
     var passwordContainsNumbers = false;
     for(var digit = 0; digit < 10; digit++) {
@@ -106,35 +114,36 @@ $(document).on("click", "#changePasswordButton", function() {
     }
     if(!passwordContainsNumbers){
         console.log("Password must contain numbers");
-        $("#newPasswordGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#newPasswordFeedback").append("<p class='text-danger'>Password must contain at least 1 number</p>");
+        newPasswordGroupSelector.removeClass("form-group has-success").addClass("form-group has-error");
+        newPasswordFeedbackSelector.append("<p class='text-danger'>Password must contain at least 1 number</p>");
         invalidField = true;
     } else {
-        $("#newPasswordGroup").removeClass("form-group has-error").addClass("form-group has-success");
+        newPasswordGroupSelector.removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     //CONFIRM PASSWORD CHECKS
     if(confirmPassword !== password){
         console.log("Confirm Password must match Password");
-        $("#confirmNewPasswordGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#confirmNewPasswordFeedback").append("<p class='text-danger'>Confirm Password must match Password</p>");
+        confirmPasswordGroupSelector.removeClass("form-group has-success").addClass("form-group has-error");
+        confirmPasswordFeedbackSelector.append("<p class='text-danger'>Confirm Password must match Password</p>");
         invalidField = true;
     } else {
-        $("#confirmNewPasswordGroup").removeClass("form-group has-error").addClass("form-group has-success");
+        confirmPasswordGroupSelector.removeClass("form-group has-error").addClass("form-group has-success");
     }
 
+    var changePasswordFeedbackSelector = $("#changePasswordFeedback");
     if(invalidField){
-        $("#changePasswordFeedback").append("<p class='text-danger'>Error in inputs, please review and try again!</p>");
+        changePasswordFeedbackSelector.append("<p class='text-danger'>Error in inputs, please review and try again!</p>");
     } else {
-        $("#changePasswordFeedback").append("<p class='text-success'>All fields valid, updating password...</p>");
+        changePasswordFeedbackSelector.append("<p class='text-success'>All fields valid, updating password...</p>");
         var updateSuccess = updatePassword(password);
         if(updateSuccess) {
-            $("#changePasswordFeedback").append("<p class='text-success'>Password changed successfully, redirecting to login page...</p>");
+            changePasswordFeedbackSelector.append("<p class='text-success'>Password changed successfully, redirecting to login page...</p>");
             window.setTimeout(function() {
                 window.open("/loginAndRegister.html","_self")
             }, 3000);
         } else {
-            $("#changePasswordFeedback").append("<p class='text-danger'>Error changing password due to token authentication, please refresh and try again</p>");
+            changePasswordFeedbackSelector.append("<p class='text-danger'>Error changing password due to token authentication, please refresh and try again</p>");
         }
     }
 

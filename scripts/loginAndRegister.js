@@ -41,7 +41,7 @@ $(document).on("click", "#loginButton", function() {
 
 });
 
-function processLogin(username, password){
+function processLogin(username){
     console.log("Logged in successfully");
     localStorage.username = username;
     saveAuthKey(username);
@@ -51,8 +51,8 @@ function processLogin(username, password){
 
 function saveAuthKey(username){
 
-    var authkey = genAuthKey(username);
-    var updateData = {username: username, field: "authkey", newValue: authkey};
+    var authKey = genAuthKey(username);
+    var updateData = {username: username, field: "authkey", newValue: authKey};
 
     $.ajax({
         type: "POST",
@@ -61,7 +61,7 @@ function saveAuthKey(username){
         dataType: "json"
     });
 
-    localStorage.authkey = authkey;
+    localStorage.authkey = authKey;
 
 }
 
@@ -88,18 +88,25 @@ $(document).on("click", "#registerButton", function() {
 function registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email){
     
     var invalidField = false;
-    $("#usernameRegisterFeedback").html("");
-    $("#passwordRegisterFeedback").html("");
-    $("#confirmPasswordRegisterFeedback").html("");
-    $("#firstNameRegisterFeedback").html("");
-    $("#lastNameRegisterFeedback").html("");
-    $("#emailRegisterFeedback").html("");
-    $("#registerFeedback").html("");
+    var usernameRegisterFeedbackSelector = $("#usernameRegisterFeedback");
+    var passwordRegisterFeedbackSelector = $("#passwordRegisterFeedback");
+    var confirmPasswordRegisterFeedbackSelector = $("#confirmPasswordRegisterFeedback");
+    var firstNameRegisterFeedbackSelector = $("#firstNameRegisterFeedback");
+    var lastNameRegisterFeedbackSelector = $("#lastNameRegisterFeedback");
+    var emailRegisterFeedbackSelector = $("#emailRegisterFeedback");
+    var registerFeedbackSelector = $("#registerFeedback");
+    usernameRegisterFeedbackSelector.html("");
+    passwordRegisterFeedbackSelector.html("");
+    confirmPasswordRegisterFeedbackSelector.html("");
+    firstNameRegisterFeedbackSelector.html("");
+    lastNameRegisterFeedbackSelector.html("");
+    emailRegisterFeedbackSelector.html("");
+    registerFeedbackSelector.html("");
 
     // USERNAME CHECKS
     if(username === ""){
         $("#usernameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#usernameRegisterFeedback").append("<p class='text-danger'>Username can't be blank</p>");
+        usernameRegisterFeedbackSelector.append("<p class='text-danger'>Username can't be blank</p>");
         invalidField = true;
     } else {
         $("#usernameRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
@@ -113,7 +120,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
             console.log("Username taken");
             usernameAvailable = false;
             $("#usernameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-            $("#usernameRegisterFeedback").append("<p class='text-danger'>Username taken</p>");
+            usernameRegisterFeedbackSelector.append("<p class='text-danger'>Username taken</p>");
             invalidField = true;
             break;
         }
@@ -126,7 +133,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     if(password === ""){
         console.log("Password is Blank");
         $("#passwordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#passwordRegisterFeedback").append("<p class='text-danger'>Password can't be blank</p>");
+        passwordRegisterFeedbackSelector.append("<p class='text-danger'>Password can't be blank</p>");
         invalidField = true;
     } else {
         $("#passwordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
@@ -135,7 +142,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     if(password.length < 8 ){
         console.log("Password needs to be 8 characters or longer");
         $("#passwordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#passwordRegisterFeedback").append("<p class='text-danger'>Password has to be 8+ characters</p>");
+        passwordRegisterFeedbackSelector.append("<p class='text-danger'>Password has to be 8+ characters</p>");
         invalidField = true;
     } else {
         $("#passwordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
@@ -151,7 +158,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     if(!passwordContainsNumbers){
         console.log("Password must contain numbers");
         $("#passwordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#passwordRegisterFeedback").append("<p class='text-danger'>Password must contain at least 1 number</p>");
+        passwordRegisterFeedbackSelector.append("<p class='text-danger'>Password must contain at least 1 number</p>");
         invalidField = true;
     } else {
         $("#passwordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
@@ -161,7 +168,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     if(confirmPassword !== password){
         console.log("Confirm Password must match Password");
         $("#confirmPasswordRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#confirmPasswordRegisterFeedback").append("<p class='text-danger'>Confirm Password must match Password</p>");
+        confirmPasswordRegisterFeedbackSelector.append("<p class='text-danger'>Confirm Password must match Password</p>");
         invalidField = true;
     } else {
         $("#confirmPasswordRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
@@ -170,7 +177,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     // FIRST AND LAST NAME CHECKS
     if(firstName === ""){
         $("#firstNameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#firstNameRegisterFeedback").append("<p class='text-danger'>First Name can't be blank</p>");
+        firstNameRegisterFeedbackSelector.append("<p class='text-danger'>First Name can't be blank</p>");
         console.log("First Name is Blank");
         invalidField = true;
     } else {
@@ -179,7 +186,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
 
     if(lastName === ""){
         $("#lastNameRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#lastNameRegisterFeedback").append("<p class='text-danger'>Last Name can't be blank</p>");
+        lastNameRegisterFeedbackSelector.append("<p class='text-danger'>Last Name can't be blank</p>");
         console.log("Last Name is Blank");
         invalidField = true;
     } else {
@@ -190,21 +197,21 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     if(email === ""){
         console.log("Email is Blank");
         $("#emailRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-        $("#emailRegisterFeedback").append("<p class='text-danger'>Email can't be blank</p>");
+        emailRegisterFeedbackSelector.append("<p class='text-danger'>Email can't be blank</p>");
         invalidField = true;
     } else {
         $("#emailRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
     var emailAvailable = true;
-    for(var i = 0; i < jsonData.length; i++) {
-        var userData = jsonData[i];
+    for(i = 0; i < jsonData.length; i++) {
+        userData = jsonData[i];
         var emailDB = userData.email;
         if(email === emailDB){
             console.log("Email already used");
             emailAvailable = false;
             $("#emailRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
-            $("#usernameRegisterFeedback").append("<p class='text-danger'>Email given has already been used</p>");
+            emailRegisterFeedbackSelector.append("<p class='text-danger'>Email given has already been used</p>");
             invalidField = true;
             break;
         }
@@ -214,19 +221,19 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     }
 
     if(invalidField){
-        $("#registerFeedback").append("<p class='text-danger'>Error in registration, please review and try again!</p>");
+        registerFeedbackSelector.append("<p class='text-danger'>Error in registration, please review and try again!</p>");
         return false;
     } else {
-        $("#registerFeedback").append("<p class='text-success'>Registered Successfully! You have been sent a confirmation email.</p>");
+        registerFeedbackSelector.append("<p class='text-success'>Registered Successfully! You have been sent a confirmation email.</p>");
         return true;
     }
 }
 
-function registerUser(username, password, authkey, rating, realname, email){
+function registerUser(username, password, authKey, rating, realName, email){
 
     console.log("Sending user registration request...");
 
-    var userData = {username: username, password: password, authkey: authkey, rating: rating, realname: realname, email: email};
+    var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email};
 
     $.ajax({
         type: "POST",
@@ -235,13 +242,13 @@ function registerUser(username, password, authkey, rating, realname, email){
         dataType: "json"
     });
 
-    sendEmailConfirmation(username, password, email, realname);
+    sendEmailConfirmation(username, password, email, realName);
 }
 
-function sendEmailConfirmation(username, password, emailAddress, realname){
+function sendEmailConfirmation(username, password, emailAddress, realName){
 
     var subject = "Scrum App - Email confirmation";
-    var message = "Dear " + realname + '\n' +
+    var message = "Dear " + realName + '\n' +
         "Welcome to to the Scrum App! Below are your account details: " + '\n \n' +
         "Username: " + username + '\n' +
         "Password: " + password + '\n' +
