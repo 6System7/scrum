@@ -11,14 +11,14 @@
 
     <title>SCRUM - Food sharing app</title>
 
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!-- jQuery -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <!-- Map for location selection -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCW6XlFsL0Ik5e5xDECavIvI24400NMx2g"></script>
     <!-- Bootstrap core JS -->
@@ -127,6 +127,16 @@
                 </div>
                 <div class="col-md-4">
                     <div class="panel panel-default">
+                        <div class="panel-heading">Dietary Requirements</div>
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="glutenfree" />Gluten-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegan"/>Vegan</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegetarian"/>Vegetarian</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="nutfree"/>Nut-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="fishfree"/>Fish-free</label>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
                         <div class="panel-heading">Meal Type</div>
                         <div class="panel-body">
                             <select name="mealtype">
@@ -135,8 +145,8 @@
                                 <option value="dinner">Dinner</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="panel panel-default">
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
                         <div class="panel-heading">Type By Country</div>
                         <div class="panel-body">
                             <select name="mealtypecountry">
@@ -148,8 +158,8 @@
                                 <option value="thai">Thai</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="panel panel-default">
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
                         <div class="panel-heading">Type Of Food</div>
                         <div class="panel-body">
                             <select name="mealtypefood">
@@ -161,8 +171,8 @@
                                 <option value="sweets">Sweets</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="panel panel-default">
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
                         <div class="panel-heading">Size/Weight</div>
                         <div class="panel-body">
                             <select name="mealweight">
@@ -171,8 +181,8 @@
                                 <option value="large">Large/Heavy</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="panel panel-default">
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
                         <div class="panel-heading">Expiration Date</div>
                         <div class="panel-body">
                             <select name="mealexpires">
