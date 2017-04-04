@@ -1,15 +1,26 @@
-window.onload = getUsername;
+window.onload = getUsername; redirectCheck();
 
 function redirectCheck(){
-    if(!authKeyCheck()){
-        //alert("You need to be logged in to access this page!");
-        window.open("/loginAndRegister.html","_self");
+    var lockedPages = ["account", "findfood", "postfood", "postManagement", "resetPassword"];
+    var keyValid = authKeyCheck();
+    var currentPage = window.location.pathname;
+    var onLockedPage = false;
+    for(var i = 0; i < lockedPages.length; i++){
+        if(currentPage === "/" + lockedPages[i] + ".html"){
+            onLockedPage = true;
+        }
+    }
+    if(onLockedPage) {
+        if (!keyValid) {
+            //alert("You need to be logged in to access this page!");
+            window.open("/loginAndRegister.html", "_self");
+        }
     }
 }
 
 function getUsername(){
     var username = localStorage.username;
-    if(username !== "" || undefined){
+    if(username !== undefined){
         $("#navBarUsername").text(username);
     } else {
         $("#navBarUsername").text("Not Logged In");
@@ -36,12 +47,16 @@ function genAuthKey(username){
 }
 
 function authKeyCheck(){
+    if((localStorage.authkey === undefined) || (localStorage.username === undefined)){
+        localStorage.removeItem("username");
+        localStorage.removeItem("authkey");
+        return false;
+    }
     if(localStorage.authkey === genAuthKey(localStorage.username)){
         return true;
     } else {
-        alert("authkey expired");
-        localStorage.username = "";
-        localStorage.authkey = "";
+        localStorage.removeItem("username");
+        localStorage.removeItem("authkey");
         return false;
     }
 }
