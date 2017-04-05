@@ -32,6 +32,7 @@ MongoClient.connect(db_URI, function(err, database_object) {
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
+app.use(express.static('pages'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
 app.use(express.static('brand-images'));
@@ -47,7 +48,7 @@ var transporter = nodemailer.createTransport({
 
 //Direct requests to various urls
 app.get("/", function(req, res) {
-    res.sendFile(path + "home.html");
+    res.sendFile(path + "pages/home.html");
 });
 
 // POSTS
@@ -298,41 +299,11 @@ app.post("/sendEmail", function(req, res) {
 
 });
 
-// WEB PAGES
-app.get("/home.html", function(req, res) {
-    res.sendFile(path + "home.html");
-});
-
-app.get("/findfood.html", function(req, res) {
-    res.sendFile(path + "findfood.html");
-});
-
-app.get("/postManagement.html", function(req, res) {
-    res.sendFile(path + "postManagement.html");
-});
-
-app.get("/postfood.html", function(req, res) {
-    res.sendFile(path + "postfood.html");
-});
-
-app.get("/loginAndRegister.html", function(req, res) {
-    res.sendFile(path + "loginAndRegister.html");
-});
-
-app.get("/resetPassword.html", function(req, res) {
-    res.sendFile(path + "resetPassword.html");
-});
-
-
-app.get("/account.html", function(req, res) {
-    res.sendFile(path + "account.html");
-});
-
 app.get("*", function(req, res) {
-    res.sendFile(path + "404.html");
+    res.sendFile(path + "/pages/404.html");
 });
 
 //Start server and listen on port 8080
 app.listen(process.env.PORT || 8080, function() {
-    console.log("Live at Port 8080");
+    console.log("Live at Port " + (process.env.PORT || "8080"));
 });
