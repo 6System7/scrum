@@ -106,6 +106,30 @@ app.get("/getPosts", function(req, res) {
     });
 });
 
+app.get("/removeUnusedImages", function(req, res) {
+    console.log("Removing any unsused images...");
+    var folder = "./post-images/";
+    fs.readdir(folder, function(err, files) {
+        files.forEach(function(file) {
+            if (file !== "NOIMAGE.png") {
+                db.collection("posts").findOne({image:file}, function(err, document) {
+                    if (!document && !err) {
+                        // IMAGE NOT REFERENCED BY ANY POST
+                        fs.unlink(folder + file, function(err) {
+                            if (err) {
+                                console.log("Could not delete " + file);
+                            } else {
+                                console.log("Deleted " + file);
+                            }
+                        })
+                    }
+                });
+            }
+        });
+    });
+    res.send("Deletion has begun.");
+});
+
 // USERS
 app.post("/addUser", function(req, res) {
     var user = {};
