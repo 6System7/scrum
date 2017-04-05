@@ -6,12 +6,12 @@ $(document).ready(function(){
         type: "GET",
         dataType: "json",
         success: function(data){
-        
+
             var dataReturned = JSON.parse(JSON.stringify(data));
             dataPass = dataReturned;
-          
+
             for(var property=0; property < dataReturned.length; property++) {
-                
+
                 var size = 0;
                 var x = dataReturned[property];
                 //var p1 = "<div class='w3-card-4'>"
@@ -27,18 +27,22 @@ $(document).ready(function(){
                     size++;
                     if(l == "title"){
                         title = x[l].toString();
-                    } 
+                    }
                     else if (l == "description"){
                         description = x[l].toString();
                        // var y = size.toString();
                        // var p2 = p2 + ("<td>" + x[l] + "</td>");
                     };
                     if (l == "image"){
-                        img = x[l].toString();
+                        if (!x[l]) {
+                            img = "NOIMAGE.png"
+                        } else {
+                            img = x[l].toString();
+                        }
                         img = '<img src="' + img + '">';
-                        
+
                         if (img == '<img src="">'){
-                   
+
                             img = '<div class = "text-center"><br><span class="glyphicon glyphicon-picture" >  </span></div>'
                         }
                     };
@@ -65,23 +69,23 @@ $(document).ready(function(){
                         alert("ERROR : Using default location");
                 }
                 dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
-                
-                p2 = '<div class="w3-card-4">' + img + '<div class="w3-container w3-center"><h4>' + title + '</h4><p>' + description + '<br><small class = "text-muted"><i>' + username + '</i></small></p></div></div><br>'; 
-            
+
+                p2 = '<div class="w3-card-4">' + img + '<div class="w3-container w3-center"><h4>' + title + '</h4><p>' + description + '<br><small class = "text-muted"><i>' + username + '</i></small></p></div></div><br>';
+
                 colNum = property;
                 colNum = colNum % 3;
                 var str = "column" + colNum.toString();
-              
-               document.getElementById(str).insertAdjacentHTML('beforeEnd', p2);   
-            }; 
+
+               document.getElementById(str).insertAdjacentHTML('beforeEnd', p2);
+            };
         }
     })
     $("#btnUpdate").click(function(){
         // TODO
         refreshTable(dataPass);
     })
- 
-    
+
+
 });
 
 function refreshTable(data){
@@ -99,21 +103,21 @@ function loadFilters(){
     filters.mealType = []
     $("#collapseMealType input:checked").each(function(){
         filters.mealType.push($(this).attr('name'));
-        
+
     })
     return filters;
-}   
+}
 
 function reloadTable(filters, data){
     $("#column0").html("");
      $("#column1").html("");
      $("#column2").html("");
 
-    
+
     var dataReturned = data;
     var numOfYes =-1;
     for(var property=0; property < dataReturned.length; property++) {
-                
+
                 var size = 0;
                 var x = dataReturned[property];
                 var title = "";
@@ -139,22 +143,26 @@ function reloadTable(filters, data){
                         if (show == 0){
                             totalShow  = false;;
                         }
-                        
+
                     }
                     if(l == "title"){
                         title = x[l].toString();
-                    } 
+                    }
                     else if (l == "description"){
                         description = x[l].toString();
                        // var y = size.toString();
                        // var p2 = p2 + ("<td>" + x[l] + "</td>");
                     };
                     if (l == "image"){
-                        img = x[l].toString();
+                        if (!x[l]) {
+                            img = "NOIMAGE.png"
+                        } else {
+                            img = x[l].toString();
+                        }
                         img = '<img src="' + img + '">';
-                        
+
                         if (img == '<img src="">'){
-                   
+
                             img = '<div class = "text-center"><br><span class="glyphicon glyphicon-picture" >  </span></div>'
                         }
                     };
@@ -182,9 +190,9 @@ function reloadTable(filters, data){
                 }
                 dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
                 if (totalShow == true){
-                   
+
                     numOfYes++;
-                    p2 = '<div class="w3-card-4">' + img + '<div class="w3-container w3-center"><h4>' + title + '</h4><p>' + description + '<br><small class = "text-muted"><i>' + username + '</i></small></p></div></div><br>'; 
+                    p2 = '<div class="w3-card-4">' + img + '<div class="w3-container w3-center"><h4>' + title + '</h4><p>' + description + '<br><small class = "text-muted"><i>' + username + '</i></small></p></div></div><br>';
 
                     colNum = numOfYes;
                     alert(colNum);
@@ -193,14 +201,14 @@ function reloadTable(filters, data){
 
                    document.getElementById(str).insertAdjacentHTML('beforeEnd', p2);
                 }
-            } 
-        
-     
+            }
+
+
 }
-    
 
 
-// TODO eventually move notifications into global functions? 
+
+// TODO eventually move notifications into global functions?
 // TODO has to loop every noe and then. Set timer??
 
 function updateSlider(slideValue){
@@ -209,8 +217,8 @@ function updateSlider(slideValue){
 
 function sortColumn(colToSortId){
     if (colToSortId == "colDistance"){
-        
-        
+
+
     }
 }
 
@@ -235,7 +243,7 @@ function sortColumn(colToSortId){
 
 
 */
-            
+
             /*-- WILL NEED BELOW LATER SO DON'T DELETE */
 // ITERATING THROUGH
           //  $.each(dataReturned[0],function(key,value){
@@ -249,5 +257,3 @@ function sortColumn(colToSortId){
             //});
         //};
      //end of function (data)
-              
-
