@@ -36,6 +36,7 @@ app.use(express.static('pages'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
 app.use(express.static('brand-images'));
+app.use(express.static('custom-css'));
 
 //Set up email system
 var transporter = nodemailer.createTransport({
