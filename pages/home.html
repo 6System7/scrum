@@ -17,7 +17,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
-    <script type="text/javascript" src="globalFunctions.js"></script>
      </head>
 
   <body>
@@ -79,6 +78,10 @@
 
         <p>Todo:<br>- A large picture<br>- Link to download from app store?<br>- About us (small print)<br>- Log in and register system (potentially in it's own page?)<br>- Notifications/Recomendations</p>
 
+        <button class="btn btn-primary" type="submit" id="loadStatsButton">Load Stats</button>
+        <br><br>
+        <ul id="statList"></ul>
+
         <!-- A large picture -->
         <!-- Link to download from app store? -->
         <!-- About us small details -->
@@ -91,7 +94,9 @@
 
     <script type="text/javascript">
 
-        //Add necessary code here.
+        $(document).on('click', '#loadStatsButton', function(){
+            getStatsByUser("JCJordan");
+        });
 
     </script>
 
@@ -101,5 +106,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="globalFunctions.js"></script>
+    <script type="text/javascript" src="dataAnalysis.js"></script>
   </body>
 </html>
