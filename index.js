@@ -32,6 +32,7 @@ MongoClient.connect(db_URI, function(err, database_object) {
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(express.static('pages'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
