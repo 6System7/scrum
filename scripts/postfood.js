@@ -202,13 +202,12 @@ function markerLocation() {
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            initMap(pos.coords.latitude, pos.coords.longitude);
-        });
-    } else {
-        initMap(54.775250, -1.584852);
-    }
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        initMap(pos.coords.latitude, pos.coords.longitude);
+    }, function(error) {
+        initMap(54.77525, -1.584852);
+        // alert("Could not get your location, defaulting to Durham");
+    });
 });
 
 var imageSelected = false;
