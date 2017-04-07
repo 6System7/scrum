@@ -15,13 +15,14 @@
     "express": "^4.14.0",
     "fs": "0.0.1-security",
     "ip": "^1.1.5",
-    "jQuery": "^1.7.4",
+    "jquery": "^3.2.1",
     "jsdom": "^9.9.1",
     "mongodb": "^2.2.24",
     "node-php": "0.0.1",
     "nodemailer": "^3.1.8",
     "quagga": "^0.11.6",
     "sha1": "^1.1.1",
-    "twitter": "^1.7.0"
+    "twitter": "^1.7.0",
+    "uuid": "^3.0.1"
   }
 }

@@ -1,119 +1,226 @@
 $(document).ready(function(){
+    var dataPass;
     getNotifications();
     $.ajax({
         url: "/getPosts",
         type: "GET",
         dataType: "json",
         success: function(data){
+
             var dataReturned = JSON.parse(JSON.stringify(data));
-            for(var property in dataReturned) {
+            dataPass = dataReturned;
+
+            for(var property=0; property < dataReturned.length; property++) {
+
                 var size = 0;
                 var x = dataReturned[property];
-                var p1 = "<tr>"
-                var p2 = p1;
+                //var p1 = "<div class='w3-card-4'>"
+                //var p2 = "";
+                var title = "";
+                var description = "";
+                var img = "";
+                var distance = "";
+                var lat = 0;
+                var long = 0;
+                var username = " ";
                 for (var l in x){
                     size++;
-                    if(size == 2 || size == 3){
-                        var y = size.toString();
-                        var p2 = p2 + ("<td>" + x[l] + "</td>");
+                    if(l == "title"){
+                        title = x[l].toString();
+                    }
+                    else if (l == "description"){
+                        description = x[l].toString();
+                       // var y = size.toString();
+                       // var p2 = p2 + ("<td>" + x[l] + "</td>");
                     };
-                    if (size == 4){
-                        var y = size.toString();
-                        var p2 = p2 + ("<td> <img src='" + x[l] + "' ></td>");
+                    if (l == "image"){
+                        if (!x[l]) {
+                            img = "NOIMAGE.png"
+                        } else {
+                            img = x[l].toString();
+                        }
+                        img = '<img src="' + img + '">';
+
+                        if (img == '<img src="">'){
+
+                            img = '<div class = "text-center"><br><span class="glyphicon glyphicon-picture" >  </span></div>'
+                        }
                     };
-                    
+                    if(l == "latitude"){
+                        lat = x[l];
+                    }
+                    if(l == "longitude"){
+                        long = x[l];
+                    }
+                    if (l == "username"){
+                        username = x[l];
+                    }
                 };
-                p2 = p2 + " </tr>";
-                document.getElementById("tBodyFood").insertAdjacentHTML('beforeEnd', p2);      
-            }; 
+                memberLang = 0;
+                memberLong = 0;
+                if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(pos) {
+                            memberLang = pos.coords.latitue;
+                            memberLong = pos.coords.longitude;
+                        });
+                    } else {
+                        memberLang = 54.775250;
+                        memberLong = -1.584852;
+                        alert("ERROR : Using default location");
+                }
+                dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
+
+                p2 = '<div class="w3-card-4">' + img + '<div class="w3-container w3-center"><h4>' + title + '</h4><p>' + description + '<br><small class = "text-muted"><i>' + username + '</i></small></p></div></div><br>';
+
+                colNum = property;
+                colNum = colNum % 3;
+                var str = "column" + colNum.toString();
+
+               document.getElementById(str).insertAdjacentHTML('beforeEnd', p2);
+            };
         }
     })
     $("#btnUpdate").click(function(){
         // TODO
+        refreshTable(dataPass);
     })
- 
-    
+
+
 });
 
-// TODO eventually move notifications into global functions? 
-// TODO has to loop every noe and then. Set timer??
-function getNotifications() {
-    userID = "Bob Smith";
-    typeOfMessage = " has sent you a <strong> message </strong>" //TODO will contain link to message
-    typeOfMessageImage = " glyphicon glyphicon-envelope"
-    newNotif = "<li class='notification'><div class='panel panel-default'> <div class = 'panel-body'><span class='glyphicon glyphicon-envelope' align = 'inline'> </span>" + userID + typeOfMessage + "</div></div></li>";
-    document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', newNotif);
-    checkNearbyFoods()
+function refreshTable(data){
+    var data = data;
+    filters = [];
+    filters = loadFilters();
+    reloadTable(filters, data);
 }
 
-// eventually pass in distance as parameter?
-function checkNearbyFoods(){
-    memberLang = 0;
-    memberLong = 0;
-    if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(pos) {
-                memberLang = pos.coords.latitue;
-                memberLong = pos.coords.longitude;
-            });
-        } else {
-            initMap(54.775250, -1.584852);
-        }
-        $.ajax({
-        url: "/getPosts",
-        type: "GET",
-        dataType: "json",
-        success: function(data){
-            var dataReturned = JSON.parse(JSON.stringify(data));
-            for(var property in dataReturned) {
+
+function loadFilters(){
+    var filters = new Object();
+    //var chkMealType = $("#collapseMealType")[0];
+   // alert(chkMealType.value.toString());
+    filters.mealType = []
+    $("#collapseMealType input:checked").each(function(){
+        filters.mealType.push($(this).attr('name'));
+
+    })
+    return filters;
+}
+
+function reloadTable(filters, data){
+    $("#column0").html("");
+     $("#column1").html("");
+     $("#column2").html("");
+
+
+    var dataReturned = data;
+    var numOfYes =-1;
+    for(var property=0; property < dataReturned.length; property++) {
+
                 var size = 0;
                 var x = dataReturned[property];
-                var p2 = "";
-                long = 0;
-                lat = 0;
+                var title = "";
+                var description = "";
+                var img = "";
+                var distance = "";
+                var lat = 0;
+                var long = 0;
+                var username = " ";
+                var totalShow = true;
                 for (var l in x){
                     size++;
-                    if (size == 2){
-                        p2 = x[l];
+                    if (!("mealtype" in x)){
+                        totalShow = false;
                     }
-                    if(size == 5){
+                    if (l == "mealtype"){
+                        var show = 0;
+                        for (var choice in filters.mealType){
+                            if (x[l] == filters.mealType[choice]){
+                                show++;
+                            }
+                        }
+                        if (show == 0){
+                            totalShow  = false;;
+                        }
+
+                    }
+                    if(l == "title"){
+                        title = x[l].toString();
+                    }
+                    else if (l == "description"){
+                        description = x[l].toString();
+                       // var y = size.toString();
+                       // var p2 = p2 + ("<td>" + x[l] + "</td>");
+                    };
+                    if (l == "image"){
+                        if (!x[l]) {
+                            img = "NOIMAGE.png"
+                        } else {
+                            img = x[l].toString();
+                        }
+                        img = '<img src="' + img + '">';
+
+                        if (img == '<img src="">'){
+
+                            img = '<div class = "text-center"><br><span class="glyphicon glyphicon-picture" >  </span></div>'
+                        }
+                    };
+                    if(l == "latitude"){
                         lat = x[l];
                     }
-                    if(size == 6){
+                    if(l == "longitude"){
                         long = x[l];
                     }
+                    if (l == "username"){
+                        username = x[l];
+                    }
                 };
+                memberLang = 0;
+                memberLong = 0;
+                if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(function(pos) {
+                            memberLang = pos.coords.latitue;
+                            memberLong = pos.coords.longitude;
+                        });
+                    } else {
+                        memberLang = 54.775250;
+                        memberLong = -1.584852;
+                        alert("ERROR : Using default location");
+                }
                 dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
-                if (dist < 6000){
-                     p2 = "<li class='notification'><div class='panel panel-default'><div class = 'panel-header'> New food post in your local area!'</div><div class = 'panel-body'>  p2 + ' is this far away : " + dist.toString() + "</div></div></li>";
-                    document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', p2 );                     
-                } 
-            }; 
-        }
-    })
+                if (totalShow == true){
+
+                    numOfYes++;
+                    p2 = '<div class="w3-card-4">' + img + '<div class="w3-container w3-center"><h4>' + title + '</h4><p>' + description + '<br><small class = "text-muted"><i>' + username + '</i></small></p></div></div><br>';
+
+                    colNum = numOfYes;
+                    alert(colNum);
+                    colNum = colNum % 3;
+                    var str = "column" + colNum.toString();
+
+                   document.getElementById(str).insertAdjacentHTML('beforeEnd', p2);
+                }
+            }
+
+
 }
 
-function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
-  var R = 6371; // Radius of the earth in km
-  var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  var d = R * c; // Distance in km
-  return d;
-}
 
-function deg2rad(deg) {
-  return deg * (Math.PI/180)
-}
+
+// TODO eventually move notifications into global functions?
+// TODO has to loop every noe and then. Set timer??
 
 function updateSlider(slideValue){
     document.getElementById("distLabel").innerHTML = "Search radius(km): " + slideValue;
 }
 
+function sortColumn(colToSortId){
+    if (colToSortId == "colDistance"){
+
+
+    }
+}
 
 /*
   <li class="notification">
@@ -136,7 +243,7 @@ function updateSlider(slideValue){
 
 
 */
-            
+
             /*-- WILL NEED BELOW LATER SO DON'T DELETE */
 // ITERATING THROUGH
           //  $.each(dataReturned[0],function(key,value){
@@ -150,4 +257,3 @@ function updateSlider(slideValue){
             //});
         //};
      //end of function (data)
-              

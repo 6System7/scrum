@@ -53,7 +53,19 @@ function sendPostData() {
 
         var indexedArray = {};
         $.map(formData, function(n, i) {
-            indexedArray[n['name']] = n['value'];
+            var key = n['name'];
+            if (key.endsWith("[]")) {
+                // Serialise dietary requirements as array correctly
+                key = key.substring(0, key.length - 2);
+                // If array exists, append, else create with one entry
+                if (indexedArray[key]) {
+                    indexedArray[key].push(n['value']);
+                } else {
+                    indexedArray[key] = [n['value']];
+                }
+            } else {
+                indexedArray[key] = n['value'];
+            }
         });
 
         indexedArray.image = $("#imgPreview").attr("src");
@@ -64,6 +76,17 @@ function sendPostData() {
             indexedArray.longitude = marker.getPosition().lng();
         }
 
+        if (localStorage.username) {
+            indexedArray.username = localStorage.username;
+        } else {
+            alert("SUBMITTING WHILE NOT LOGGED IN");
+        }
+
+        // TODO copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
+        // Remove any post from localStorage to exit edit mode having submitted the edited post
+        localStorage.removeItem("postToEdit");
+
+        console.log("Submitting post as follows", indexedArray)
         $.ajax({
             type: "POST",
             url: "/addPost",
@@ -81,7 +104,7 @@ function sendPostData() {
             }
         });
 
-        // THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT CLEARED
+        // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
         location.reload();
     }
 }
@@ -94,9 +117,9 @@ function previewFile() {
     reader.onloadend = function() {
         var image = new Image();
         image.onload = function() {
-            // Resize image down to 200x200 maximum
+            // Resize image down
             var canvas = document.createElement('canvas'),
-                max_size = 200,
+                max_size = 380,
                 width = image.width,
                 height = image.height;
             if (width > height) {
@@ -128,7 +151,6 @@ function previewFile() {
 }
 
 function initMap(lat, lng) {
-
     //The center location of our map. DURHAM IS 54.775250, -1.584852
     var centerOfMap = new google.maps.LatLng(lat, lng);
 
@@ -175,8 +197,8 @@ function markerLocation() {
     //Get location.
     var currentLocation = marker.getPosition();
     //Add lat and lng values to a field that we can save.
-    document.getElementById('lat').value = currentLocation.lat(); //latitude
-    document.getElementById('lng').value = currentLocation.lng(); //longitude
+    $("#lat").val(currentLocation.lat()); //latitude
+    $("#lng").val(currentLocation.lng()); //longitude
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
@@ -202,10 +224,11 @@ $(document).ready(function() {
         previewFile();
     });
     getNotifications();
+
+    if (localStorage.postToEdit) {
+        // TODO load post data into form
+    }
 });
-
-// TODO Mike - quagga.js for barcode
-
 
 function getNotifications() {
     userID = "Bob Smith";
@@ -214,3 +237,5 @@ function getNotifications() {
     newNotif = "<li class='notification'><span class='glyphicon glyphicon-envelope' align = 'inline'> </span>" + userID + typeOfMessage + "</li>";
     document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', newNotif);
 }
+
+// TODO Mike - quagga.js for barcode

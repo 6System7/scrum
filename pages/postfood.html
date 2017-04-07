@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="Group Project Assignment" content="">
+    <meta name="gttg22" content="">
+
+    <title>SCRUM - Food sharing app</title>
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="/jquery/jquery.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- Custom styles for this template -->
+    <link href="scrumFormat.css" rel="stylesheet">
+    <!-- Map for location selection -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCW6XlFsL0Ik5e5xDECavIvI24400NMx2g"></script>
+    <!-- Additional CSS -->
+    <style type="text/css">
+        #imgPreview {
+            margin: 5px;
+            /*float: right;*/
+            max-height: 200px;
+        }
+
+        #map {
+            width: 400px;
+            height: 250px;
+        }
+    </style>
+</head>
+<body>
+    <!--Bootstrap Navigation Bar-->
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                <a id="navbarheader" class="navbar-brand" href="">
+                    <img id="navbar-logo" src="possibleLogo.png">
+                </a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown dropdown-notifications">
+                        <!--Todo: want to make it pull left. -->
+                        <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton">
+                            <i data-count="2" class="glyphicon glyphicon-bell "></i>
+                        </a>
+                        <ul class="dropdown-menu" id="notificationsPanel">
+                            <div class="container" id="allNotifs">
+                                <h3>Notifications</h3>
+                                <div class="panel-group" id="groupNotifPanels">
+                                    <ul class="list-unstyled" id="notificationList">
+                                        <!-- where the notifications will be put -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <!--/.nav-collapse -->
+                        </ul>
+
+                    </li>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="postManagement.html">Manage Posts</a></li>
+                    <li><a href="findfood.html">Find Food</a></li>
+                    <li><a href="loginAndRegister.html">Login &amp; Register</a></li>
+                    <li><a href="account.html">Account Settings</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a id="navBarUsername" href="loginAndRegister.html"></a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container">
+        <!--Initial data when landing on page-->
+        <div class="scrumFormat">
+            <h1 id="pageTitleH1">Post a food item</h1>
+        </div>
+        <form id="frmPost" action="#">
+            <div class="row">
+                <!-- Create/Edit posts -->
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="txtTitle">Post Title</label>
+                        <input type="text" name="title" class="form-control" id="txtTitle" data-hr="Post Title">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtDescription">Description</label>
+                        <input type="text" name="description" class="form-control" id="txtDescription" data-hr="Post Description">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtLocation">Pick-up location</label>
+                        <p>Click a new location, or drag the marker to change location.</p>
+                        <!-- TODO if location not allowed, map doesn't appear - how handle this? -->
+                        <div id="map"></div>
+                        <form method="post" action="#">
+                            Latitude: <input type="text" id="lat" readonly="yes"> Longitude: <input type="text" id="lng" readonly="yes">
+                        </form>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtImg">Picture of item</label>
+                        <input type="file" name="img" class="form-control" accept="image/jpg, image/jpeg, image/png" id="txtImg">
+                        <img id="imgPreview" src="" alt="">
+                    </div>
+                    <input type="checkbox" name="collection" id="chkCollectionOnly">Collection only</input>
+                    <br/>
+                    <input type="checkbox" name="business" id="chkBusiness">Business</input>
+                    <br/>
+                </div>
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Dietary Requirements</div>
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="glutenfree" />Gluten-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegan"/>Vegan</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegetarian"/>Vegetarian</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="nutfree"/>Nut-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="fishfree"/>Fish-free</label>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Meal Type</div>
+                        <div class="panel-body">
+                            <select name="mealtype">
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                            </select>
+                        </div>
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
+                        <div class="panel-heading">Type By Country</div>
+                        <div class="panel-body">
+                            <select name="mealtypecountry">
+                                <option value="british">British</option>
+                                <option value="chinese">Chinese</option>
+                                <option value="french">French</option>
+                                <option value="italian">Italian</option>
+                                <option value="spanish">Spanish</option>
+                                <option value="thai">Thai</option>
+                            </select>
+                        </div>
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
+                        <div class="panel-heading">Type Of Food</div>
+                        <div class="panel-body">
+                            <select name="mealtypefood">
+                                <option value="dairy">Dairy</option>
+                                <option value="meat">Meat</option>
+                                <option value="fruit">Fruit</option>
+                                <option value="vegetables">Vegetables</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="sweets">Sweets</option>
+                            </select>
+                        </div>
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
+                        <div class="panel-heading">Size/Weight</div>
+                        <div class="panel-body">
+                            <select name="mealweight">
+                                <option value="small">Small/Light</option>
+                                <option value="medium">Medium</option>
+                                <option value="large">Large/Heavy</option>
+                            </select>
+                        </div>
+                    <!-- </div>
+                    <div class="panel panel-default"> -->
+                        <div class="panel-heading">Expiration Date</div>
+                        <div class="panel-body">
+                            <select name="mealexpires">
+                                <option value="close">Imminent (&lt;1 week)</option>
+                                <option value="medium">Soon (1 week to 1 month)</option>
+                                <option value="far">Distant (&gt;1 month)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-default" onclick="sendPostData()">Submit</button>
+        </form>
+    </div>
+    <!-- /.container -->
+    <!-- Bootstrap core JS -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Our own JS -->
+    <script type="text/javascript" src="postfood.js"></script>
+    <script type="text/javascript" src="globalFunctions.js"></script>
+</body>
+
+</html>

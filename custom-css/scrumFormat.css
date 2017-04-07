@@ -5,6 +5,9 @@ body {
 #navbar{
     background-color: #1C939B;
 }
+#navbarContent{
+    background-color: #1C939B;
+}
 
 #navbarheader {
     color: white;

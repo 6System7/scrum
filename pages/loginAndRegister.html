@@ -9,22 +9,21 @@
     <meta name="gttg22" content="">
 
     <title>SCRUM - Food sharing app</title>
-
+    <!-- jQuery -->
+    <script type="text/javascript" src="/jquery/jquery.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- Custom styles for this template -->
-    <link href="/css/scrumFormat.css" rel="stylesheet">
-
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="loginAndRegister.js"></script>
-    <script type="text/javascript" src="globalFunctions.js"></script>
+    <link href="scrumFormat.css" rel="stylesheet">
   </head>
 
   <body>
-      
+
     <!--Bootstrap Navigation Bar-->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -33,32 +32,54 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="">SCRUM</a>
+            <a id = "navbarheader" class="navbar-brand" href="">
+                <img id="navbar-logo" src = "possibleLogo.png">
+            </a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+              <li class="dropdown dropdown-notifications" >
+                <!--Todo: want to make it pull left. -->
+            <a href="#notifications-panel" class="dropdown-toggle" data-toggle = "dropdown" id = "notificationsButton">
+            <i data-count = "2" class="glyphicon glyphicon-bell"></i>
+              <!--<i data-count="2" class="glyphicon glyphicon-comment "></i>-->
+            </a>
+
+              <ul class = "dropdown-menu" id = "notificationsPanel">
+                <div class="container" id = "allNotifs">
+                  <h3>Notifications</h3>
+
+                    <div class="panel-group" id ="groupNotifPanels">
+                    <!-- where the notifications will be put -->
+                    <ul class = "list-unstyled" id = "notificationList">
+                    </ul>
+                    </div>
+                </div><!--/.nav-collapse -->
+                </ul>
             <li><a href="home.html">Home</a></li>
-            <li><a href="postfood.html">Post Food</a></li>
+            <li><a href="postManagement.html">Manage Posts</a></li>
             <li><a href="findfood.html">Find Food</a></li>
             <li class="active"><a href="loginAndRegister.html">Login & Register</a></li>
             <li><a href="account.html">Account Settings</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a id="navbarUsername" href="loginAndRegister.html">Not Logged In</a></li>
+            <li><a id="navBarUsername" href="loginAndRegister.html"></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
 
     <div class="container">
-        
+
     <!--Initial data when landing on page-->
       <div class="scrumFormat">
         <h1>Scrum Login & Register Page</h1>
       </div>
 
       <div class="scrumFormat">
-        <div class="col-xs-6">
+
+        <div id="leftColumn" class="col-xs-6">
+
           <div class="panel panel-default">
             <div class="panel-heading">Login</div>
             <div id="loginPanel"  class="panel-body">
@@ -77,8 +98,36 @@
               <div id="loginFeedback"></div>
             </div>
           </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">Recover Username</div>
+            <div id="recoverUsernamePanel"  class="panel-body">
+              <div class="form-group">
+                <label for="recoverUsernameInput">Enter Email Address:</label>
+                <input type="text" class="form-control" id="recoverUsernameInput">
+                <div id="recoverUsernameFeedback"></div>
+              </div>
+              <button class="btn btn-primary" type="submit" id="recoverUsernameButton">Recover</button>
+              <br>
+            </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">Reset Password</div>
+            <div id="resetPasswordPanel"  class="panel-body">
+              <div class="form-group">
+                <label for="resetPasswordInput">Enter Username:</label>
+                <input type="text" class="form-control" id="resetPasswordInput">
+                <div id="resetPasswordFeedback"></div>
+              </div>
+              <button class="btn btn-primary" type="submit" id="resetPasswordButton">Reset</button>
+              <br>
+            </div>
+          </div>
+
         </div>
-        <div class="col-xs-6">
+
+        <div id="rightColumn" class="col-xs-6">
           <div class="panel panel-default">
             <div class="panel-heading">Register</div>
             <div id="registerPanel" class="panel-body">
@@ -101,7 +150,7 @@
               <div class="form-group" id="passwordRegisterGroup">
                 <label for="passwordRegisterInput">*Password:</label>
                 <br>
-                <small p>Password must be longer than 8 characters (and contain numbers)</small p>
+                <small>Password must be longer than 8 characters (and contain numbers)</small>
                 <input type="password" class="form-control" id="passwordRegisterInput">
                 <div id="passwordRegisterFeedback"></div>
               </div>
@@ -121,14 +170,16 @@
             </div>
           </div>
         </div>
+
       </div>
 
     </div><!-- /.container -->
-      
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="loginAndRegister.js"></script>
+    <script type="text/javascript" src="globalFunctions.js"></script>
   </body>
 </html>
