@@ -82,30 +82,44 @@ function sendPostData() {
             alert("SUBMITTING WHILE NOT LOGGED IN");
         }
 
-        // TODO copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
-        // Remove any post from localStorage to exit edit mode having submitted the edited post
-        localStorage.removeItem("postToEdit");
+        // @Mike, I Added saving location here as googleApi wasn't accessible from index.js
 
-        console.log("Submitting post as follows", indexedArray)
-        $.ajax({
-            type: "POST",
-            url: "/addPost",
-            data: {
-                postToPost: indexedArray
-            },
-            dataType: "json",
-            success: function(data) {
-                console.log("Success when posting");
-            },
-            error: function() {
-                // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
-                // console.log("Failed when posting");
-                // alert("Could not add post\nPlease try again soon!");
+        var geocoder = new google.maps.Geocoder;
+        var latlng = {lat: indexedArray.latitude, lng: indexedArray.longitude};
+
+        geocoder.geocode({'location': latlng}, function(results, status) {
+            if (status === 'OK') {
+                if (results[1]) {
+                    indexedArray.location = results[1].address_components;
+                }
             }
-        });
 
-        // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
-        location.reload();
+            // TODO copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
+            // Remove any post from localStorage to exit edit mode having submitted the edited post
+            localStorage.removeItem("postToEdit");
+
+            console.log("Submitting post as follows", indexedArray)
+            $.ajax({
+                type: "POST",
+                url: "/addPost",
+                data: {
+                    postToPost: indexedArray
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log("Success when posting");
+                },
+                error: function() {
+                    // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
+                    // console.log("Failed when posting");
+                    // alert("Could not add post\nPlease try again soon!");
+                }
+            });
+
+            // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
+            location.reload();
+
+        });
     }
 }
 
