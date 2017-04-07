@@ -202,16 +202,12 @@ function markerLocation() {
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
-    // if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(pos) {
         initMap(pos.coords.latitude, pos.coords.longitude);
     }, function(error) {
-        alert("ERROR IN GETTING LOCATION", error.code)
-        initMap(54.775250, -1.584852);
+        initMap(54.77525, -1.584852);
+        // alert("Could not get your location, defaulting to Durham");
     });
-    // } else {
-    // alert("Initialised map to durham, due to lack of allowing location");
-    // }
 });
 
 var imageSelected = false;
