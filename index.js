@@ -32,9 +32,12 @@ MongoClient.connect(db_URI, function(err, database_object) {
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
+app.use(express.static('pages'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
 app.use(express.static('brand-images'));
+app.use(express.static('custom-css'));
 
 //Set up email system
 var transporter = nodemailer.createTransport({
@@ -47,7 +50,7 @@ var transporter = nodemailer.createTransport({
 
 //Direct requests to various urls
 app.get("/", function(req, res) {
-    res.sendFile(path + "home.html");
+    res.sendFile(path + "pages/home.html");
 });
 
 // POSTS
@@ -83,6 +86,10 @@ app.post("/addPost", function(req, res) {
         console.log("No image attached");
     }
 
+    // TODO NOTE Jordan JORDAN HERE IT'S HERE JORDAN
+    // This is your last chance to modify the post object before it's saved
+    // The below code is purely adding it to the database
+
     db.collection("posts").save(post, function(err, results) {
         if (err) {
             console.log("Saving post failed: " + err.toString());
@@ -103,6 +110,30 @@ app.get("/getPosts", function(req, res) {
             res.send(JSON.stringify(results));
         }
     });
+});
+
+app.get("/removeUnusedImages", function(req, res) {
+    console.log("Removing any unsused images...");
+    var folder = "./post-images/";
+    fs.readdir(folder, function(err, files) {
+        files.forEach(function(file) {
+            if (file !== "NOIMAGE.png") {
+                db.collection("posts").findOne({image:file}, function(err, document) {
+                    if (!document && !err) {
+                        // IMAGE NOT REFERENCED BY ANY POST
+                        fs.unlink(folder + file, function(err) {
+                            if (err) {
+                                console.log("Could not delete " + file);
+                            } else {
+                                console.log("Deleted " + file);
+                            }
+                        })
+                    }
+                });
+            }
+        });
+    });
+    res.send("Deletion has begun.");
 });
 
 // USERS
@@ -298,41 +329,11 @@ app.post("/sendEmail", function(req, res) {
 
 });
 
-// WEB PAGES
-app.get("/home.html", function(req, res) {
-    res.sendFile(path + "home.html");
-});
-
-app.get("/findfood.html", function(req, res) {
-    res.sendFile(path + "findfood.html");
-});
-
-app.get("/postManagement.html", function(req, res) {
-    res.sendFile(path + "postManagement.html");
-});
-
-app.get("/postfood.html", function(req, res) {
-    res.sendFile(path + "postfood.html");
-});
-
-app.get("/loginAndRegister.html", function(req, res) {
-    res.sendFile(path + "loginAndRegister.html");
-});
-
-app.get("/resetPassword.html", function(req, res) {
-    res.sendFile(path + "resetPassword.html");
-});
-
-
-app.get("/account.html", function(req, res) {
-    res.sendFile(path + "account.html");
-});
-
 app.get("*", function(req, res) {
-    res.sendFile(path + "404.html");
+    res.redirect('/404.html');
 });
 
 //Start server and listen on port 8080
 app.listen(process.env.PORT || 8080, function() {
-    console.log("Live at Port 8080");
+    console.log("Live at Port " + (process.env.PORT || "8080"));
 });

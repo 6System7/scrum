@@ -1,0 +1,69 @@
+body {
+  padding-top: 50px;
+  background-color: #F7FFFF; // change to f0ffff
+}
+#navbar{
+    background-color: #1C939B;
+}
+#navbarContent{
+    background-color: #1C939B;
+}
+
+#navbarheader {
+    color: white;
+}
+.nav.navbar-nav > li > a {
+    color: white;
+}
+
+.scrumFormat {
+  padding: 40px 15px;
+  text-align: center;
+}
+
+#allNotifs{
+    position:relative;
+    width: calc(100% - 18px);
+
+}
+#navbar-logo {
+    max-width: 50px;
+    /*background-color: #fff2e6;*/
+}
+
+.glyphicon.glyphicon-cutlery{
+    margin-right:10px;
+}
+
+#notificationsPanel {
+    background-color: #DFF6F7;
+    border-color: darkgrey;
+    width: calc(100vh - 120px);
+    height: calc(100vh - 300px);
+    padding-bottom: 20px;
+    overflow-y: scroll; 
+}
+#notificationsButton{
+    max-height: 50px;
+}
+.panel {
+    border-width: 2px;
+    border-color: black;
+    background-color: #A6EAEF;
+}
+.panel-default {
+    max-width: inherit;
+}
+.panel-default>.panel-heading {
+    background-color: #1C939B;
+    color: white;
+}
+
+
+
+.panel-group .panel-default {
+    margin-bottom: 10px;
+}
+#pageheader {
+    text-align: center;
+}

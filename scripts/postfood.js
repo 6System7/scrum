@@ -53,7 +53,19 @@ function sendPostData() {
 
         var indexedArray = {};
         $.map(formData, function(n, i) {
-            indexedArray[n['name']] = n['value'];
+            var key = n['name'];
+            if (key.endsWith("[]")) {
+                // Serialise dietary requirements as array correctly
+                key = key.substring(0, key.length - 2);
+                // If array exists, append, else create with one entry
+                if (indexedArray[key]) {
+                    indexedArray[key].push(n['value']);
+                } else {
+                    indexedArray[key] = [n['value']];
+                }
+            } else {
+                indexedArray[key] = n['value'];
+            }
         });
 
         indexedArray.image = $("#imgPreview").attr("src");
@@ -92,7 +104,7 @@ function sendPostData() {
             }
         });
 
-        // THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT CLEARED
+        // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
         location.reload();
     }
 }
@@ -190,13 +202,12 @@ function markerLocation() {
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            initMap(pos.coords.latitude, pos.coords.longitude);
-        });
-    } else {
-        initMap(54.775250, -1.584852);
-    }
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        initMap(pos.coords.latitude, pos.coords.longitude);
+    }, function(error) {
+        initMap(54.77525, -1.584852);
+        // alert("Could not get your location, defaulting to Durham");
+    });
 });
 
 var imageSelected = false;

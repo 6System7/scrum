@@ -9,44 +9,45 @@
     <meta name="gttg22" content="">
 
     <title>SCRUM - Food sharing app</title>
-
+    <!-- jQuery -->
+    <script type="text/javascript" src="/jquery/jquery.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <!--TODO Check if any other bootstrap js scripts are using cdn-->
+    <script src="/js/bootstrap.min.js"></script>
     <!-- Custom styles for this template -->
-    <link href="/css/scrumFormat.css" rel="stylesheet">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="globalFunctions.js"></script>
+    <link href="scrumFormat.css" rel="stylesheet">
      </head>
 
-  <body>  
+  <body>
     <!--Bootstrap Navigation Bar-->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
+      <!--id="navbar"-->
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarContent" aria-expanded="false" aria-controls="navbarContent">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-            <a id = "navbarheader" class="navbar-brand" href="">
+            <a id = "navbar-header" class="navbar-brand" href="">
                 <img id="navbar-logo" src = "possibleLogo.png">
             </a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbarContent" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-              
+
             <li class="dropdown dropdown-notifications" >
-                <!--Todo: want to make it pull left. --> 
-            <a href="#notifications-panel" class="dropdown-toggle" data-toggle = "dropdown" id = "notificationsButton"> 
-            
+                <!--Todo: want to make it pull left. -->
+            <a href="#notifications-panel" class="dropdown-toggle" data-toggle = "dropdown" id = "notificationsButton">
+
               <i data-count="2" class="glyphicon glyphicon-bell "></i>
             </a>
               <ul class = "dropdown-menu" id = "notificationsPanel">
                 <div class="container">
-                  <h3>Notifications</h3>  
+                  <h3>Notifications</h3>
                     <!-- where the notifications will be put -->
                     <ul class = "notifications" id = "notificationList">
                     </ul>
@@ -58,8 +59,8 @@
             <li><a href="findfood.html">Find Food</a></li>
             <li><a href="loginAndRegister.html">Login & Register</a></li>
               <li><a href="account.html">Account Settings</a></li>
-            
-                
+
+
 
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -71,35 +72,42 @@
 
 
     <div class="container">
-        
+
     <!--Initial data when landing on page-->
       <div class="scrumFormat">
         <h1>Scrum Home Page</h1>
         <p class="lead">Place holder text, insert welcome message here.<br>Place holder text, insert scrum description here.<br></p>
-          
-        <p>Todo:<br>- A large picture<br>- Link to download from app store?<br>- About us (small print)<br>- Log in and register system (potentially in it's own page?)<br>- Notifications/Recomendations</p>  
-          
+
+        <p>Todo:<br>- A large picture<br>- Link to download from app store?<br>- About us (small print)<br>- Log in and register system (potentially in it's own page?)<br>- Notifications/Recomendations</p>
+
+        <button class="btn btn-primary" type="submit" id="loadStatsButton">Load Stats</button>
+        <br><br>
+        <ul id="statList"></ul>
+
         <!-- A large picture -->
         <!-- Link to download from app store? -->
         <!-- About us small details -->
         <!-- Log in and Register system (Potentially in it's own page?) -->
         <!-- Notifications/Recomendations -->
-                
+
       </div>
 
     </div><!-- /.container -->
-      
+
     <script type="text/javascript">
-        
-        //Add necessary code here.
-                
+
+        $(document).on('click', '#loadStatsButton', function(){
+            getStatsByUser("JCJordan");
+        });
+
     </script>
-      
-      
+
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="globalFunctions.js"></script>
+    <script type="text/javascript" src="dataAnalysis.js"></script>
   </body>
 </html>
