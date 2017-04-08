@@ -34,15 +34,6 @@ $(document).ready(function(){
     });
 })
 
-    // include parameter for when to do this??
-    // Maybe by lenth? List of all thingys? array of all inputs
-           /*
-           initially pass all data as the length should be right?
-           
-           Otherwise call filter and then append all that pass and then can check against? All will be cross checked against Id
-           
-           */
-
 function getPostedFoods(x){
     $("#column0").html("");
      $("#column1").html("");
@@ -76,11 +67,6 @@ function getPostedFoods(x){
                             img2 = $('<span>');
                             img2.addClass("glyphicon glyphicon-picture");
                             img2.attr("style","margin-top:20px");
-                            
-                           // var info = '<br><span class = "glyphicon glyphicon-picture"></span>';
-                           // $('<br><span class = "glyphicon glyphicon-picture"></span>').appendTo(img2);
-                            
-                            
                         }
                         else{
                             img2.attr("src",(x.image).toString());
@@ -89,27 +75,7 @@ function getPostedFoods(x){
                         }
                         img2.appendTo(imgDiv);
                         imgDiv.appendTo(divEl);
-                        
-                        /*var img2 = $('<img>');
-                        
-                        var img = (x.image).toString();
-                        if (img == ""){
-                            img2 = $('<div>');
-                            img2.addClass("text-center");
-                            var info = "<br><span class = 'glyphicon glyphicon-picture'></span>";
-                            $("<br><span class = 'glyphicon glyphicon-picture'></span>").appendTo(img2);   
-                        }
-                        img2.attr("src",(x.image).toString());
-                        img2.addClass("center");
-                        img2.attr("style", "max-height:200px; width:auto")
-                    
-                       // img2.attr("object-fit", "fit");
-                       // img2.attr("max-width", "360");
-                    // img2.attr("width","360")
-                   //  img2.attr("max-height", "500");
-                        
-                        img2.appendTo(divEl);
-*/
+
                         // CREATE CONTAINER
                         var container = $('<div>');
                         container.addClass("w3-container w3-center");
@@ -139,7 +105,6 @@ function getPostedFoods(x){
         }
     })
 } 
-
 
 // Create's a array of IDs: these posts will be displayed
 function filterFoods(dataPass){
