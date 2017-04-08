@@ -35,6 +35,10 @@ $(document).ready(function(){
            */
 
 function getPostedFoods(x){
+        $("#column0").html("");
+     $("#column1").html("");
+     $("#column2").html("");
+
     var checkArray = x;
     var dataReturned;
     $.ajax({
@@ -62,30 +66,11 @@ function getPostedFoods(x){
                             $("<br><span class = 'glyphicon glyphicon-picture'></span>").appendTo(img2);   
                         }
                         img2.attr("src",(x.image).toString());
-                       // img2.attr("display","block");
-                       // img2.attr("max-height", "20");
-                       // img2.attr("max-width", "150");
-                      // img2.attr("max-width", "relative");
-                      //  img2.attr("height", "160");
-                        //img2.attr("max-height", "160px");
-                     //   img2.attr("width", "540px");
-                      //  img2.attr("max-height", "16vh");
-                       // img2.attr("object-fit", "contain");
-                        img2.attr("width", "60px");
-                        img2.attr("height", "inherit");
-                     //   img2.attr("max-width", "100%");
-                       // img2.attr("height", "260px");
-
-                       //     width: 150px;
-    //.//height: 100px;
-    //background-image: url("http://i.stack.imgur.com/2OrtT.jpg");
-    //background-size: cover;
+                        img2.attr("object-fit", "contain");
+                        img2.attr("width", "auto");
+                        img2.attr("max-height", "160px");
                         img2.appendTo(divEl);
-                        
-                         // max-width:230px;
- // max-height:95px;
- // width: auto;
-  //height: auto;
+
                         // CREATE CONTAINER
                         var container = $('<div>');
                         container.addClass("w3-container w3-center");
@@ -132,16 +117,78 @@ function refreshTable(data){
 function filterFoods(dataPass){
     var data = dataPass;
     foodsToPost = []
-    filters = [];
-    filters = loadFilters();
-    for (var property = 0; property < data.length; property++){
+    var filters = loadFilters();
+    // for testing
+    alert(Object.keys(filters).length);
+    alert(filters.mealtype);
+    ////// myobj[Object.keys(myobj)[0]];
+    alert(data.length);
+    for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
         var visibility = false;
-        var foodPost = dataPass[property];
-        //alert(dataPass[property]._id);
-        for (var fieldNum = 0; fieldNum < filters.length; fieldNum++){
-            //filters[fieldNum] == 
-            alert(filters[mealType[0]]);
+        var foodPost = dataPass[foodPostElem];
+       // alert(foodPost._id); prints alert
+        
+    
+        for (var category = 0; category < Object.keys(filters).length; category++){
+      //  alert(Object.keys(filters)[category]); // mealtype
+        
+        var postCheck = foodPost.mealtype;
+        //alert(postCheck);
+        var xox = filters[Object.keys(filters)[category]];
+        //alert(xox[0]);  /// e.g breakfast
+            for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
+                if (xox[listInCategory] == postCheck){
+                    visibility = true;
+                }
+            }
+       
+    }
+        alert(visibility);
+        if (visibility == true){
+            foodsToPost.push(foodPost._id);
         }
+        // PROBLEM 
+        
+        
+        //for(var xx in xxx){
+       //     alert(xx)
+      //  }
+    }
+    getPostedFoods(foodsToPost);
+}
+    /*
+    
+    for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
+        var visibility = false;
+        var foodPost = dataPass[foodPostElem];
+        
+        // now iterate through the filter keys
+        for (var filterElem in filters){
+            var postCheck = foodPost.filterElem;
+            
+            for (var xx in filterElem){
+                if (postCheck == xx){
+                    
+                   
+                    visibility = true;
+                }
+            }
+        }
+        */
+        
+        // go through and check against every food pst.
+        //alert(dataPass[property]._id);
+       // for (var property in filters) {
+        //    if (object.hasOwnProperty(property)) {
+        // do stuff
+          //  }
+       // }
+       // for (var fieldNum = 0; fieldNum < filters.length; //fieldNum++){
+            
+            //filters[fieldNum] == 
+            //alert(filters.mealType.length);
+            
+       // }
        /* CURRENTLY PLAYING WITH
        for (var fieldNum = 0; fieldNum < foodPost.length; fieldNum++){
             field = foodPost[fieldNum];
@@ -155,32 +202,39 @@ function filterFoods(dataPass){
                 }
             }
         }*/
-        if (visibility == true){
-            foodsToPost.push(foodPost._id.toString());
-            alert("here");
-        }
-    }
-    
-}
+       // if (visibility == true){
+       //     foodsToPost.push(foodPost._id.toString());
+       //     alert("here");
+       // }
+   // }
+ //   /
+
+
+/*
+var key = "happyCount";
+var obj = {};
+obj[key] = someValueArray;
+myArray.push(obj);
+
+*/
 
 
 // Grabs the possible filters
 function loadFilters(){
     var filters = {
-        mealType: " "
-    }
-    //var chkMealType = $("#collapseMealType")[0];
-   // alert(chkMealType.value.toString());
-   // filters['mealType'] = [];
-    var mealType = [];
+        mealtype: " "
+    };
+    var mealtypeList = [];
     $("#collapseMealType input:checked").each(function(){
-        mealType.push($(this).attr('name'))
+      
+        mealtypeList.push($(this).attr('name'))
         
     })
     // put in mealtype if its not empty?? TODO
     //filters(mealType);
-    filters.mealType = mealType;
-    alert(filters.length);
+    alert(mealtypeList.length);
+    filters["mealtype"] = mealtypeList;
+    alert(filters.mealtype);
     return filters;
 } 
 //var dict = {
