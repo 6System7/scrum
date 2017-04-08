@@ -20,7 +20,6 @@ $(document).ready(function(){
     });
     $("#btnUpdate").click(function(){
     // TODO
-     //   refreshTable();
         filterFoods(dataPass);
     });
 })
@@ -101,129 +100,64 @@ function getPostedFoods(x){
     })
 } 
 
-// end of getPostedFoods  
-//create array with all?? if in array then push.
-    //go through and put id of each one to append. 
-           // then iterate through array in here.
-
-function refreshTable(data){
-    // not playing
-    var data = data;
-    filters = [];
-    filters = loadFilters();
-    reloadTable(filters, data);
-}
-
+// creates a list of ids of posts which can then be passed to the printer
 function filterFoods(dataPass){
     var data = dataPass;
     foodsToPost = []
     var filters = loadFilters();
-    // for testing
-    alert(Object.keys(filters).length);
-    alert(filters.mealtype);
-    ////// myobj[Object.keys(myobj)[0]];
-    alert(data.length);
+    //alert(Object.keys(filters).length);
+    //alert(filters.mealtype);
+    //alert(data.length);
+
     for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
         var visibility = false;
         var foodPost = dataPass[foodPostElem];
-       // alert(foodPost._id); prints alert
-        
-    
+        // alert(foodPost._id); prints alert
         for (var category = 0; category < Object.keys(filters).length; category++){
-      //  alert(Object.keys(filters)[category]); // mealtype
         
-        var postCheck = foodPost.mealtype;
-        //alert(postCheck);
-        var xox = filters[Object.keys(filters)[category]];
-        //alert(xox[0]);  /// e.g breakfast
+            //  alert(Object.keys(filters)[category]); // mealtype
+            /*
+            var postCheck = foodPost.mealtype;
+             THIS WORKS BUT CAN'T HAVE MEALTYPE'*/ 
+            
+            //alert(Object.key(filters)[category]);
+            
+            
+            var postCheck = foodPost[Object.keys(filters)[category]];
+            var xox = filters[Object.keys(filters)[category]];
+            //alert(xox[0]);  /// e.g breakfast
             for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                 if (xox[listInCategory] == postCheck){
+                    alert("HERE");
                     visibility = true;
                 }
-            }
-       
-    }
-        alert(visibility);
+            } 
+        }
         if (visibility == true){
             foodsToPost.push(foodPost._id);
         }
-        // PROBLEM 
-        
-        
-        //for(var xx in xxx){
-       //     alert(xx)
-      //  }
+
     }
     getPostedFoods(foodsToPost);
 }
-    /*
-    
-    for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
-        var visibility = false;
-        var foodPost = dataPass[foodPostElem];
-        
-        // now iterate through the filter keys
-        for (var filterElem in filters){
-            var postCheck = foodPost.filterElem;
-            
-            for (var xx in filterElem){
-                if (postCheck == xx){
-                    
-                   
-                    visibility = true;
-                }
-            }
-        }
-        */
-        
-        // go through and check against every food pst.
-        //alert(dataPass[property]._id);
-       // for (var property in filters) {
-        //    if (object.hasOwnProperty(property)) {
-        // do stuff
-          //  }
-       // }
-       // for (var fieldNum = 0; fieldNum < filters.length; //fieldNum++){
-            
-            //filters[fieldNum] == 
-            //alert(filters.mealType.length);
-            
-       // }
-       /* CURRENTLY PLAYING WITH
-       for (var fieldNum = 0; fieldNum < foodPost.length; fieldNum++){
-            field = foodPost[fieldNum];
-            for (var fieldOptionNum = 0; fieldOptionNum < field.length; fieldOptionNum++){
-                alert(field[fieldOptionNum]);
-                if (foodPost.field == field[fieldOptionNum]){
-                    alert("HERE");
-                    visibility = true;
-                    alert("this");
-                    
-                }
-            }
-        }*/
-       // if (visibility == true){
-       //     foodsToPost.push(foodPost._id.toString());
-       //     alert("here");
-       // }
-   // }
- //   /
-
-
-/*
-var key = "happyCount";
-var obj = {};
-obj[key] = someValueArray;
-myArray.push(obj);
-
-*/
-
-
+   
 // Grabs the possible filters
 function loadFilters(){
-    var filters = {
-        mealtype: " "
+    var filters =  {
+        /* collection only and business?
+        dietary requirements, keywords, distance TODO        
+        */
+        mealtype: " ",
+        mealtypecountry: " ",
+        mealtypefood: " ",
+        mealsizeweight: " ",
+        mealexpires: " ",
+        mealTypeDietary: " ", //captails??  
+        collectionbusiness: " "
     };
+    
+    
+    // MEAL TYPE
     var mealtypeList = [];
     $("#collapseMealType input:checked").each(function(){
       
@@ -231,15 +165,57 @@ function loadFilters(){
         
     })
     // put in mealtype if its not empty?? TODO
-    //filters(mealType);
-    alert(mealtypeList.length);
     filters["mealtype"] = mealtypeList;
-    alert(filters.mealtype);
+    
+    // MEAL TYPE COUNTRY
+    var mealtypecountrylist = [];
+    $("#collapseTypeCountry input:checked").each(function(){
+            mealtypecountrylist.push($(this).attr('value'))
+    })
+    filters["mealtypecountry"] = mealtypecountrylist;
+    
+    // MEAL TYPE FOOD
+    var mealtypefoodlist = [];
+    $("#collapseTypeOfFood input:checked").each(function(){
+            mealtypefoodlist.push($(this).attr('value'))
+    })
+    filters["mealtypefood"] = mealtypefoodlist;
+    
+    // SIZE / WEIGHT
+    var sizeweightlist = [];
+    $("#collapseSizeWeight input:checked").each(function(){
+            sizeweightlist.push($(this).attr('value'))
+    })
+    filters["mealsizeweight"] = sizeweightlist;
+    
+    // EXPIRATION DATE
+    var mealexpireslist = [];
+    $("#collapseExpirationDate input:checked").each(function(){
+            mealexpireslist.push($(this).attr('value'))
+    })
+    filters["mealexpires"] = mealexpireslist;
+    
+    // COLLECTION AND BUSINESS
+    var collectionbusinesslist = [];
+    $("#collapseCollectionOnly input:checked").each(function(){
+            collectionbusinesslist.push($(this).attr('value'))
+    })
+    filters["collectionbusiness"] = mealexpireslist;
+    
+    // DIETARY REQUIREMENTS
+    var mealtypedietarylist = [];
+    $("#collapseDietryRequirements input:checked").each(function(){
+            mealtypedietarylist.push($(this).attr('value'))
+    })
+    filters["mealTypeDietary"] = mealtypedietarylist;
+    
+    
+    
+    //alert(Object.keys(filters).length);
+
     return filters;
 } 
-//var dict = {
-  //key1: "value1",
-///  key2: "value2"
+
 function updateSlider(slideValue){
     document.getElementById("distLabel").innerHTML = "Search radius(km): " + slideValue;
 }
