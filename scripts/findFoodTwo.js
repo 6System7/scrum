@@ -21,7 +21,17 @@ $(document).ready(function(){
     $("#btnUpdate").click(function(){
     // TODO
         var foodsToPost = filterFoods(dataPass);
-        getPostedFoods(foodsToPost);
+        console.log(foodsToPost.length);
+        if (foodsToPost.length == 0){
+            $("#column0").html("");
+            $("#column1").html("");
+            $("#column2").html("");
+            divEl = "<div ><img src = 'sorry.png'><br><br><h5><i><b> No posts match your search</b></i> </h5></div>"
+            $("#column1").append(divEl);
+        }
+        else {
+            getPostedFoods(foodsToPost);
+        }
     });
 })
 
@@ -53,6 +63,7 @@ function getPostedFoods(x){
                 for (y in checkArray){
                     if ((x._id).toString() == checkArray[y]){
                         toPrint++;
+                        
                          // CREATE CARD 
                         var divEl = $('<div>');
                         divEl.addClass("w3-card-4");
@@ -102,28 +113,20 @@ function getPostedFoods(x){
     })
 } 
 
-// creates a list of ids of posts which can then be passed to the printer
+
+// Create's a array of IDs: these posts will be displayed
 function filterFoods(dataPass){
     var data = dataPass;
     foodsToPost = []
     var filters = loadFilters();
     for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
         var visibility = false;
-        var foodPost = dataPass[foodPostElem];
-        // alert(foodPost._id); prints alert
+        var foodPost = dataPass[foodPostElem]; // alert(foodPost._id); prints alert
         var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
-        console.log(parseInt(dist) <= filters.distance);
-        console.log(dist);
         if (parseInt(dist) <= filters.distance){
-            for (var category = 0; category < Object.keys(filters).length; category++){
-                
-                //  alert(Object.keys(filters)[category]); // mealtype
-                /*
-                var postCheck = foodPost.mealtype;
-                 THIS WORKS BUT CAN'T HAVE MEALTYPE'*/ 
+            for (var category = 0; category < Object.keys(filters).length; category++){  //  alert(Object.keys(filters)[category]); // mealtype
                 var postCheck = foodPost[Object.keys(filters)[category]];
-                var xox = filters[Object.keys(filters)[category]];
-                //alert(xox[0]);  /// e.g breakfast
+                var xox = filters[Object.keys(filters)[category]]; //alert(xox[0]);  /// e.g breakfast
                 for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                     if (xox[listInCategory] == postCheck){
                         visibility = true;
@@ -133,17 +136,16 @@ function filterFoods(dataPass){
             if (visibility == true){
                 foodsToPost.push(foodPost._id);
             }
-
         }
     }
     return foodsToPost;
 }
    
-// Grabs the possible filters
+// Makes a list of checked filters
 function loadFilters(){
     var filters =  {
-        /* collection only and business?
-        dietary requirements, keywords, distance TODO        
+        /* TODO
+        keywords??        
         */
         mealtype: " ",
         mealtypecountry: " ",
@@ -160,10 +162,8 @@ function loadFilters(){
     var mealtypeList = [];
     $("#collapseMealType input:checked").each(function(){
       
-        mealtypeList.push($(this).attr('name'))
-        
-    })
-    // put in mealtype if its not empty?? TODO
+        mealtypeList.push($(this).attr('name'))   
+    }) // put in mealtype if its not empty?? TODO
     filters["mealtype"] = mealtypeList;
     
     // MEAL TYPE COUNTRY
