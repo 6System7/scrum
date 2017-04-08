@@ -20,7 +20,8 @@ $(document).ready(function(){
     });
     $("#btnUpdate").click(function(){
     // TODO
-        filterFoods(dataPass);
+        var foodsToPost = filterFoods(dataPass);
+        getPostedFoods(foodsToPost);
     });
 })
 
@@ -34,7 +35,7 @@ $(document).ready(function(){
            */
 
 function getPostedFoods(x){
-        $("#column0").html("");
+    $("#column0").html("");
      $("#column1").html("");
      $("#column2").html("");
 
@@ -89,7 +90,6 @@ function getPostedFoods(x){
                         bodyCon.appendTo(container);
 
                         // CALCULATE COLUMN
-                        alert(toPrint);
                         colNum = toPrint-1;
                         colNum = colNum % 3;
                         var str = "#column" + colNum.toString();
@@ -111,26 +111,32 @@ function filterFoods(dataPass){
         var visibility = false;
         var foodPost = dataPass[foodPostElem];
         // alert(foodPost._id); prints alert
-        for (var category = 0; category < Object.keys(filters).length; category++){
-            //  alert(Object.keys(filters)[category]); // mealtype
-            /*
-            var postCheck = foodPost.mealtype;
-             THIS WORKS BUT CAN'T HAVE MEALTYPE'*/ 
-            var postCheck = foodPost[Object.keys(filters)[category]];
-            var xox = filters[Object.keys(filters)[category]];
-            //alert(xox[0]);  /// e.g breakfast
-            for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
-                if (xox[listInCategory] == postCheck){
-                    visibility = true;
-                }
-            } 
-        }
-        if (visibility == true){
-            foodsToPost.push(foodPost._id);
-        }
+        var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
+        console.log(parseInt(dist) <= filters.distance);
+        console.log(dist);
+        if (parseInt(dist) <= filters.distance){
+            for (var category = 0; category < Object.keys(filters).length; category++){
+                
+                //  alert(Object.keys(filters)[category]); // mealtype
+                /*
+                var postCheck = foodPost.mealtype;
+                 THIS WORKS BUT CAN'T HAVE MEALTYPE'*/ 
+                var postCheck = foodPost[Object.keys(filters)[category]];
+                var xox = filters[Object.keys(filters)[category]];
+                //alert(xox[0]);  /// e.g breakfast
+                for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
+                    if (xox[listInCategory] == postCheck){
+                        visibility = true;
+                    }
+                } 
+            }
+            if (visibility == true){
+                foodsToPost.push(foodPost._id);
+            }
 
+        }
     }
-    getPostedFoods(foodsToPost);
+    return foodsToPost;
 }
    
 // Grabs the possible filters
@@ -145,7 +151,8 @@ function loadFilters(){
         mealsizeweight: " ",
         mealexpires: " ",
         mealTypeDietary: " ", //captails??  
-        collectionbusiness: " "
+        collectionbusiness: " ",
+        distance: " "
     };
     
     
@@ -201,9 +208,9 @@ function loadFilters(){
     })
     filters["mealTypeDietary"] = mealtypedietarylist;
     
-    
-    
-    //alert(Object.keys(filters).length);
+    // DISTANCE AWAY:
+    var distanceAwayKm = $("#trcDistanceSlider").val();
+    filters["distance"] = distanceAwayKm;
 
     return filters;
 } 
@@ -215,6 +222,45 @@ function updateSlider(slideValue){
 function sortColumn(colToSortId){
     if (colToSortId == "colDistance"){     
     }
+}
+
+function calculateDistance(latitude, longitude){
+
+    var memberLang = 0;
+    var memberLong = 0;
+    var lat = latitude;
+    var long = longitude;
+    // check they want to use this location not another one TODO
+    if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                memberLang = pos.coords.latitue;
+                memberLong = pos.coords.longitude;
+            });
+        } else {
+            memberLang = 54.775250;
+            memberLong = -1.584852;
+            
+    }
+    dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
+    return dist;
+}
+
+function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  return d;
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
 }
 
 // TODO eventually move notifications into global functions? 
