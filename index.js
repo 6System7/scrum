@@ -33,6 +33,7 @@ app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
+app.use('/fonts', express.static(__dirname + '/node_modules/bootstrap/fonts'));
 app.use(express.static('pages'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
@@ -118,7 +119,9 @@ app.get("/removeUnusedImages", function(req, res) {
     fs.readdir(folder, function(err, files) {
         files.forEach(function(file) {
             if (file !== "NOIMAGE.png") {
-                db.collection("posts").findOne({image:file}, function(err, document) {
+                db.collection("posts").findOne({
+                    image: file
+                }, function(err, document) {
                     if (!document && !err) {
                         // IMAGE NOT REFERENCED BY ANY POST
                         fs.unlink(folder + file, function(err) {
@@ -227,7 +230,9 @@ app.post("/addResetToken", function(req, res) {
         }
 
         if (tokenExists) {
-            db.collection("resetTokens").remove({username: tokenData.username}, function (err, results) {
+            db.collection("resetTokens").remove({
+                username: tokenData.username
+            }, function(err, results) {
                 if (err) {
                     console.log("Deleting token failed: " + err.toString());
                 } else {
@@ -236,7 +241,7 @@ app.post("/addResetToken", function(req, res) {
             });
         }
 
-        db.collection("resetTokens").save(tokenData, function (err, results) {
+        db.collection("resetTokens").save(tokenData, function(err, results) {
             if (err) {
                 res.send(err.toString());
                 console.log("Saving reset token failed: " + err.toString());
@@ -262,10 +267,12 @@ app.get("/getResetTokens", function(req, res) {
     });
 });
 
-app.post("/deleteResetToken", function(req, res){
+app.post("/deleteResetToken", function(req, res) {
     var resetToken = req.body.resetToken;
 
-    db.collection("resetTokens").remove({resetToken: resetToken}, function(err, results){
+    db.collection("resetTokens").remove({
+        resetToken: resetToken
+    }, function(err, results) {
         if (err) {
             res.send(err.toString());
             console.log("Deleting token failed: " + err.toString());
@@ -276,7 +283,7 @@ app.post("/deleteResetToken", function(req, res){
     });
 });
 
-app.post("/cleanResetTokens", function(req, res){
+app.post("/cleanResetTokens", function(req, res) {
     db.collection("resetTokens").find().toArray(function(err, results) {
 
         var currentDate = new Date(Date.now());
@@ -286,7 +293,9 @@ app.post("/cleanResetTokens", function(req, res){
             var jsonResult = results[i];
             if (jsonResult.expirationDate < currentDate) {
                 deleteCount++;
-                db.collection("resetTokens").remove({resetToken: jsonResult.resetToken}, function(err, results){
+                db.collection("resetTokens").remove({
+                    resetToken: jsonResult.resetToken
+                }, function(err, results) {
                     if (err) {
                         console.log("Deleting token failed: " + err.toString());
                     } else {

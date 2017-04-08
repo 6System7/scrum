@@ -38,7 +38,7 @@ function validInputs() {
         valid = false;
         alert("Please select a pick-up location!");
     }
-    // if (valid && !imageSelected) { // TODO Mike - uncomment - only commented for testing (not needing image each time)
+    // if (valid && !imageSelected) { // TODO Mike - uncomment? - spec says 'optional image' so maybe leave commented
     //     valid = false;
     //     alert("Please upload an image of your item!");
     // }
@@ -79,10 +79,10 @@ function sendPostData() {
         if (localStorage.username) {
             indexedArray.username = localStorage.username;
         } else {
-            alert("SUBMITTING WHILE NOT LOGGED IN");
+            alert("WARNING - SUBMITTING WHILE NOT LOGGED IN");
         }
 
-        // TODO copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
+        // TODO Mike - copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
         // Remove any post from localStorage to exit edit mode having submitted the edited post
         localStorage.removeItem("postToEdit");
 
@@ -222,7 +222,7 @@ $(document).ready(function() {
     getNotifications();
 
     if (localStorage.postToEdit) {
-        // TODO load post data into form
+        // TODO Mike - load post data into form
     }
 });
 
