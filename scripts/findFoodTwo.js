@@ -62,8 +62,30 @@ function getPostedFoods(x){
                             $("<br><span class = 'glyphicon glyphicon-picture'></span>").appendTo(img2);   
                         }
                         img2.attr("src",(x.image).toString());
+                       // img2.attr("display","block");
+                       // img2.attr("max-height", "20");
+                       // img2.attr("max-width", "150");
+                      // img2.attr("max-width", "relative");
+                      //  img2.attr("height", "160");
+                        //img2.attr("max-height", "160px");
+                     //   img2.attr("width", "540px");
+                      //  img2.attr("max-height", "16vh");
+                       // img2.attr("object-fit", "contain");
+                        img2.attr("width", "60px");
+                        img2.attr("height", "inherit");
+                     //   img2.attr("max-width", "100%");
+                       // img2.attr("height", "260px");
+
+                       //     width: 150px;
+    //.//height: 100px;
+    //background-image: url("http://i.stack.imgur.com/2OrtT.jpg");
+    //background-size: cover;
                         img2.appendTo(divEl);
                         
+                         // max-width:230px;
+ // max-height:95px;
+ // width: auto;
+  //height: auto;
                         // CREATE CONTAINER
                         var container = $('<div>');
                         container.addClass("w3-container w3-center");
@@ -120,7 +142,8 @@ function filterFoods(dataPass){
             //filters[fieldNum] == 
             alert(filters[mealType[0]]);
         }
-       /* for (var fieldNum = 0; fieldNum < foodPost.length; fieldNum++){
+       /* CURRENTLY PLAYING WITH
+       for (var fieldNum = 0; fieldNum < foodPost.length; fieldNum++){
             field = foodPost[fieldNum];
             for (var fieldOptionNum = 0; fieldOptionNum < field.length; fieldOptionNum++){
                 alert(field[fieldOptionNum]);
