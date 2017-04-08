@@ -73,13 +73,20 @@ function getPostedFoods(x){
                         var img2 = $('<img>');
                         img = (x.image).toString();
                         if (img == ""){
-                            var info = "<br><span class = 'glyphicon glyphicon-picture'></span>";
-                            $("<br><span class = 'glyphicon glyphicon-picture'></span>").appendTo(img2);
+                            img2 = $('<span>');
+                            img2.addClass("glyphicon glyphicon-picture");
+                            img2.attr("style","margin-top:20px");
+                            
+                           // var info = '<br><span class = "glyphicon glyphicon-picture"></span>';
+                           // $('<br><span class = "glyphicon glyphicon-picture"></span>').appendTo(img2);
+                            
                             
                         }
-                        img2.attr("src",(x.image).toString());
-                        img2.addClass("center");
-                        img2.attr("style", "height:160px; width:auto")
+                        else{
+                            img2.attr("src",(x.image).toString());
+                            img2.addClass("center");
+                            img2.attr("style", "height:160px; width:auto")
+                        }
                         img2.appendTo(imgDiv);
                         imgDiv.appendTo(divEl);
                         
