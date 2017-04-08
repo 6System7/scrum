@@ -69,7 +69,23 @@ function getPostedFoods(x){
                         divEl.addClass("w3-card-4");
 
                         // CREATE IMAGE
+                        var imgDiv = $('<div>');
+                        imgDiv.addClass("text-center");
                         var img2 = $('<img>');
+                        img = (x.image).toString();
+                        if (img == ""){
+                            var info = "<br><span class = 'glyphicon glyphicon-picture'></span>";
+                            $("<br><span class = 'glyphicon glyphicon-picture'></span>").appendTo(img2);
+                            
+                        }
+                        img2.attr("src",(x.image).toString());
+                        img2.addClass("center");
+                        img2.attr("style", "max-height:200px; width:auto")
+                        img2.appendTo(imgDiv);
+                        imgDiv.appendTo(divEl);
+                        
+                        /*var img2 = $('<img>');
+                        
                         var img = (x.image).toString();
                         if (img == ""){
                             img2 = $('<div>');
@@ -78,11 +94,16 @@ function getPostedFoods(x){
                             $("<br><span class = 'glyphicon glyphicon-picture'></span>").appendTo(img2);   
                         }
                         img2.attr("src",(x.image).toString());
-                        img2.attr("object-fit", "contain");
-                        img2.attr("width", "auto");
-                        img2.attr("max-height", "160px");
+                        img2.addClass("center");
+                        img2.attr("style", "max-height:200px; width:auto")
+                    
+                       // img2.attr("object-fit", "fit");
+                       // img2.attr("max-width", "360");
+                    // img2.attr("width","360")
+                   //  img2.attr("max-height", "500");
+                        
                         img2.appendTo(divEl);
-
+*/
                         // CREATE CONTAINER
                         var container = $('<div>');
                         container.addClass("w3-container w3-center");
