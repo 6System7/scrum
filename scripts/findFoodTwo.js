@@ -21,7 +21,6 @@ $(document).ready(function(){
     $("#btnUpdate").click(function(){
     // TODO
         var foodsToPost = filterFoods(dataPass);
-        console.log(foodsToPost.length);
         if (foodsToPost.length == 0){
             $("#column0").html("");
             $("#column1").html("");
@@ -80,7 +79,7 @@ function getPostedFoods(x){
                         }
                         img2.attr("src",(x.image).toString());
                         img2.addClass("center");
-                        img2.attr("style", "max-height:200px; width:auto")
+                        img2.attr("style", "height:160px; width:auto")
                         img2.appendTo(imgDiv);
                         imgDiv.appendTo(divEl);
                         
