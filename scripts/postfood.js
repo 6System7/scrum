@@ -226,12 +226,4 @@ $(document).ready(function() {
     }
 });
 
-function getNotifications() {
-    userID = "Bob Smith";
-    typeOfMessage = " has sent you a <strong> message </strong>" //TODO will contain link to message
-    typeOfMessageImage = " glyphicon glyphicon-envelope"
-    newNotif = "<li class='notification'><span class='glyphicon glyphicon-envelope' align = 'inline'> </span>" + userID + typeOfMessage + "</li>";
-    document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', newNotif);
-}
-
 // TODO Mike - quagga.js for barcode
