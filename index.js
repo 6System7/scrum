@@ -5,6 +5,7 @@ var ip = require('ip');
 var nodemailer = require('nodemailer');
 var uuidV4 = require('uuid/v4');
 var MongoClient = require("mongodb").MongoClient;
+var ObjectID = require("mongodb").ObjectID;
 var fs = require("fs");
 var app = express();
 var path = __dirname + "/";
@@ -97,31 +98,22 @@ app.post("/addPost", function(req, res) {
 });
 
 app.get("/getPosts", function(req, res) {
-    if (req.query.username) {
-        db.collection("posts").find({
-            username: req.query.username
-        }).toArray(function(err, results) {
-            res.setHeader("Content-Type", "application/json");
-            if (err) {
-                res.send(JSON.stringify({
-                    "error": err
-                }));
-            } else {
-                res.send(JSON.stringify(results));
-            }
-        });
-    } else {
-        db.collection("posts").find().toArray(function(err, results) {
-            res.setHeader("Content-Type", "application/json");
-            if (err) {
-                res.send(JSON.stringify({
-                    "error": err
-                }));
-            } else {
-                res.send(JSON.stringify(results));
-            }
-        });
+    var queryObj = {};
+    if (req.query.id) {
+        queryObj._id = ObjectID.createFromHexString(req.query.id);
+    } else if (req.query.username) {
+        queryObj.username = req.query.username;
     }
+    db.collection("posts").find(queryObj).toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
+        } else {
+            res.send(JSON.stringify(results));
+        }
+    });
 });
 
 app.get("/removeUnusedImages", function(req, res) {
