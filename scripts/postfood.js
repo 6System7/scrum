@@ -243,7 +243,7 @@ $(document).ready(function() {
     getNotifications();
 
     if (localStorage.postToEdit) {
-        // TODO Mike - load post data into form
+        // TODO Mike - load post data into form and change what form controls do?
     }
 });
 
