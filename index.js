@@ -59,6 +59,10 @@ app.get("/", function(req, res) {
 app.post("/addPost", function(req, res) {
     var post = req.body.postToPost;
 
+    if (post._id && typeof post._id === 'string') {
+        post._id = ObjectID.createFromHexString(post._id);
+    }
+
     if (post.image) {
         var regex = /^data:.+\/(.+);base64,(.*)$/;
         var matches = post.image.match(regex);
