@@ -85,9 +85,14 @@ function sendPostData() {
         // @Mike, I Added saving location here as googleApi wasn't accessible from index.js
 
         var geocoder = new google.maps.Geocoder;
-        var latlng = {lat: indexedArray.latitude, lng: indexedArray.longitude};
+        var latlng = {
+            lat: indexedArray.latitude,
+            lng: indexedArray.longitude
+        };
 
-        geocoder.geocode({'location': latlng}, function(results, status) {
+        geocoder.geocode({
+            'location': latlng
+        }, function(results, status) {
             if (status === 'OK') {
                 if (results[1]) {
                     indexedArray.location = results[1].address_components[1].long_name; // City
@@ -96,9 +101,9 @@ function sendPostData() {
             }
 
 
-        // TODO Mike - copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
-        // Remove any post from localStorage to exit edit mode having submitted the edited post
-        localStorage.removeItem("postToEdit");
+            // TODO Mike - copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
+            // Remove any post from localStorage to exit edit mode having submitted the edited post
+            localStorage.removeItem("postToEdit");
 
             console.log("Submitting post as follows", indexedArray);
             $.ajax({

@@ -97,16 +97,31 @@ app.post("/addPost", function(req, res) {
 });
 
 app.get("/getPosts", function(req, res) {
-    db.collection("posts").find().toArray(function(err, results) {
-        res.setHeader("Content-Type", "application/json");
-        if (err) {
-            res.send(JSON.stringify({
-                "error": err
-            }));
-        } else {
-            res.send(JSON.stringify(results));
-        }
-    });
+    if (req.query.username) {
+        db.collection("posts").find({
+            username: req.query.username
+        }).toArray(function(err, results) {
+            res.setHeader("Content-Type", "application/json");
+            if (err) {
+                res.send(JSON.stringify({
+                    "error": err
+                }));
+            } else {
+                res.send(JSON.stringify(results));
+            }
+        });
+    } else {
+        db.collection("posts").find().toArray(function(err, results) {
+            res.setHeader("Content-Type", "application/json");
+            if (err) {
+                res.send(JSON.stringify({
+                    "error": err
+                }));
+            } else {
+                res.send(JSON.stringify(results));
+            }
+        });
+    }
 });
 
 app.get("/removeUnusedImages", function(req, res) {
