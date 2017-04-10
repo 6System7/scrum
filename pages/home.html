@@ -17,6 +17,8 @@
     <script src="/js/bootstrap.min.js"></script>
     <!-- Custom styles for this template -->
     <link href="scrumFormat.css" rel="stylesheet">
+      <!-- Map for location selection -->
+      <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCW6XlFsL0Ik5e5xDECavIvI24400NMx2g"></script>
      </head>
 
   <body>
@@ -81,7 +83,12 @@
 
         <button class="btn btn-primary" type="submit" id="loadStatsButton">Load Stats</button>
         <br><br>
-        <ul id="statList"></ul>
+          <table id="statList" class="table table-striped" style="text-align: left">
+              <tr>
+                  <th>Stat</th>
+                  <th>Data</th>
+              </tr>
+          </table>
 
         <!-- A large picture -->
         <!-- Link to download from app store? -->
