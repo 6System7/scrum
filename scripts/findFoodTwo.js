@@ -113,18 +113,44 @@ function filterFoods(dataPass){
     var filters = loadFilters();
     for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
         var visibility = false;
-        var foodPost = dataPass[foodPostElem]; // alert(foodPost._id); prints alert
+        var foodPost = dataPass[foodPostElem];  //alert(foodPost._id);  
         var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
         if (parseInt(dist) <= filters.distance){
+           // console.log("HEY");
+           // console.log(filters.mealweight);
+        
+            
             for (var category = 0; category < Object.keys(filters).length; category++){  //  alert(Object.keys(filters)[category]); // mealtype
-                var postCheck = foodPost[Object.keys(filters)[category]];
+            console.log("CHECK");
+            var checkAgain = (Object.keys(filters)[category]).toString();
+            console.log(checkAgain);
+            console.log(foodPost[checkAgain]);
+            var postCheck = foodPost[checkAgain]; //grab it from post
+               // console.log(postCheck);
                 var xox = filters[Object.keys(filters)[category]]; //alert(xox[0]);  /// e.g breakfast
+
+                
                 for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
-                    if (xox[listInCategory] == postCheck){
-                        visibility = true;
+                   // console.log(postCheck);
+                       // console.log("here");
+                        //console.log(xox.mealweight);
+                        
+                     // console.log("CHECK");
+                      //  console.log(postCheck);
+                          //  if (xox[listInCategory] == postCheck[listInOtherCategory]){
+                       // for(var xPost in postCheck){
+                         //   console.log(xox[listInCategory]);
+
+                        //   console.log(postCheck[listInOtherCategory]);
+                      //  console.log(postCheck);
+                        if (xox[listInCategory] == postCheck){
+                                console.log("here");
+                                visibility = true;
+                            }
+                        }
                     }
-                } 
-            }
+                 
+            
             if (visibility == true){
                 foodsToPost.push(foodPost._id);
             }
@@ -142,11 +168,12 @@ function loadFilters(){
         mealtype: " ",
         mealtypecountry: " ",
         mealtypefood: " ",
-        mealsizeweight: " ",
+        mealweight: " ",
         mealexpires: " ",
         mealTypeDietary: " ", //captails??  
         collectionbusiness: " ",
-        distance: " "
+        distance: " ",
+        keyword: " "
     };
     
     
@@ -177,7 +204,7 @@ function loadFilters(){
     $("#collapseSizeWeight input:checked").each(function(){
             sizeweightlist.push($(this).attr('value'))
     })
-    filters["mealsizeweight"] = sizeweightlist;
+    filters["mealweight"] = sizeweightlist;
     
     // EXPIRATION DATE
     var mealexpireslist = [];
@@ -203,7 +230,38 @@ function loadFilters(){
     // DISTANCE AWAY:
     var distanceAwayKm = $("#trcDistanceSlider").val();
     filters["distance"] = distanceAwayKm;
+    
+    // KEYWORDS
+    var keywords = [];
+    var take = $("#txtKeyWord").val()
+    if (take != " " || take !=""){
+    
+        //    mealtypedietarylist.push($(this).attr('value'))
+    //})
+    ///filters["mealTypeDietary"] = mealtypedietarylist;
+  
+        //for (var zero = 0; zero< yyyy.length; zero++){
+        //    console.log(yyyy[zero]);
+       // }
+    console.log(filters['mealweight']);
+    for (var keyy in Object.keys(filters)){
+        console.log(Object.keys(filters)[keyy]); //THIS RETURNS CORRECT THING
+    }
+    for (var key in filters) {
+    // skip loop if the property is from prototype
+    if (!filters.hasOwnProperty(key)) continue;
 
+    var obj = filters[key];
+    for (var prop in obj) {
+        // skip loop if the property is from prototype
+        if(!obj.hasOwnProperty(prop)) continue;
+
+        // your code
+        console.log(prop + " = " + obj[prop]);
+    }
+}
+        
+    }
     return filters;
 } 
 
