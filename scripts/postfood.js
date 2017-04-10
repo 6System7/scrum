@@ -23,7 +23,7 @@ var dataURLToBlob = function(dataURL) {
 }
 
 function validInputs() {
-    // TODO - nicer alerts in this section?
+    // TODO Maddy? - nicer alerts in this section?
 
     var valid = true;
     $("#frmPost :input[type=text], textarea").each(function() {
