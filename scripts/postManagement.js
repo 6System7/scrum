@@ -77,7 +77,33 @@ function generatePostCards(data) {
         });
         $(divEl).append(btnEdit);
 
-        // TODO ADD DELETE BUTTON
+        // ADD DELETE BUTTON
+        var btnDelete = $("<button>");
+        $(btnDelete).text("Delete");
+        $(btnDelete).attr("type", "button");
+        $(btnDelete).addClass("btn btn-danger");
+        $(btnDelete).css("float", "right");
+        $(btnDelete).data("post", x);
+        $(btnDelete).click(function() {
+            if (confirm("Are you sure you want to delete this post?")) {
+                $.ajax({
+                    type: "POST",
+                    url: "/deletePost",
+                    data: {
+                        id: $(this).data("post")._id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function() {
+                        alert("Delete request failed, please try again later");
+                    }
+                });
+
+            }
+        });
+        $(divEl).append(btnDelete);
 
         // CALCULATE COLUMN
         colNum = toPrint - 1;

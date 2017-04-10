@@ -102,6 +102,24 @@ app.post("/addPost", function(req, res) {
     });
 });
 
+app.post("/deletePost", function(req, res) {
+    res.setHeader("Content-Type", "application/json");
+    if (req.body.id) {
+        console.log("Attempting to delete post with id", req.body.id);
+        db.collection("posts").remove({
+            _id: ObjectID.createFromHexString(req.body.id)
+        });
+        res.send(JSON.stringify({
+            note: "success?"
+        }));
+    } else {
+        console.log("No ID for deleting");
+        res.send(JSON.stringify({
+            error: "No ID attached to request"
+        }));
+    }
+});
+
 app.get("/getPosts", function(req, res) {
     var queryObj = {};
     if (req.query.id) {
