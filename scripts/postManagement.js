@@ -65,10 +65,25 @@ function generatePostCards(data) {
         bodyCon.append(authorCon);
         bodyCon.appendTo(container);
 
+        // ADD EDIT BUTTON
+        var btnEdit = $("<button>");
+        $(btnEdit).text("Edit");
+        $(btnEdit).attr("type", "button");
+        $(btnEdit).addClass("btn btn-primary");
+        $(btnEdit).data("post", x);
+        $(btnEdit).click(function() {
+            localStorage.postToEdit = JSON.stringify($(this).data("post"));
+            window.location.replace("/postfood.html");
+        });
+        $(divEl).append(btnEdit);
+
+        // TODO ADD DELETE BUTTON
+
         // CALCULATE COLUMN
         colNum = toPrint - 1;
         colNum = colNum % 4;
         var str = "#column" + colNum.toString();
+
         $(str).append(divEl);
         (divEl).after("<br>");
     }

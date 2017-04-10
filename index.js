@@ -63,7 +63,7 @@ app.post("/addPost", function(req, res) {
         post._id = ObjectID.createFromHexString(post._id);
     }
 
-    if (post.image) {
+    if (post.image && post.saveImage) {
         var regex = /^data:.+\/(.+);base64,(.*)$/;
         var matches = post.image.match(regex);
         var ext = "." + matches[1];
@@ -89,8 +89,9 @@ app.post("/addPost", function(req, res) {
             }
         });
     } else {
-        console.log("No image attached");
+        console.log("No image attached, or image already saved (from post editing)");
     }
+    delete post.saveImage;
 
     db.collection("posts").save(post, function(err, results) {
         if (err) {

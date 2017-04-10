@@ -38,7 +38,7 @@ function validInputs() {
         valid = false;
         alert("Please select a pick-up location!");
     }
-    // if (valid && !imageSelected) { // TODO Mike - uncomment? - spec says 'optional image' so maybe leave commented
+    // if (valid && !imageSelected) { // NOTE spec says 'optional image' so maybe leave commented
     //     valid = false;
     //     alert("Please upload an image of your item!");
     // }
@@ -69,7 +69,8 @@ function sendPostData() {
         });
 
         indexedArray.image = $("#imgPreview").attr("src");
-        $("#imgPreview").attr("src", "");
+        indexedArray.saveImage = imageSelected;
+        // $("#imgPreview").attr("src", "");
 
         if (marker) {
             indexedArray.latitude = marker.getPosition().lat();
@@ -100,12 +101,12 @@ function sendPostData() {
                 }
             }
 
-
-            // TODO Mike - copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
-            // Remove any post from localStorage to exit edit mode having submitted the edited post
+            if (postID) {
+                indexedArray._id = postID;
+            }
             localStorage.removeItem("postToEdit");
 
-            console.log("Submitting post as follows", indexedArray);
+            // console.log("Submitting post as follows", indexedArray);
             $.ajax({
                 type: "POST",
                 url: "/addPost",
@@ -123,6 +124,7 @@ function sendPostData() {
                 }
             });
 
+            postID = false;
             // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
             location.reload();
 
@@ -234,6 +236,7 @@ google.maps.event.addDomListener(window, 'load', function() {
 var imageSelected = false;
 var map; //Will contain map object.
 var marker = false;
+var postID;
 
 $(document).ready(function() {
     $("input:file").change(function() {
@@ -243,7 +246,54 @@ $(document).ready(function() {
     getNotifications();
 
     if (localStorage.postToEdit) {
-        // TODO Mike - load post data into form and change what form controls do?
+        $("#pageTitleH1").text("Edit a food item");
+        console.log(localStorage.postToEdit);
+        var post = JSON.parse(localStorage.postToEdit);
+        postID = post._id;
+
+        $("#txtTitle").val(post.title);
+        $("#txtDescription").val(post.description);
+        initMap(Number(post.latitude), Number(post.longitude));
+        $("#imgPreview").attr("src", post.image);
+        if (post.business) {
+            $("#chkBusiness").prop("checked", true);
+        }
+        if (post.collection) {
+            $("#chkCollectionOnly").prop("checked", true);
+        }
+        if (post.mealTypeDietary) {
+            for (var i = 0; i < post.mealTypeDietary.length; i++) {
+                if (post.mealTypeDietary[i] === "glutenfree") {
+                    $("#chkGlutenFree").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "vegan") {
+                    $("#chkVegan").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "vegetarian") {
+                    $("#chkVegetarian").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "nutfree") {
+                    $("#chkNutFree").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "fishfree") {
+                    $("#chkFishFree").prop("checked", true);
+                }
+            }
+        }
+        if (post.mealtype) {
+            $("#slcMealType").val(post.mealtype);
+        }
+        if (post.mealtypecountry) {
+            $("#slcMealTypeCountry").val(post.mealtypecountry);
+        }
+        if (post.mealtypefood) {
+            $("#slcMealTypeFood").val(post.mealtypefood);
+        }
+        if (post.mealweight) {
+            $("#slcMealWeight").val(post.mealweight);
+        }
+        if (post.mealexpires) {
+            $("#slcMealExpires").val(post.mealexpires);
+        }
+        localStorage.removeItem("postToEdit");
+    } else {
+        postID = false;
     }
 });
 

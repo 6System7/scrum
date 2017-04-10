@@ -35,6 +35,7 @@
         }
     </style>
 </head>
+
 <body>
     <!--Bootstrap Navigation Bar-->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
@@ -77,7 +78,9 @@
                     <li><a href="account.html">Account Settings</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a id="navBarUsername" href="loginAndRegister.html"></a></li>
+                    <li>
+                        <a id="navBarUsername" href="loginAndRegister.html"></a>
+                    </li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -124,27 +127,27 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">Dietary Requirements</div>
                         <div class="panel-body">
-                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="glutenfree" />Gluten-free</label>
-                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegan"/>Vegan</label>
-                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegetarian"/>Vegetarian</label>
-                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="nutfree"/>Nut-free</label>
-                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="fishfree"/>Fish-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="glutenfree" id="chkGlutenFree"/>Gluten-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegan" id="chkVegan"/>Vegan</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="vegetarian" id="chkVegetarian"/>Vegetarian</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="nutfree" id="chkNutFree"/>Nut-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="fishfree" id="chkFishFree"/>Fish-free</label>
                         </div>
                     </div>
                     <div class="panel panel-default">
                         <div class="panel-heading">Meal Type</div>
                         <div class="panel-body">
-                            <select name="mealtype">
+                            <select name="mealtype" id="slcMealType">
                                 <option value="breakfast">Breakfast</option>
                                 <option value="lunch">Lunch</option>
                                 <option value="dinner">Dinner</option>
                             </select>
                         </div>
-                    <!-- </div>
+                        <!-- </div>
                     <div class="panel panel-default"> -->
                         <div class="panel-heading">Type By Country</div>
                         <div class="panel-body">
-                            <select name="mealtypecountry">
+                            <select name="mealtypecountry" id="slcMealTypeCountry">
                                 <option value="british">British</option>
                                 <option value="chinese">Chinese</option>
                                 <option value="french">French</option>
@@ -153,11 +156,11 @@
                                 <option value="thai">Thai</option>
                             </select>
                         </div>
-                    <!-- </div>
+                        <!-- </div>
                     <div class="panel panel-default"> -->
                         <div class="panel-heading">Type Of Food</div>
                         <div class="panel-body">
-                            <select name="mealtypefood">
+                            <select name="mealtypefood" id="slcMealTypeFood">
                                 <option value="dairy">Dairy</option>
                                 <option value="meat">Meat</option>
                                 <option value="fruit">Fruit</option>
@@ -166,21 +169,21 @@
                                 <option value="sweets">Sweets</option>
                             </select>
                         </div>
-                    <!-- </div>
+                        <!-- </div>
                     <div class="panel panel-default"> -->
                         <div class="panel-heading">Size/Weight</div>
                         <div class="panel-body">
-                            <select name="mealweight">
+                            <select name="mealweight" id="slcMealWeight">
                                 <option value="small">Small/Light</option>
                                 <option value="medium">Medium</option>
                                 <option value="large">Large/Heavy</option>
                             </select>
                         </div>
-                    <!-- </div>
+                        <!-- </div>
                     <div class="panel panel-default"> -->
                         <div class="panel-heading">Expiration Date</div>
                         <div class="panel-body">
-                            <select name="mealexpires">
+                            <select name="mealexpires" id="slcMealExpires">
                                 <option value="close">Imminent (&lt;1 week)</option>
                                 <option value="medium">Soon (1 week to 1 month)</option>
                                 <option value="far">Distant (&gt;1 month)</option>
