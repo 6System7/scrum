@@ -100,7 +100,10 @@
             <button id="btnUpdate" type="button" class="btn btn-default">
                 <h4 class="panel-title">Search</h4>
             </button>
-            <br>
+     
+            <button id="btnClearAll" type="button" class="btn btn-default">
+                <h5 class="panel-title">Clear all</h5>
+            </button>
             <br>
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -118,7 +121,7 @@
                         </div>
                         <br>
                         <!-- TODO -->
-                        <label for="trcDistanceSlider" id="distLabel">Search radius(km): 1000</label>
+                        <label for="trcDistanceSlider" id="distLabel">Search radius(km): 10000</label>
                         <input type="range" id="trcDistanceSlider" id="points" value="10000" min="0" max="10000" data-show-value="true" onchange="updateSlider(this.value)">
                     </div>
                 </div>

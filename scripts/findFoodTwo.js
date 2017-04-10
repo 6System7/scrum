@@ -19,7 +19,6 @@ $(document).ready(function(){
         }
     });
     $("#btnUpdate").click(function(){
-    // TODO
         var foodsToPost = filterFoods(dataPass);
         if (foodsToPost.length == 0){
             $("#column0").html("");
@@ -32,6 +31,9 @@ $(document).ready(function(){
             getPostedFoods(foodsToPost);
         }
     });
+    $("#btnClearAll").click(function(){
+        clearAll();
+    })
 })
 
 function getPostedFoods(x){
@@ -114,21 +116,35 @@ function filterFoods(dataPass){
     for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
         var visibility = false;
         var foodPost = dataPass[foodPostElem];  //alert(foodPost._id);  
+        
+        // CALCULATE DISTANCE AND CHECK ITS CORRECT
         var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
-        if (parseInt(dist) <= filters.distance){
+        if (parseInt(dist) <= filters.distance){ 
+            
+            // COMPARE DESCRIPTION AND KEYWORDS
+            var description = foodPost.description;
+            description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
+            var filterDesc = filters.description;
+            console.log(foodPost.title);
+            for (var word = 0; word< filterDesc.length; word++){
+                
+                var wordStr = (filterDesc[word]);
+                if (description.indexOf(wordStr) !== -1){
+                    visibility = true;     
+                }
+            }
+            
             for (var category = 0; category < Object.keys(filters).length; category++){
-            console.log("CHECK");
+
             var checkAgain = (Object.keys(filters)[category]).toString();
-            console.log(checkAgain);
-            console.log(foodPost[checkAgain]);
             var postCheck = foodPost[checkAgain]; //grab it from post
                 var xox = filters[Object.keys(filters)[category]]; //alert(xox[0]);  /// e.g breakfast
 
                 
                 for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                         if (xox[listInCategory] == postCheck){
-                                console.log("here");
                                 visibility = true;
+                            console.log("HEYA");
                             }
                         }
                     }
@@ -156,7 +172,7 @@ function loadFilters(){
         mealTypeDietary: " ", //captails??  
         collectionbusiness: " ",
         distance: " ",
-        keyword: " "
+        description: " "
     };
     
     
@@ -218,12 +234,10 @@ function loadFilters(){
     var keywords = [];
     var take = $("#txtKeyWord").val()
     if (take != " " || take !=""){
-    
-        //    mealtypedietarylist.push($(this).attr('value'))
-    //})
-    ///filters["mealTypeDietary"] = mealtypedietarylist;
-
-        
+        var punctuationless = take.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
+        keywords = punctuationless.split(" ");
+        filters["description"] = keywords;
+ 
     }
     return filters;
 } 
@@ -274,6 +288,11 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 
 function deg2rad(deg) {
   return deg * (Math.PI/180)
+}
+
+function clearAll(){
+    $("#txtKeyWord").val(" ");
+        $('input:checkbox').prop('checked', false);
 }
 
 // TODO eventually move notifications into global functions? 
