@@ -4,7 +4,7 @@
 
 ### FR0 - Web Page Functionality  
   * ~~FR0.1 Registration / Login System~~  
-  * FR0.2 Posting and Editing Listing
+  * ~~FR0.2 Posting and Editing Listing~~
   * FR0.3 Filtering Results
   * FR0.4 Account Modification
   * FR0.5 Barcode Scanning
