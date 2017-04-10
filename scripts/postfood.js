@@ -90,7 +90,8 @@ function sendPostData() {
         geocoder.geocode({'location': latlng}, function(results, status) {
             if (status === 'OK') {
                 if (results[1]) {
-                    indexedArray.location = results[1].address_components;
+                    indexedArray.location = results[1].address_components[1].long_name; // City
+                    //indexedArray.location = results[1].address_components[3].long_name; // County
                 }
             }
 
@@ -99,7 +100,7 @@ function sendPostData() {
         // Remove any post from localStorage to exit edit mode having submitted the edited post
         localStorage.removeItem("postToEdit");
 
-            console.log("Submitting post as follows", indexedArray)
+            console.log("Submitting post as follows", indexedArray);
             $.ajax({
                 type: "POST",
                 url: "/addPost",
