@@ -116,33 +116,16 @@ function filterFoods(dataPass){
         var foodPost = dataPass[foodPostElem];  //alert(foodPost._id);  
         var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
         if (parseInt(dist) <= filters.distance){
-           // console.log("HEY");
-           // console.log(filters.mealweight);
-        
-            
-            for (var category = 0; category < Object.keys(filters).length; category++){  //  alert(Object.keys(filters)[category]); // mealtype
+            for (var category = 0; category < Object.keys(filters).length; category++){
             console.log("CHECK");
             var checkAgain = (Object.keys(filters)[category]).toString();
             console.log(checkAgain);
             console.log(foodPost[checkAgain]);
             var postCheck = foodPost[checkAgain]; //grab it from post
-               // console.log(postCheck);
                 var xox = filters[Object.keys(filters)[category]]; //alert(xox[0]);  /// e.g breakfast
 
                 
                 for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
-                   // console.log(postCheck);
-                       // console.log("here");
-                        //console.log(xox.mealweight);
-                        
-                     // console.log("CHECK");
-                      //  console.log(postCheck);
-                          //  if (xox[listInCategory] == postCheck[listInOtherCategory]){
-                       // for(var xPost in postCheck){
-                         //   console.log(xox[listInCategory]);
-
-                        //   console.log(postCheck[listInOtherCategory]);
-                      //  console.log(postCheck);
                         if (xox[listInCategory] == postCheck){
                                 console.log("here");
                                 visibility = true;
@@ -239,27 +222,7 @@ function loadFilters(){
         //    mealtypedietarylist.push($(this).attr('value'))
     //})
     ///filters["mealTypeDietary"] = mealtypedietarylist;
-  
-        //for (var zero = 0; zero< yyyy.length; zero++){
-        //    console.log(yyyy[zero]);
-       // }
-    console.log(filters['mealweight']);
-    for (var keyy in Object.keys(filters)){
-        console.log(Object.keys(filters)[keyy]); //THIS RETURNS CORRECT THING
-    }
-    for (var key in filters) {
-    // skip loop if the property is from prototype
-    if (!filters.hasOwnProperty(key)) continue;
 
-    var obj = filters[key];
-    for (var prop in obj) {
-        // skip loop if the property is from prototype
-        if(!obj.hasOwnProperty(prop)) continue;
-
-        // your code
-        console.log(prop + " = " + obj[prop]);
-    }
-}
         
     }
     return filters;
