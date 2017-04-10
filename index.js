@@ -87,10 +87,6 @@ app.post("/addPost", function(req, res) {
         console.log("No image attached");
     }
 
-    // TODO NOTE Jordan JORDAN HERE IT'S HERE JORDAN
-    // This is your last chance to modify the post object before it's saved
-    // The below code is purely adding it to the database
-
     db.collection("posts").save(post, function(err, results) {
         if (err) {
             console.log("Saving post failed: " + err.toString());
