@@ -37,7 +37,7 @@ function checkNearbyFoods(dataPassReturned){
             var dist = calculateDistance(foodPost.latitude, foodPost.longitude, memberLang, memberLong)
             var title = foodPost.title;
             if (dist < 10000){
-                alert(foodPost._id);
+                
 
                 // CREATE NEARBY POST
 

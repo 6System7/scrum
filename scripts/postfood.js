@@ -247,8 +247,7 @@ $(document).ready(function() {
         imageSelected = true;
         previewFile();
     });
-    getNotifications();
-
+    
     if (localStorage.postToEdit) {
         $("#pageTitleH1").text("Edit a food item");
         console.log(localStorage.postToEdit);
