@@ -1,29 +1,5 @@
-var dataURLToBlob = function(dataURL) {
-    var BASE64_MARKER = ';base64,';
-    if (dataURL.indexOf(BASE64_MARKER) == -1) {
-        var parts = dataURL.split(',');
-        var contentType = parts[0].split(':')[1];
-        var raw = parts[1];
-
-        return new Blob([raw], {
-            type: contentType
-        });
-    }
-    var parts = dataURL.split(BASE64_MARKER);
-    var contentType = parts[0].split(':')[1];
-    var raw = window.atob(parts[1]);
-    var rawLength = raw.length;
-    var uInt8Array = new Uint8Array(rawLength);
-    for (var i = 0; i < rawLength; ++i) {
-        uInt8Array[i] = raw.charCodeAt(i);
-    }
-    return new Blob([uInt8Array], {
-        type: contentType
-    });
-}
-
 function validInputs() {
-    // TODO - nicer alerts in this section?
+    // TODO Maddy? - nicer alerts in this section?
 
     var valid = true;
     $("#frmPost :input[type=text], textarea").each(function() {
@@ -38,7 +14,7 @@ function validInputs() {
         valid = false;
         alert("Please select a pick-up location!");
     }
-    // if (valid && !imageSelected) { // TODO Mike - uncomment - only commented for testing (not needing image each time)
+    // if (valid && !imageSelected) { // NOTE spec says 'optional image' so maybe leave commented
     //     valid = false;
     //     alert("Please upload an image of your item!");
     // }
@@ -69,7 +45,10 @@ function sendPostData() {
         });
 
         indexedArray.image = $("#imgPreview").attr("src");
-        $("#imgPreview").attr("src", "");
+        if (imageSelected) {
+            indexedArray.saveImage = true;
+        }
+        // $("#imgPreview").attr("src", "");
 
         if (marker) {
             indexedArray.latitude = marker.getPosition().lat();
@@ -79,33 +58,59 @@ function sendPostData() {
         if (localStorage.username) {
             indexedArray.username = localStorage.username;
         } else {
-            alert("SUBMITTING WHILE NOT LOGGED IN");
+            alert("WARNING - SUBMITTING WHILE NOT LOGGED IN");
         }
 
-        // TODO copy ID from localStorage (to-edit) post over to indexedArray BEFORE sending to db
-        // Remove any post from localStorage to exit edit mode having submitted the edited post
-        localStorage.removeItem("postToEdit");
+        // @Mike, I Added saving location here as googleApi wasn't accessible from index.js
 
-        console.log("Submitting post as follows", indexedArray)
-        $.ajax({
-            type: "POST",
-            url: "/addPost",
-            data: {
-                postToPost: indexedArray
-            },
-            dataType: "json",
-            success: function(data) {
-                console.log("Success when posting");
-            },
-            error: function() {
-                // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
-                // console.log("Failed when posting");
-                // alert("Could not add post\nPlease try again soon!");
+        var geocoder = new google.maps.Geocoder;
+        var latlng = {
+            lat: indexedArray.latitude,
+            lng: indexedArray.longitude
+        };
+
+        geocoder.geocode({
+            'location': latlng
+        }, function(results, status) {
+            if (status === 'OK') {
+                if (results[1]) {
+                    indexedArray.location = results[1].address_components[1].long_name; // City
+                    //indexedArray.location = results[1].address_components[3].long_name; // County
+                }
+            }
+
+            if (postID) {
+                indexedArray._id = postID;
+            }
+            localStorage.removeItem("postToEdit");
+
+            // console.log("Submitting post as follows", indexedArray);
+            $.ajax({
+                type: "POST",
+                url: "/addPost",
+                data: {
+                    postToPost: indexedArray
+                },
+                dataType: "json",
+                success: function(data) {
+                    console.log("Success when posting");
+                },
+                error: function() {
+                    // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
+                    // console.log("Failed when posting");
+                    // alert("Could not add post\nPlease try again soon!");
+                }
+            });
+
+            // IF EDITING, GO BACK TO MANAGEMENT
+            if (postID) {
+                postID = false;
+                window.location.replace("/postManagement.html");
+            } else { // IF ADDING, ALLOW FOR MORE ADDING
+                // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
+                location.reload();
             }
         });
-
-        // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
-        location.reload();
     }
 }
 
@@ -137,7 +142,6 @@ function previewFile() {
             canvas.height = height;
             canvas.getContext('2d').drawImage(image, 0, 0, width, height);
             var dataUrl = canvas.toDataURL('image/jpeg');
-            // var resizedImage = dataURLToBlob(dataUrl);
             preview.attr("src", dataUrl);
         }
         image.src = reader.result;
@@ -202,18 +206,18 @@ function markerLocation() {
 }
 
 google.maps.event.addDomListener(window, 'load', function() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-            initMap(pos.coords.latitude, pos.coords.longitude);
-        });
-    } else {
-        initMap(54.775250, -1.584852);
-    }
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        initMap(pos.coords.latitude, pos.coords.longitude);
+    }, function(error) {
+        initMap(54.77525, -1.584852);
+        // alert("Could not get your location, defaulting to Durham");
+    });
 });
 
 var imageSelected = false;
 var map; //Will contain map object.
 var marker = false;
+var postID;
 
 $(document).ready(function() {
     $("input:file").change(function() {
@@ -223,16 +227,55 @@ $(document).ready(function() {
     getNotifications();
 
     if (localStorage.postToEdit) {
-        // TODO load post data into form
+        $("#pageTitleH1").text("Edit a food item");
+        console.log(localStorage.postToEdit);
+        var post = JSON.parse(localStorage.postToEdit);
+        postID = post._id;
+
+        $("#txtTitle").val(post.title);
+        $("#txtDescription").val(post.description);
+        initMap(Number(post.latitude), Number(post.longitude));
+        $("#imgPreview").attr("src", post.image);
+        if (post.business) {
+            $("#chkBusiness").prop("checked", true);
+        }
+        if (post.collection) {
+            $("#chkCollectionOnly").prop("checked", true);
+        }
+        if (post.mealTypeDietary) {
+            for (var i = 0; i < post.mealTypeDietary.length; i++) {
+                if (post.mealTypeDietary[i] === "glutenfree") {
+                    $("#chkGlutenFree").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "vegan") {
+                    $("#chkVegan").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "vegetarian") {
+                    $("#chkVegetarian").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "nutfree") {
+                    $("#chkNutFree").prop("checked", true);
+                } else if (post.mealTypeDietary[i] === "fishfree") {
+                    $("#chkFishFree").prop("checked", true);
+                }
+            }
+        }
+        if (post.mealtype) {
+            $("#slcMealType").val(post.mealtype);
+        }
+        if (post.mealtypecountry) {
+            $("#slcMealTypeCountry").val(post.mealtypecountry);
+        }
+        if (post.mealtypefood) {
+            $("#slcMealTypeFood").val(post.mealtypefood);
+        }
+        if (post.mealweight) {
+            $("#slcMealWeight").val(post.mealweight);
+        }
+        if (post.mealexpires) {
+            $("#slcMealExpires").val(post.mealexpires);
+        }
+        localStorage.removeItem("postToEdit");
+    } else {
+        postID = false;
     }
 });
-
-function getNotifications() {
-    userID = "Bob Smith";
-    typeOfMessage = " has sent you a <strong> message </strong>" //TODO will contain link to message
-    typeOfMessageImage = " glyphicon glyphicon-envelope"
-    newNotif = "<li class='notification'><span class='glyphicon glyphicon-envelope' align = 'inline'> </span>" + userID + typeOfMessage + "</li>";
-    document.getElementById("notificationList").insertAdjacentHTML('beforeEnd', newNotif);
-}
 
 // TODO Mike - quagga.js for barcode

@@ -3,34 +3,34 @@
 ## Functional Requirements  
 
 ### FR0 - Web Page Functionality  
-  * FR0.1 Registration / Login System  
-  * FR0.2 Posting and Editing Listing
+  * ~~FR0.1 Registration / Login System~~  
+  * ~~FR0.2 Posting and Editing Listing~~
   * FR0.3 Filtering Results
   * FR0.4 Account Modification
   * FR0.5 Barcode Scanning
-  * FR0.6 Navigation/Links
+  * ~~FR0.6 Navigation/Links~~
   * FR0.7 Integrated Map (With Markers)
   * FR0.8 Chat Service
   * FR0.9 Point System
   * FR0.10 User Rating System
-  * FR0.11 Password Control
+  * ~~FR0.11 Password Control~~
   * FR0.12 Notifications
   * FR0.13 Server-side Post Filtering
   * FR0.14 Advanced Filtering Results 
    
 ### FR1 - Back-End Server Functionality  
-  * FR1.1 Database Management  
+  * ~~FR1.1 Database Management~~  
   * FR1.2 Intelligent Data Analysis  
   
 ## Non-Functional Requirements
 
 ### NFR0 - Security
-  * NFR0.1 Encryption
+  * ~~NFR0.1 Encryption~~
   * NFR0.2 Access Control  
   
 ### NFR1 - Usability - Web Page Design
   * NFR1.1 Accommodating for those with additional needs.
-  * NFR1.2 Device Compatibility  
+  * ~~NFR1.2 Device Compatibility~~  
 
 ### NFR2 - Reliability - Server Uptime
   * NFR2.1 Crash Recovery

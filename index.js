@@ -5,6 +5,7 @@ var ip = require('ip');
 var nodemailer = require('nodemailer');
 var uuidV4 = require('uuid/v4');
 var MongoClient = require("mongodb").MongoClient;
+var ObjectID = require("mongodb").ObjectID;
 var fs = require("fs");
 var app = express();
 var path = __dirname + "/";
@@ -38,10 +39,13 @@ MongoClient.connect(db_URI, function(err, database_object) {
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
+app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
+app.use('/fonts', express.static(__dirname + '/node_modules/bootstrap/fonts'));
 app.use(express.static('pages'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
 app.use(express.static('brand-images'));
+app.use(express.static('custom-css'));
 
 //Set up email system
 var transporter = nodemailer.createTransport({
@@ -61,7 +65,11 @@ app.get("/", function(req, res) {
 app.post("/addPost", function(req, res) {
     var post = req.body.postToPost;
 
-    if (post.image) {
+    if (post._id && typeof post._id === 'string') {
+        post._id = ObjectID.createFromHexString(post._id);
+    }
+
+    if (post.image && post.saveImage) {
         var regex = /^data:.+\/(.+);base64,(.*)$/;
         var matches = post.image.match(regex);
         var ext = "." + matches[1];
@@ -87,8 +95,9 @@ app.post("/addPost", function(req, res) {
             }
         });
     } else {
-        console.log("No image attached");
+        console.log("No image attached, or image already saved (from post editing)");
     }
+    delete post.saveImage;
 
     db.collection("posts").save(post, function(err, results) {
         if (err) {
@@ -99,8 +108,32 @@ app.post("/addPost", function(req, res) {
     });
 });
 
+app.post("/deletePost", function(req, res) {
+    res.setHeader("Content-Type", "application/json");
+    if (req.body.id) {
+        console.log("Attempting to delete post with id", req.body.id);
+        db.collection("posts").remove({
+            _id: ObjectID.createFromHexString(req.body.id)
+        });
+        res.send(JSON.stringify({
+            note: "success?"
+        }));
+    } else {
+        console.log("No ID for deleting");
+        res.send(JSON.stringify({
+            error: "No ID attached to request"
+        }));
+    }
+});
+
 app.get("/getPosts", function(req, res) {
-    db.collection("posts").find().toArray(function(err, results) {
+    var queryObj = {};
+    if (req.query.id) {
+        queryObj._id = ObjectID.createFromHexString(req.query.id);
+    } else if (req.query.username) {
+        queryObj.username = req.query.username;
+    }
+    db.collection("posts").find(queryObj).toArray(function(err, results) {
         res.setHeader("Content-Type", "application/json");
         if (err) {
             res.send(JSON.stringify({
@@ -118,7 +151,9 @@ app.get("/removeUnusedImages", function(req, res) {
     fs.readdir(folder, function(err, files) {
         files.forEach(function(file) {
             if (file !== "NOIMAGE.png") {
-                db.collection("posts").findOne({image:file}, function(err, document) {
+                db.collection("posts").findOne({
+                    image: file
+                }, function(err, document) {
                     if (!document && !err) {
                         // IMAGE NOT REFERENCED BY ANY POST
                         fs.unlink(folder + file, function(err) {
@@ -227,7 +262,9 @@ app.post("/addResetToken", function(req, res) {
         }
 
         if (tokenExists) {
-            db.collection("resetTokens").remove({username: tokenData.username}, function (err, results) {
+            db.collection("resetTokens").remove({
+                username: tokenData.username
+            }, function(err, results) {
                 if (err) {
                     console.log("Deleting token failed: " + err.toString());
                 } else {
@@ -236,7 +273,7 @@ app.post("/addResetToken", function(req, res) {
             });
         }
 
-        db.collection("resetTokens").save(tokenData, function (err, results) {
+        db.collection("resetTokens").save(tokenData, function(err, results) {
             if (err) {
                 res.send(err.toString());
                 console.log("Saving reset token failed: " + err.toString());
@@ -262,10 +299,12 @@ app.get("/getResetTokens", function(req, res) {
     });
 });
 
-app.post("/deleteResetToken", function(req, res){
+app.post("/deleteResetToken", function(req, res) {
     var resetToken = req.body.resetToken;
 
-    db.collection("resetTokens").remove({resetToken: resetToken}, function(err, results){
+    db.collection("resetTokens").remove({
+        resetToken: resetToken
+    }, function(err, results) {
         if (err) {
             res.send(err.toString());
             console.log("Deleting token failed: " + err.toString());
@@ -276,7 +315,7 @@ app.post("/deleteResetToken", function(req, res){
     });
 });
 
-app.post("/cleanResetTokens", function(req, res){
+app.post("/cleanResetTokens", function(req, res) {
     db.collection("resetTokens").find().toArray(function(err, results) {
 
         var currentDate = new Date(Date.now());
@@ -286,7 +325,9 @@ app.post("/cleanResetTokens", function(req, res){
             var jsonResult = results[i];
             if (jsonResult.expirationDate < currentDate) {
                 deleteCount++;
-                db.collection("resetTokens").remove({resetToken: jsonResult.resetToken}, function(err, results){
+                db.collection("resetTokens").remove({
+                    resetToken: jsonResult.resetToken
+                }, function(err, results) {
                     if (err) {
                         console.log("Deleting token failed: " + err.toString());
                     } else {
@@ -334,7 +375,7 @@ app.get("/socket.io/socket.io.js", function(req, res) {
 });
 
 app.get("*", function(req, res) {
-    res.sendFile(path + "/pages/404.html");
+    res.redirect('/404.html');
 });
 
 //Start server and listen on port 8080

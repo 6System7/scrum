@@ -7,24 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="Group Project Assignment" content="">
-    <meta name="gttg22" content="">
+    <meta name="6system7" content="">
 
     <title>SCRUM - Food sharing app</title>
     <!-- jQuery -->
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/jquery/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!-- Can remove this one?
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">-->
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--this makes the drop down notifcations work! -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+       <!-- this makes the bell pretty -->
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
 
     <!-- Custom styles for this template -->
-    <link href="/css/scrumFormat.css" rel="stylesheet">
-    <link href="/css/findFoodCSSTest.css" rel="stylesheet">
+    <link href="scrumFormat.css" rel="stylesheet">
+    <link href="findFoodCSSTest.css" rel="stylesheet">
+    
+   
+    
 
-
-    <!-- Bootstrap core JS -->
-    <script src="/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -44,6 +51,7 @@
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
+                          
                     <li class="dropdown dropdown-notifications">
                         <!--Todo: want to make it pull left. -->
                         <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton">
@@ -58,6 +66,7 @@
                                 <div class="panel-group" id="groupNotifPanels">
                                     <!-- where the notifications will be put -->
                                     <ul class="list-unstyled" id="notificationList">
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -67,7 +76,7 @@
                         <li><a href="home.html">Home</a></li>
                         <li><a href="postManagement.html">Manage Posts</a></li>
                         <li class="active"><a href="findfood.html">Find Food</a></li>
-                        <li><a href="loginAndRegister.html">Login & Register</a></li>
+                        <li><a href="loginAndRegister.html">Login &amp; Register</a></li>
                         <li><a href="account.html">Account Settings</a></li>
             <li><a href="chat.html">Messages</a></li>
                 </ul>
@@ -102,7 +111,10 @@
             <button id="btnUpdate" type="button" class="btn btn-default">
                 <h4 class="panel-title">Search</h4>
             </button>
-            <br>
+     
+            <button id="btnClearAll" type="button" class="btn btn-default">
+                <h5 class="panel-title">Clear all</h5>
+            </button>
             <br>
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -120,8 +132,8 @@
                         </div>
                         <br>
                         <!-- TODO -->
-                        <label for="trcDistanceSlider" id="distLabel">Search radius(km): 1000</label>
-                        <input type="range" id="trcDistanceSlider" id="points" value="1000" min="0" max="10000" data-show-value="true" onchange="updateSlider(this.value)">
+                        <label for="trcDistanceSlider" id="distLabel">Search radius(km): 10000</label>
+                        <input type="range" id="trcDistanceSlider" id="points" value="10000" min="0" max="10000" data-show-value="true" onchange="updateSlider(this.value)">
                     </div>
                 </div>
             </div>
@@ -134,130 +146,136 @@
                     </h4>
                 </div>
                 <div id="collapseMealType" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" name="breakfast" value="">Breakfast</label>
-                        <label class="checkbox-inline"><input type="checkbox" name ="lunch" value="">Lunch</label>
-                        <label class="checkbox-inline"><input type="checkbox" name ="dinner" value="">Dinner</label>
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" name="breakfast" value="">Breakfast</label>
+                            <label class="checkbox-inline"><input type="checkbox" name ="lunch" value="">Lunch</label>
+                            <label class="checkbox-inline"><input type="checkbox" name ="dinner" value="">Dinner</label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" href="#collapseTypeCountry">
                                 Type - Country
                             </a>
                         </h4>
-                </div>
-                <div id="collapseTypeCountry" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" value="">Italian</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Chinese</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Thai</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">French</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Spanish</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">British</label>
-                        <!-- TODO more than one option possible? Is this built in-->
+                    </div>
+                    <div id="collapseTypeCountry" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" value="italian">Italian</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="chinese">Chinese</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="thai">Thai</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="french">French</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="spanish">Spanish</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="british">British</label>
+                            <!-- TODO more than one option possible? Is this built in-->
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" href="#collapseTypeOfFood">
                                 Type of Food
                             </a>
                         </h4>
-                </div>
-                <div id="collapseTypeOfFood" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" value="">Dairy</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Meat</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Veg</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Fruit</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Sweets</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Snacks</label>
-                        <!-- TODO more than one option possible? Is this built in-->
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <div id="collapseTypeOfFood" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" value="dairy">Dairy</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="meat">Meat</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="vegetables">Vegetables</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="fruit">Fruit</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="sweets">Sweets</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="snacks">Snacks</label>
+                            <!-- TODO more than one option possible? Is this built in-->
+                        </div>
+                    </div>
+             </div>
+             <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" href="#collapseSizeWeight">
                                 Size/Weight
                             </a>
                         </h4>
-                </div>
-                <div id="collapseSizeWeight" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" value="">Small/Light</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Medium</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Large/Heavy</label>
-                        <!-- TODO more than one option possible? Is this built in-->
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <div id="collapseSizeWeight" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" value="small">Small/Light</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="medium">Medium</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="large">Large/Heavy</label>
+                            <!-- TODO more than one option possible? Is this built in-->
+                        </div>
+                    </div>
+             </div>
+             <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" href="#collapseExpirationDate">
                                 Expiration Date
                             </a>
                         </h4>
-                </div>
-                <div id="collapseExpirationDate" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" value="">Short (within a week)</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Medium</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Long (Over a month)</label>
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <div id="collapseExpirationDate" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" value="close">Short (within a week)</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="medium">Medium</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="far">Long (Over a month)</label>
+                        </div>
+                    </div>
+             </div>
+             <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" href="#collapseCollectionOnly">
                                 Collection Only
                             </a>
                         </h4>
-                </div>
-                <div id="collapseCollectionOnly" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" value="">Yes</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">No</label>
                     </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+                    <div id="collapseCollectionOnly" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <label class = "checkbox-inline"><input type="checkbox" value="collection">Collection only</label>
+                        <br/>
+                            <label class = "checkbox-inline"><input type="checkbox" value="business">Business</label>
+
+                           <!-- <label class="checkbox-inline"><input type="checkbox" value="">Yes</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="">No</label>
+                        </div>
+                    </div>
+             </div>
+             <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" href="#collapseBusiness">
                                 Business
                             </a>
                         </h4>
-                </div>
-                <div id="collapseBusiness" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" value="">Yes</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">No</label>
                     </div>
-                </div>
+                    <div id="collapseBusiness" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" value="">Yes</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="">No</label>
+                        </div> -->
+                    </div>
+             </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
+             <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
                             <a data-toggle="collapse" href="#collapseDietryRequirements">
                                 Dietry Requirements
                             </a>
                         </h4>
-                </div>
-                <div id="collapseDietryRequirements" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <label class="checkbox-inline"><input type="checkbox" value="">Gluten-free</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Vegan</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Nut-free</label>
-                        <label class="checkbox-inline"><input type="checkbox" value="">Vegetarian</label>
+                    </div>
+                    <div id="collapseDietryRequirements" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <label class="checkbox-inline"><input type="checkbox" value="glutenfree">Gluten-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="vegan">Vegan</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="nutfree">Nut-free</label>
+                            <label class="checkbox-inline"><input type="checkbox" value="vegetarian">Vegetarian</label>
+                        <label class="checkbox-inline"><input type="checkbox" value="fishfree">Fish-free</label>
                     </div>
                 </div>
             </div>
@@ -265,46 +283,24 @@
         <!-- end of columns -->
 
         <div class="col-sm-3" id="column0">
-            <div class="w3-card-4">
-                <img src="https://res-3.cloudinary.com/simpleview/image/upload/c_fill,f_auto,h_480,q_65,w_708/v1/clients/norway/kayaking_in_reine_lofoten_norway_2_1_e9050661-f349-4d95-bb31-8d4cd40ff0ea.jpg" alt="Norway" style="width:100%">
-                <div class="w3-container w3-center">
-                    <h4> Norway Image </h4>
-                    <p>The Troll's tongue in Hardanger, Norway</p>
-                    <p class="card-text"><small class="text-muted"> <i>Username</i></small></p>
 
-                </div>
-            </div>
-            <br>
         </div>
         <!-- First column end-->
         <div class="col-sm-3" id="column1">
-            <div class="w3-card-4">
-                <img src="https://res-3.cloudinary.com/simpleview/image/upload/c_fill,f_auto,h_480,q_65,w_708/v1/clients/norway/kayaking_in_reine_lofoten_norway_2_1_e9050661-f349-4d95-bb31-8d4cd40ff0ea.jpg" alt="Norway" style="width:100%">
-                <div class="w3-container w3-center">
-                    <h4> Norway Image </h4>
-                    <p>The Troll's tongue in Hardanger, Norway</p>
-                    <p class="card-text"><small class="text-muted"> <i>Username</i></small></p>
-                </div>
-            </div>
-            <br>
+
         </div>
         <!-- Second column end-->
         <div class="col-sm-3" id="column2">
-            <div class="w3-card-4">
-                <img src="https://res-3.cloudinary.com/simpleview/image/upload/c_fill,f_auto,h_480,q_65,w_708/v1/clients/norway/kayaking_in_reine_lofoten_norway_2_1_e9050661-f349-4d95-bb31-8d4cd40ff0ea.jpg" alt="Norway" style="width:100%">
-                <div class="w3-container w3-center">
-                    <h4> Norway Image </h4>
-                    <p>The Troll's tongue in Hardanger, Norway</p>
-                    <p class="card-text"><small class="text-muted"> <i>Username</i></small></p>
-                </div>
-            </div>
-            <br>
+
         </div>
         <!-- Third column end-->
 
     </div>
+    <!-- Bootstrap core JS -->
+    <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="findFoodTwo.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
+    <script type="text/javascript" src="notifications.js"></script>
 </body>
 
 </html>
