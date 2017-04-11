@@ -1,6 +1,5 @@
 $(document).ready(function(){
     var dataPass;
-    getNotifications();
     $.ajax({
         url: "/getPosts",
         type: "GET",
