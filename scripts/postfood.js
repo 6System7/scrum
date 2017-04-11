@@ -93,7 +93,7 @@ function sendPostData() {
                 },
                 dataType: "json",
                 success: function(data) {
-                    console.log("Success when posting");
+                    // console.log("Success when posting");
                 },
                 error: function() {
                     // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
@@ -224,10 +224,13 @@ $(document).ready(function() {
         imageSelected = true;
         previewFile();
     });
-    
+
+    // NOTE Maddy - Mike commented this out as instructed, getNotifications();
+
+
     if (localStorage.postToEdit) {
         $("#pageTitleH1").text("Edit a food item");
-        console.log(localStorage.postToEdit);
+        // console.log(localStorage.postToEdit);
         var post = JSON.parse(localStorage.postToEdit);
         postID = post._id;
 

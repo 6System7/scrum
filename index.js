@@ -16,6 +16,12 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
     extended: true
 }));
 
+//Chat stuff
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+
+
+
 var db_URI = "mongodb://john:6system7@ds119220.mlab.com:19220/heroku_q2dllfgh";
 var db;
 
@@ -364,11 +370,116 @@ app.post("/sendEmail", function(req, res) {
 
 });
 
+app.get("/socket.io/socket.io.js", function(req, res) {
+    res.sendFile(path + "/node_modules/socket.io-client/dist/socket.io.js");
+});
+
 app.get("*", function(req, res) {
     res.redirect('/404.html');
 });
 
 //Start server and listen on port 8080
-app.listen(process.env.PORT || 8080, function() {
+server.listen(process.env.PORT || 8080, function() {
     console.log("Live at Port " + (process.env.PORT || "8080"));
+});
+
+//Chat stuff test
+io.on('connection', function (socket) {
+  var addedUser = false;
+  
+  // when the client performs initial handshake, store their username in local variable
+  socket.on('handshake', function (username) {
+    if (addedUser) {return;}
+    // store the username in the socket session for this client
+    socket.username = username;
+    addedUser = true;
+    console.log('Handshake completed with ', username);
+    socket.emit('login');
+  });
+  
+  // when the client emits 'joinRoom', this adds the client to that room
+  socket.on('joinRoom', function (room) {
+    // Only add socket if it is not already in the room
+    if(!socket.rooms[room]) {
+      socket.join(room);
+      socket.emit('joined', room);
+      output = 'Added a user to room \'' + room + '\'';
+      console.log(output);
+    }
+  });
+    
+  // when the client emits 'leaveRoom', this removes the client from that room
+  socket.on('leaveRoom', function (room) {
+    // Only remove socket if it is already in the room
+    if(socket.rooms[room]) {
+      socket.leave(room);
+      socket.emit('left', room);
+      output = 'Removed user \'' + socket.username +  '\' from room \'' + room + '\'';
+      console.log(output);
+    }
+  });
+  
+  // when the client emits 'toggleRoom', remove them if they're in the room, or add them if they're not
+  socket.on('toggleRoom', function (room) {
+    // Only add socket if it is not already in the room
+    if(!socket.rooms[room]) {
+      socket.join(room);
+      socket.emit('joined', room);
+      output = 'Added a user to room \'' + room + '\'';
+      console.log(output);
+    }// Only remove socket if it is already in the room
+    else {
+      socket.leave(room);
+      socket.emit('left', room);
+      output = 'Removed user \'' + socket.username +  '\' from room \'' + room + '\'';
+      console.log(output);
+    }
+  });
+  
+  // when the client emits 'direct message', send the msg to the given room
+  socket.on('direct message', function(room, msg) {
+    socket.to(room).emit('chat message', socket.username, msg);
+    console.log('Message \'' + msg + '\' sent to room \'' + room + '\'')
+  });
+  
+  var addedUser = false;
+
+  // when the client emits 'broadcast message', this listens and executes
+  socket.on('broadcast message', function (data) {
+    // we tell the client to execute 'new message'
+    socket.broadcast.emit('broadcast message', {
+      username: socket.username,
+      message: data
+    });
+  });
+
+  // when the client emits 'typing', we broadcast it to others
+  socket.on('typing', function () {
+    socket.broadcast.emit('typing', {
+      username: socket.username
+    });
+  });
+
+  // when the client emits 'stop typing', we broadcast it to others
+  socket.on('stop typing', function () {
+    socket.broadcast.emit('stop typing', {
+      username: socket.username
+    });
+  });
+  
+  // when the user emits 'getRooms', we respond with a list of the rooms that user is in
+  socket.on('getRooms', function() {
+    socket.emit('postRooms', socket.rooms);
+  });
+
+  // when the user disconnects, perform this
+  socket.on('disconnect', function () {
+    if (addedUser) {
+      // echo globally that this client has left
+      socket.broadcast.emit('user left', {
+        username: socket.username
+      });
+      console.log(socket.username, 'disconnected');
+    }
+  });
 });
