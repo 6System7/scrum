@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<!--TODO
+- Make messages list scrollable independently of rest
+- Load contacts list (and messages from db)
+  - Load contacts from list of rooms?
+  - Sort contacts in order of time since last message sent/received
+-->
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -6,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="Group Project Assignment" content="">
-    <meta name="gttg22" content="">
+    <meta name="6System7" content="">
 
     <title>SCRUM - Food sharing app</title>
     <!-- jQuery -->
@@ -18,6 +25,7 @@
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
      </head>
+  
   <body>
     <!--Bootstrap Navigation Bar-->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
@@ -52,11 +60,11 @@
                 </ul>
             </li>
             <li><a href="home.html">Home</a></li>
-            <li class="active"><a href="postManagement.html">Manage Posts</a></li>
+            <li><a href="postManagement.html">Manage Posts</a></li>
             <li><a href="findfood.html">Find Food</a></li>
             <li><a href="loginAndRegister.html">Login & Register</a></li>
               <li><a href="account.html">Account Settings</a></li>
-            <li><a href="chat.html">Messages</a></li>
+            <li class="active"><a href="chat.html">Messages</a></li>
 
 
 
@@ -68,42 +76,83 @@
       </div>
     </nav>
 
-    <div class="container">
 
-    <!--Initial data when landing on page-->
-      <div class="scrumFormat">
-        <h1>Post Management</h1>
-        <form action="/postfood.html">
-          <button class="btn btn-primary" type="submit" id="createPostButton">Create Post</button>
-        </form>
-
-        <br>
-        <p>Todo:
-          <br>- Post management shiz
-          <br>ie. load posts, give option to edit each one, use localStorage for passing to edit page</p>
-
-        <!-- A large picture -->
-        <!-- Link to download from app store? -->
-        <!-- About us small details -->
-        <!-- Log in and Register system (Potentially in it's own page?) -->
-        <!-- Notifications/Recomendations -->
-
+    <div class="container-fluid">
+<!--        TODO: Add a scrollable lift on the left, separated from the mesages list, containing previous conversations.-->
+        <style>
+          form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 80%; }
+          form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+          form button { width: 9%; background: rgb(28, 147, 155); border: none; padding: 10px; color: rgb(255, 255, 255)}
+          #messages { list-style-type: none; margin: 0; padding: 0; }
+          #messages li { padding: 5px 10px; }
+          #messages li:nth-child(odd) { background: #eee; }
+          #messages { margin-bottom: 40px }
+          #messages { max-height: 100%}
+        </style>
+      <div class="row">
+            <div class="col-md-2"><h1>Chat Rooms</h1></div>
+            <div class="col-md-10"><h1>Messages</h1></div>
+            
+        </div>
+      <div class="row">
+        <div class="col-md-2">
+          <!--div class to be filled with chat rooms once they've been loaded-->
+          <div class="list-group" id="rooms"></div>
+          <button class="btn btn-primary" type="submit" id="room1Button">Join room 1</button>
+          <button class="btn btn-primary" type="submit" id="room2Button">Join room 2</button>
+          <button class="btn" type="submit" id="updateRooms">update Rooms</button>
+        </div>
+        <div class="col-md-10" style="position:relative">
+          <!--div class to be filled with chat messages once they've been loaded-->
+          <ul id="messages"></ul> <!-- List that holds messages displayed on screen -->
+          <form action="">
+            <input id="input" autocomplete="off" /><button>Send</button>
+          </form>
+        </div>
       </div>
+      <body>
+        
+
+      </body>
 
     </div><!-- /.container -->
-
+      
     <script type="text/javascript">
-
-        //Add necessary code here.
-
+      var currentRoom;
+      function setActive(room) {
+        //If the same room is selected twice in a row, do nothing
+        if(room == currentRoom){return}
+        //Set the selected room to active
+        document.getElementById(room).setAttribute("class", "list-group-item active");
+        //If another topic is active, deselect it
+        if(currentRoom !== undefined) {
+          try {
+            document.getElementById(currentRoom).setAttribute("class", "list-group-item");
+          } catch(err) {
+            if(err instanceof TypeError) {}
+            // If the err is a TypeError, it likely means the last currentTopic has been removed
+            // in this case we do nothing
+            else {
+              // Otherwise, throw the error
+              throw err;
+            }
+          }
+        }
+        //Update the currentTopic variable
+        currentRoom = room;
+      }
+                
     </script>
-
-
+      
+      
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="chat.js"></script>
   </body>
 </html>

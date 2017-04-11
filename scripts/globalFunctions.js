@@ -1,7 +1,7 @@
 window.onload = getUsername; redirectCheck();
 
 function redirectCheck(){
-    var lockedPages = ["account", "findfood", "postfood", "postManagement", "resetPassword"];
+    var lockedPages = ["account", "findfood", "postfood", "postManagement", "resetPassword", "chat"];
     var keyValid = authKeyCheck();
     var currentPage = window.location.pathname;
     var onLockedPage = false;
