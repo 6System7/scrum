@@ -61,7 +61,7 @@ function generatePostCards(data) {
         // CREATE DESCRIPTION & AUTHOR
         var bodyCon = $("<p>");
         bodyCon.text(x.description);
-        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i></small>";
+        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + " (You)</i></small>";
         bodyCon.append(authorCon);
         bodyCon.appendTo(container);
 

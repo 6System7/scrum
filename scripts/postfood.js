@@ -124,10 +124,14 @@ function sendPostData() {
                 }
             });
 
-            postID = false;
-            // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
-            location.reload();
-
+            // IF EDITING, GO BACK TO MANAGEMENT
+            if (postID) {
+                postID = false;
+                window.location.replace("/postManagement.html");
+            } else { // IF ADDING, ALLOW FOR MORE ADDING
+                // NOTE THIS IS TO CLEAR THE UNCLEARABLE INPUT, AND TO ENSURE THE LOCATION INPUTS ARE NOT EMPTY, ETC
+                location.reload();
+            }
         });
     }
 }
