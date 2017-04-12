@@ -224,7 +224,9 @@ $(document).ready(function() {
         imageSelected = true;
         previewFile();
     });
+
     // NOTE Maddy - Mike commented this out as instructed, getNotifications();
+
 
     if (localStorage.postToEdit) {
         $("#pageTitleH1").text("Edit a food item");
