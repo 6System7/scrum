@@ -279,3 +279,4 @@ $(document).ready(function() {
 });
 
 // TODO Mike - quagga.js for barcode
+// TODO Mike - https://en.wiki.openfoodfacts.org/API Open Food Facts API for barcode -> product information for auto fill of form data
