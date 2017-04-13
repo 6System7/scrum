@@ -21,14 +21,24 @@ $(function() {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      addChatMessage({
-        username: username,
-        message: message
-      });
-      // tell server to execute 'broadcast message' and send along one parameter
-      socket.emit('broadcast message', message);
+      // tell server to execute 'direct message' to the given room
       if(currentRoom != undefined) {
+        addChatMessage({
+          username: username,
+          message: message
+        });
         socket.emit('direct message', currentRoom, message);
+        // store this message in the db
+        $.post("/saveMessage", {
+          room: currentRoom,
+          messageData: {
+            username: username,
+            message: message,
+            date: new Date().getTime()
+          }
+        });
+      } else {
+        alert('Please choose a recipient from the list on the left before sending a message.');
       }
     }
     // Return focus to the message input field
@@ -43,8 +53,21 @@ $(function() {
 
   // Adds the visual chat message to the message list
   function addChatMessage (data, options) {
-    date = new Date();
-    var $timeDiv = $('<span>').text(date.getHours() + ":" + date.getMinutes() + ' - ');
+    //If date is included in data, use this - otherwise, use current date
+    if(data.date) {
+      date = new Date(Number(data.date));
+    } else {
+      date = new Date();
+    }
+    var minutes = date.getMinutes().toString();
+    var hours = date.getHours().toString();
+    if(minutes.length == 1) {
+      minutes = "0" + minutes;
+    }
+    if(hours.length == 1) {
+      hours = "0" + hours;
+    }
+    var $timeDiv = $('<span>').text(hours + ":" + minutes + ' - ');
     var $usernameDiv = $('<strong/>')
       .text(data.username + ': ');
     var $messageBodyDiv = $('<span>')
@@ -142,22 +165,123 @@ $(function() {
   
   // Updates the list of rooms on the page
   function updateRooms (rooms) {
-    // Sort the rooms in order of time since last message received/sent
-    
-    //Clear any previously displayed topics
-    document.getElementById('rooms').innerHTML = "";
+    // Sort the rooms in order of time since last message received/sent - TODO
+    console.log('New rooms:', rooms);
+    //Clear any previously displayed rooms
+    $('#rooms').html('');
     //Display the new topics
     for(var index in rooms){
-        document.getElementById('rooms').innerHTML += '<a id="' + rooms[index] + '" onclick="setActive(\'' + rooms[index] + '\')" class="list-group-item">' + rooms[index] + '</a>';
+      // Get the username of the other user in this room from the room's name
+      var other_user;
+      var room_users = rooms[index].split("-");
+      // If this does not produce 2 segments, this room doesn't follow the room naming convention, and thus just display the room name
+      if(room_users.length !== 2) {
+        other_user = rooms[index];
+      } else {
+        if(room_users[0] == username) {
+          other_user = room_users[1];
+        } else if(room_users[1] == username) {
+          other_user = room_users[0];
+        } else {
+          // Room name contains a - but this user's name not found, so just display the room name
+          other_user = rooms[index];
+        }
+      }
+      document.getElementById('rooms').innerHTML += '<a id="' + rooms[index] + '" onclick="setItemActive(\'' + rooms[index] + '\'); return false;" class="list-group-item">' + other_user + '</a>';
     }
     // Rooms have now been updated
+    
+    // Make the currentRoom active again - TODO
   }
   
   // Retrieves messages for the given room from the database
   function getMessages(room) {
-    return;
+    // First, clear all messages currently shown
+    $('#messages').empty();
+    // Next, display the welcome message for this room
+    // Get the username of the other user in this room from the room's name
+      var other_user;
+      var room_users = room.split("-");
+      // If this does not produce 2 segments, this room doesn't follow the room naming convention, and thus just display the room name
+      if(room_users.length !== 2) {
+        other_user = room;
+      } else {
+        if(room_users[0] == username) {
+          other_user = room_users[1];
+        } else if(room_users[1] == username) {
+          other_user = room_users[0];
+        } else {
+          // Room name contains a - but this user's name not found, so just display the room name
+          other_user = room;
+        }
+      }
+    var message = 'You are now chatting with ' + other_user;
+    log(message, {
+      prepend: true
+    });
+    
+    // Next, retrieve and display the chat history for this room
+    $.get("/getMessages", {room: room}, function(data, status) {
+      if(data.error) {
+        console.log('Something went wrong when retrieving messages');
+      } else {
+        // Sort messages by date/time sent
+        // Sorting code adapted from http://stackoverflow.com/questions/10123953/sort-javascript-object-array-by-date
+        var messages = data.messages;
+        messages.sort(function(a,b){
+          var c = new Date(a.date);
+          var d = new Date(b.date);
+          return c-d;
+        });
+        // Display all the messages
+        for(var index in messages) {
+          addChatMessage(messages[index]);
+        }
+      }
+    });
   }
   
+  // Code to retrieve URL parameters taken from http://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js
+  function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+      sURLVariables = sPageURL.split('&'),
+      sParameterName,
+      i;
+    for (i = 0; i < sURLVariables.length; i++) {
+      sParameterName = sURLVariables[i].split('=');
+      if (sParameterName[0] === sParam) {
+        return sParameterName[1] === undefined ? true : sParameterName[1];
+      }
+    }
+  }
+  
+  // Joins a room and prompts the given user to join it as well
+  function connectWithUser(user, callback) {
+    var lower_user = user.toLowerCase();
+    var lower_self = username.toLowerCase();
+    var room;
+    // Name the room with the usernames in alphabetical order
+    if(lower_user < lower_self) {
+      room = user + '-' + username;
+    } else {
+      room = username + '-' + user;
+    }
+    // Join the room
+    socket.emit('joinRoom', room);
+    // Store this in the database
+    $.post("addRoom", {
+      user: username,
+      room: room
+    }, function() {
+        // Add the other user as well
+        $.post("addRoom", {
+        user: user,
+        room: room
+      }, function() {
+          callback();
+        });
+    });
+  }
   
   // Initialize the socket connection
   
@@ -166,6 +290,48 @@ $(function() {
   // perform initial handshake with message server
   
   socket.emit('handshake', localStorage.username);
+  
+  // Check the URL to see if a new chat connection should be established
+  
+  var contact = getUrlParameter('contact');
+  if(contact !== undefined) {
+    // Start a chat connection with this user
+    console.log('Connecting with user', contact);
+    connectWithUser(contact, function() {
+      // Retrieve rooms list from the database
+      $.get("/getRooms", {username: username}, function(data, status){
+        var rooms = data.rooms;
+        if(data.error) {
+          console.log('Something went wrong when retrieving rooms list');
+        } else {
+          // Join these rooms
+          for(var i = 0; i < rooms.length; i++) {
+            socket.emit('joinRoom', rooms[i]);
+            console.log('Requesting to join room', rooms[i]);
+          }
+          // Update the page
+          socket.emit('getRooms');
+        }
+      });
+    });
+  } else {
+    // Retrieve rooms list from the database
+    $.get("/getRooms", {username: username}, function(data, status){
+      var rooms = data.rooms;
+      if(data.error) {
+        console.log('Something went wrong when retrieving rooms list');
+      } else {
+        // Join these rooms
+        for(var i = 0; i < rooms.length; i++) {
+          socket.emit('joinRoom', rooms[i]);
+          console.log('Requesting to join room', rooms[i]);
+        }
+        // Update the page
+        socket.emit('getRooms');
+      }
+    });
+  }
+  
   
   $('form').submit(function(){
     sendMessage();
@@ -184,7 +350,7 @@ $(function() {
   socket.on('login', function() {
     connected = true;
     // Display the welcome message
-    var message = 'You are now chatting with [User]';
+    var message = 'Welcome to the messaging service of SCRUM. To send messages, please select a user from the list on the left. To message a new user, enter their username into the form on the left.';
     log(message, {
       prepend: true
     });
@@ -198,6 +364,7 @@ $(function() {
   // When the server emits 'postRooms', parse the list of rooms and update the list on the page
   socket.on('postRooms', function (rooms) {
     var rooms_list = [];
+    console.log('Rooms received from server:', rooms);
     for(var room in rooms) {
       // Omit the socket's ID's room
       if(room != socket.id) {
@@ -208,7 +375,7 @@ $(function() {
     updateRooms(rooms_list);
   });
   
-  // When the server emits 'joined', log this
+  // When the server emits 'joined', log this and update the page
   socket.on('joined', function (room) {
     console.log('joined,', room);
   });
@@ -217,20 +384,13 @@ $(function() {
   socket.on('left', function (room) {
     console.log('left,', room);
   });
-  
-  // Click events
-  
-  $(document).on('click', '#room1Button', function(){
-    socket.emit('toggleRoom','room1');
-  });
 
-  $(document).on('click', '#room2Button', function(){
-    socket.emit('toggleRoom','room2');
-  });
-  
-  $(document).on('click', '#updateRooms', function(){
-    //socket.emit('toggleRoom','room2');
-    socket.emit('getRooms');
+  $(document).on('click', '#connectButton', function(){
+    // Call the global function to connect with user "Tester_One"
+    var target = $('#connectInput').val();
+    $('#connectInput').val('');
+    console.log('Connecting with user', target);
+    startChat(target);
   });
   
   // When the user clicks a room in the list, update the currentRoom value and retrieve the messages for the selected room

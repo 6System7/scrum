@@ -21,12 +21,11 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 
-
 var db_URI = "mongodb://john:6system7@ds119220.mlab.com:19220/heroku_q2dllfgh";
 var db;
 
 // Use connect method to connect to the Server
-MongoClient.connect(db_URI, function(err, database_object) {
+MongoClient.connect(db_testURI, function(err, database_object) {
     if (err) {
         console.log("Failed to connect to database\n", err);
     } else {
@@ -370,8 +369,114 @@ app.post("/sendEmail", function(req, res) {
 
 });
 
+// CHAT
+
 app.get("/socket.io/socket.io.js", function(req, res) {
     res.sendFile(path + "/node_modules/socket.io-client/dist/socket.io.js");
+});
+
+app.get("/getRooms", function(req, res) {
+  var username = req.query.username;
+  console.log('Attempting to get rooms for user', username);
+  db.collection("rooms").findOne({username: username}, function(err, results) {
+    res.setHeader("Content-Type", "application/json");
+    if (err) {
+      res.send(JSON.stringify({
+        "error": err
+      }));
+    } else {
+      res.send(JSON.stringify(results));
+    }
+  });
+});
+
+app.get("/getMessages", function(req, res) {
+  var room = req.query.room;
+  console.log('Attempting to get messages for room', room);
+  db.collection("messages").findOne({room: room}, function(err, results) {
+    res.setHeader("Content-Type", "application/json");
+    if (err) {
+      res.send(JSON.stringify({
+        "error": err
+      }));
+    } else {
+      res.send(JSON.stringify(results));
+    }
+  });
+});
+
+app.post("/saveMessage", function(req, res) {
+  var room = req.body.room;
+  var messageData = req.body.messageData;
+  // Add this message to the list of messages for this room
+  db.collection("messages").update({room: room}, {$push:{messages: messageData}});
+  // Check if more than 100 messages are now stored
+  db.collection("messages").find({room: room}).toArray(function(err, results) {
+    res.setHeader("Content-Type", "application/json");
+    if (err) {
+      return;
+    } else if(results[0]) {
+      if(results[0].messages.length > 100) {
+        // Sort the messages list by date (ascending), and remove the oldest one (i.e. last, i.e. just pop() it)
+        var messages = results[0].messages;
+        messages.sort(function(a,b){
+          var c = new Date(a.date);
+          var d = new Date(b.date);
+          return c-d;
+        });
+        messages.reverse();
+        // Remove messages until the size is at most 100
+        while(messages.length > 100) {
+          messages.pop();
+        }
+        // Save the new message list to the database
+        db.collection("messages").update({room: room}, {$set:{messages: messages.reverse()}});
+      }
+    }
+  });
+});
+
+app.post("/addRoom", function(req, res) {
+  var user = req.body.user;
+  var room = req.body.room;
+  // First, add a new document to the messages collection for this room if there isn't one
+  db.collection("messages").findOne({room: room}, function(err, results) {
+    if(!results) {
+      db.collection("messages").insert(
+      {
+        room: room,
+        messages: []
+      });
+    }
+    // Now, add this room to the rooms list of the user
+    db.collection("rooms").findOne({username: user}, function(err, results) {
+      // If no result is found, add an entry for this user
+      if(!results) {
+        db.collection("rooms").insert({username: user, rooms: []});
+      }
+      // Check if this room is already in the user's list of rooms
+      db.collection("rooms").findOne({username: user}, function(err, results) {
+        if(!err) {
+          if(results.rooms.indexOf(room) < 0) {
+            // Room is not already stored, so add it
+            db.collection("rooms").update({username: user}, {$push:{rooms: room}}, function(err, results) {
+              if(err) {
+                // Reply with sucess
+                res.send(JSON.stringify({status: 'failure'}));
+              } else {
+                res.send(JSON.stringify({status: 'success'}));
+              }
+            });
+          } else {
+            // Reply with success
+            res.send(JSON.stringify({status: 'success'}));
+          }
+        } else {
+          // Reply with failure, as something went wrong
+          res.send(JSON.stringify({status: 'failure'}));}
+      });
+    });
+  });
 });
 
 app.get("*", function(req, res) {
@@ -383,7 +488,7 @@ server.listen(process.env.PORT || 8080, function() {
     console.log("Live at Port " + (process.env.PORT || "8080"));
 });
 
-//Chat stuff test
+//Chat stuff
 io.on('connection', function (socket) {
   var addedUser = false;
   
@@ -398,13 +503,11 @@ io.on('connection', function (socket) {
   });
   
   // when the client emits 'joinRoom', this adds the client to that room
-  socket.on('joinRoom', function (room) {
+  socket.on('joinRoom', function (room) { // TODO - this seems to somehow be bugged in IE
     // Only add socket if it is not already in the room
     if(!socket.rooms[room]) {
       socket.join(room);
       socket.emit('joined', room);
-      output = 'Added a user to room \'' + room + '\'';
-      console.log(output);
     }
   });
     
@@ -414,8 +517,6 @@ io.on('connection', function (socket) {
     if(socket.rooms[room]) {
       socket.leave(room);
       socket.emit('left', room);
-      output = 'Removed user \'' + socket.username +  '\' from room \'' + room + '\'';
-      console.log(output);
     }
   });
   
@@ -425,21 +526,16 @@ io.on('connection', function (socket) {
     if(!socket.rooms[room]) {
       socket.join(room);
       socket.emit('joined', room);
-      output = 'Added a user to room \'' + room + '\'';
-      console.log(output);
     }// Only remove socket if it is already in the room
     else {
       socket.leave(room);
       socket.emit('left', room);
-      output = 'Removed user \'' + socket.username +  '\' from room \'' + room + '\'';
-      console.log(output);
     }
   });
   
   // when the client emits 'direct message', send the msg to the given room
   socket.on('direct message', function(room, msg) {
     socket.to(room).emit('chat message', socket.username, msg);
-    console.log('Message \'' + msg + '\' sent to room \'' + room + '\'')
   });
   
   var addedUser = false;
@@ -475,10 +571,6 @@ io.on('connection', function (socket) {
   // when the user disconnects, perform this
   socket.on('disconnect', function () {
     if (addedUser) {
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username
-      });
       console.log(socket.username, 'disconnected');
     }
   });

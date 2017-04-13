@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <!--TODO
 - Make messages list scrollable independently of rest
-- Load contacts list (and messages from db)
-  - Load contacts from list of rooms?
-  - Sort contacts in order of time since last message sent/received
+- Sort contacts/rooms/people list in order of time since last message sent/received
+  - Store a Date() object with room? Or pull messages from messages collection (db access heavy)
+
+- one to one functionality
+  - finalise room naming convention - DONE
+  - functionality for allowing one user to make another user join a room
+    - Broadcast username of recipient, if broadcasted username matches own username, join specified room
+    - Emit (room) to user's id's room, prompting that user to emit to joinRoom(room) - thus establishing connection
+    - Provide a global function
+    - When called, redirects user to chat page
+    - Prompts their socket to initiate chat, after handshake
+    - E.g. send them to SERVERURL/chat.html?contact=USERNAME
 -->
 
 <html lang="en">
@@ -78,9 +87,9 @@
 
 
     <div class="container-fluid">
-<!--        TODO: Add a scrollable lift on the left, separated from the mesages list, containing previous conversations.-->
+<!--        TODO: Make People list scrollable-->
         <style>
-          form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 80%; }
+          form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 83%; }
           form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
           form button { width: 9%; background: rgb(28, 147, 155); border: none; padding: 10px; color: rgb(255, 255, 255)}
           #messages { list-style-type: none; margin: 0; padding: 0; }
@@ -90,17 +99,17 @@
           #messages { max-height: 100%}
         </style>
       <div class="row">
-            <div class="col-md-2"><h1>Chat Rooms</h1></div>
+            <div class="col-md-2"><h1>People</h1></div>
             <div class="col-md-10"><h1>Messages</h1></div>
             
-        </div>
+      </div>
       <div class="row">
         <div class="col-md-2">
           <!--div class to be filled with chat rooms once they've been loaded-->
-          <div class="list-group" id="rooms"></div>
-          <button class="btn btn-primary" type="submit" id="room1Button">Join room 1</button>
-          <button class="btn btn-primary" type="submit" id="room2Button">Join room 2</button>
-          <button class="btn" type="submit" id="updateRooms">update Rooms</button>
+          <div class="list-group" id="rooms">
+          </div><div>Note: capitalisation of usernames <strong>does</strong> matter.</div><input id="connectInput" autocomplete="off" />
+          <button class="btn btn-primary" type="submit" id="connectButton">Connect with this user</button>
+<!--          <button class="btn" type="submit" id="updateRooms">update Rooms</button>-->
         </div>
         <div class="col-md-10" style="position:relative">
           <!--div class to be filled with chat messages once they've been loaded-->
@@ -110,22 +119,17 @@
           </form>
         </div>
       </div>
-      <body>
-        
-
-      </body>
 
     </div><!-- /.container -->
       
     <script type="text/javascript">
       var currentRoom;
-      function setActive(room) {
+      function setItemActive(room) {
         //If the same room is selected twice in a row, do nothing
-        if(room == currentRoom){return}
         //Set the selected room to active
         document.getElementById(room).setAttribute("class", "list-group-item active");
         //If another topic is active, deselect it
-        if(currentRoom !== undefined) {
+        if(currentRoom !== undefined && currentRoom !== room) {
           try {
             document.getElementById(currentRoom).setAttribute("class", "list-group-item");
           } catch(err) {

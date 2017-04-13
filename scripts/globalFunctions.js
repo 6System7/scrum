@@ -61,3 +61,7 @@ function authKeyCheck(){
     }
 }
 
+function startChat(user){
+  window.open('/chat.html?contact=' + user, '_self');
+}
+
