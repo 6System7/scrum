@@ -93,7 +93,7 @@ function sendPostData() {
                 },
                 dataType: "json",
                 success: function(data) {
-                    console.log("Success when posting");
+                    // console.log("Success when posting");
                 },
                 error: function() {
                     // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
@@ -224,11 +224,13 @@ $(document).ready(function() {
         imageSelected = true;
         previewFile();
     });
-    getNotifications();
+
+    // NOTE Maddy - Mike commented this out as instructed, getNotifications();
+
 
     if (localStorage.postToEdit) {
         $("#pageTitleH1").text("Edit a food item");
-        console.log(localStorage.postToEdit);
+        // console.log(localStorage.postToEdit);
         var post = JSON.parse(localStorage.postToEdit);
         postID = post._id;
 
@@ -279,3 +281,4 @@ $(document).ready(function() {
 });
 
 // TODO Mike - quagga.js for barcode
+// TODO Mike - https://en.wiki.openfoodfacts.org/API Open Food Facts API for barcode -> product information for auto fill of form data

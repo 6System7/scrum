@@ -17,6 +17,7 @@ $(document).ready(function(){
             getPostedFoods(foodsToShow);
         }
     });
+
     $("#btnUpdate").click(function(){
         var foodsToPost = filterFoods(dataPass);
         if (foodsToPost.length == 0){
@@ -90,9 +91,26 @@ function getPostedFoods(x){
                         // CREATE DESCRIPTION & AUTHOR
                         var bodyCon = $("<p>");
                         bodyCon.text(x.description);
-                        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i></small>";
+                        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i></small><br>";
                         bodyCon.append(authorCon);
                         bodyCon.appendTo(container);
+                        
+                        // CREATE SEE BUTTON
+                        var seeButton = $("<button>");
+                        seeButton.attr("type","button");
+                        seeButton.attr("id","seePostBtn");
+                        seeButton.addClass("btn btn-default pull-right ");
+                        seeButton.attr("data-toggle","modal");
+                        seeButton.attr("data-target","#seePostsModal");
+                        seeButton.click(function() {
+                            $('#seePostsModal').modal('show');
+                        })
+                        
+   
+                        var glyph = $("<span>")
+                        glyph.addClass("glyphicon glyphicon-eye-open")
+                        glyph.appendTo(seeButton);
+                        seeButton.appendTo(bodyCon);
 
                         // CALCULATE COLUMN
                         colNum = toPrint-1;

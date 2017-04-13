@@ -26,17 +26,17 @@
         <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
       <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarContent" aria-expanded="false" aria-controls="navbarContent">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-            <a id = "navbarheader" class="navbar-brand" href="">
+            <a id = "navbar-header" class="navbar-brand" href="">
                 <img id="navbar-logo" src = "possibleLogo.png">
             </a>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
+        <div id="navbarContent" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
               <li class="dropdown dropdown-notifications" >
                 <!--Todo: want to make it pull left. -->
@@ -94,13 +94,12 @@
                 </div>
                 <div id="collapseNotifications" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <p> Notification options go here</p>
-                        
+                            <p style="font-style:italic" id = "showDistanceNearby"> Currently showing distances up to 1000km </p>
                             <label for="distanceNearby">Set "nearby foods" distance</label>
-                        <div class="input-group">
-                             <input id = "distanceNearby" type="text" class="form-control" placeholder="10000" value="10000">
+                        <div id="distanceValidate" class="input-group">
+                             <input id = "distanceNearby" type="number" class="form-control" placeholder="Enter new distance" >
                              <span class="input-group-btn">
-                                <button class="btn btn-secondary" type="button" id="changeNearbyDistance">Change</button>
+                                <button class="btn btn-secondary" type="button" id="changeNearbyDistance" >Change</button>
                              </span>
 
                         </div>
@@ -118,5 +117,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
+    <script type="text/javascript" src="notifications.js"></script>
   </body>
 </html>

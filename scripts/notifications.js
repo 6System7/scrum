@@ -1,6 +1,8 @@
+var userDistance;
 //Notifications 
 $(document).ready(function(){
-        console.log("GEY");
+    getUserDistance();
+    
     $.ajax({
         url: "/getPosts",
         type: "GET",
@@ -10,11 +12,17 @@ $(document).ready(function(){
             checkNearbyFoods(dataPassReturned);
         }
     })
+    $("#changeNearbyDistance").click(function(){
+        changeDistance();
+      //  getUserDistance();
+       // changeUserDistance
+    })
+    
 }) // end of getNotifications
 
 // TODOeventually pass in distance as parameter?
 function checkNearbyFoods(dataPassReturned){
-
+   // alert(userDistance);
     var dataPass = dataPassReturned;
     
     // GET CURRENT POSITIONS
@@ -34,10 +42,10 @@ function checkNearbyFoods(dataPassReturned){
         for (var foodPostElem = 0; foodPostElem < dataPass.length; foodPostElem++){ //iterate through posts
               //  alert(foodPostElem);
             var foodPost = dataPass[foodPostElem]; //alert(foodPost._id);  
-            var dist = calculateDistance(foodPost.latitude, foodPost.longitude, memberLang, memberLong)
+            var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, memberLang, memberLong)
             var title = foodPost.title;
-            if (dist < 10000){
-                alert(foodPost._id);
+            if (dist < userDistance){
+                
 
                 // CREATE NEARBY POST
 
@@ -93,3 +101,92 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
 function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
+
+function getUserDistance(){
+    if (userDistance == undefined){
+        $.ajax({
+           url:"account.html",
+           type:'GET',
+           success: function(result){
+               var html = jQuery('<input>').html(result);
+               // alert(html.find("input#distanceNearby").attr("id")); THIS WORKS
+               userDistance = html.find("input#distanceNearby").attr("value");
+
+               if (userDistance == undefined || userDistance ==""){
+
+                    userDistance = "10000"
+                }
+                /*if (userDistance < 1){
+                    var text = $("<p>");
+                    text.text("Input not valid");
+                    text.addClass("bold");
+                    text.attr("style", "color:red; padding-top:5px; padding-bottom:0px")
+                    text.attr("id", "errorMessage")
+                    text.insertAfter("#distanceValidate");  
+                }
+                else{
+                   // ("#distanceValidate").remove("#errorMessage");
+                    $("#errorMessage").remove();
+                    $('#showDistanceNearby').text("Currently showing distances up to " + userDistance + "km");
+                    userDistance = parseInt(userDistance);
+                    // TODO add a listening click button
+                }*/
+               //alert(userDistance);
+               }
+
+        });
+    }
+
+}
+function changeDistance(){
+    userDistance = $('#distanceNearby').val();
+    if (userDistance == undefined || userDistance ==""){
+        alert("it's undefined");
+        userDistance = "10000"
+    }
+    if (userDistance < 1){
+        var text = $("<p>");
+        text.text("Input not valid");
+        text.addClass("bold");
+        text.attr("style", "color:red; padding-top:5px; padding-bottom:0px")
+        text.attr("id", "errorMessage")
+        text.insertAfter("#distanceValidate");  
+    }
+    else{
+       // ("#distanceValidate").remove("#errorMessage");
+        $("#errorMessage").remove();
+        $('#showDistanceNearby').text("Currently showing distances up to " + userDistance + "km");
+        userDistance = parseInt(userDistance);
+        //getUserDistance;
+        // TODO add a listening click button
+    }
+
+
+
+}
+   /* $.get('account.html', null, function(result){
+        //var obj = $(result).find($('#distanceNearby').val());
+        obj = $(result).find($('distanceNearby').val());
+        alert(obj);
+        //var userDistance = $('#distanceNearby').val();
+        if (userDistance == undefined || userDistance ==""){
+
+            userDistance = "10000"
+        }
+        if (userDistance < 1){
+            var text = $("<p>");
+            text.text("Input not valid");
+            text.addClass("bold");
+            text.attr("style", "color:red; padding-top:5px; padding-bottom:0px")
+            text.attr("id", "errorMessage")
+            text.insertAfter("#distanceValidate");  
+        }
+        else{
+           // ("#distanceValidate").remove("#errorMessage");
+            $("#errorMessage").remove();
+            $('#showDistanceNearby').text("Currently showing distances up to " + userDistance + "km");
+            userDistance = parseInt(userDistance);
+            // TODO add a listening click button
+        }
+   */ //});
+

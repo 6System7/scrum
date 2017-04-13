@@ -45,3 +45,14 @@ img {
 max-height:260px;
 
 }
+.btn.btn-default.pull-right {
+    padding: 0px; 
+    margin-bottom:2px;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+  
+
+    
+}
