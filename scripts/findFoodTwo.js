@@ -34,6 +34,10 @@ $(document).ready(function(){
     $("#btnClearAll").click(function(){
         clearAll();
     })
+    $("#btnSeePosts").click(function(){
+        $("#seePostsModal").modal('show');
+        seePost();
+    })
 })
 
 function getPostedFoods(x){
@@ -102,9 +106,9 @@ function getPostedFoods(x){
                         seeButton.addClass("btn btn-default pull-right ");
                         seeButton.attr("data-toggle","modal");
                         seeButton.attr("data-target","#seePostsModal");
-                        seeButton.click(function() {
-                            $('#seePostsModal').modal('show');
-                        })
+                        //seeButton.click(function() {
+                        //    $('#seePostsModal').modal('show');
+                        ///})
                         
    
                         var glyph = $("<span>")
@@ -310,6 +314,11 @@ function deg2rad(deg) {
 function clearAll(){
     $("#txtKeyWord").val(" ");
         $('input:checkbox').prop('checked', false);
+}
+
+function seePost(){
+    $("#modalHeader").text("Text");
+    
 }
 
 // TODO eventually move notifications into global functions? 
