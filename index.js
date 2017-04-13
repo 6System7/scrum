@@ -25,7 +25,7 @@ var db_URI = "mongodb://john:6system7@ds119220.mlab.com:19220/heroku_q2dllfgh";
 var db;
 
 // Use connect method to connect to the Server
-MongoClient.connect(db_testURI, function(err, database_object) {
+MongoClient.connect(db_URI, function(err, database_object) {
     if (err) {
         console.log("Failed to connect to database\n", err);
     } else {
