@@ -34,6 +34,7 @@ $(document).ready(function(){
     $("#btnClearAll").click(function(){
         clearAll();
     })
+
     //$("#btnSeePosts").click(function(){
    //     $("#seePostsModal").modal('show');
    //     seePost();
@@ -448,7 +449,6 @@ function seePost(x){
     distance.text(dist);
     $("#modalRightColumn").append(distanceLabel);
     $("#modalRightColumn").append(distance);
-
             
     // EXPIRATION DATE
     var expires = $('<p>');
@@ -457,8 +457,14 @@ function seePost(x){
     $("#modalRightColumn").append(expiresLabel);
     $("#modalRightColumn").append(expires);
 
+    // USER
+    var user = $('<p>');
+    var userLabel = "<br><i>Uploaded by </i>"
+    user.text(x.username);
+    $("#modalRightColumn").append(userLabel);
+    $("#modalRightColumn").append(user);
 }
+// TODO user button: pass in new value for the button with the username and send offff??
 
 
-// TODO eventually move notifications into global functions? 
 // TODO has to loop every noe and then. Set timer??

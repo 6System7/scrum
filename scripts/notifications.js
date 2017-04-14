@@ -155,7 +155,7 @@ function changeDistance(){
     else{
        // ("#distanceValidate").remove("#errorMessage");
         $("#errorMessage").remove();
-        $('#showDistanceNearby').text("Currently showing distances up to " + userDistance + "km");
+        $('#showDistanceNearby').text("Currently showing distances up to " + userDistance.toFixed(1) + "km");
         userDistance = parseInt(userDistance);
         //getUserDistance;
         // TODO add a listening click button

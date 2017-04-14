@@ -55,8 +55,13 @@ max-height:260px;
     
 }
 .modal-header{
-    background-color: #1C939B;
-    color: white;
+    background-color: #1C939B; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#1C939B, #DFF6F7); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#1C939B, #DFF6F7); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#1C939B, #DFF6F7); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#1C939B, #DFF6F7); /* Standard syntax */
+    border-color:#DFF6F7;
+    color: black;
 }
 
 .modal-body{
@@ -65,4 +70,20 @@ max-height:260px;
 
 #modalPanels{
     background-color:#1C939B;
+}
+.panel-footer{
+    background-color:#DFF6F7; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#DFF6F7, #1C939B); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#DFF6F7, #1C939B); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#DFF6F7, #1C939B); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#DFF6F7, #1C939B); /* Standard syntax */
+    border-color:#DFF6F7;
+    text-align:center;
+}
+#messageUser {
+    background-color:#DFF6F7;
+    color:black;
+    border-color: black;
+    background-color:transparent;
+    border-color:transparent;
 }
