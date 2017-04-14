@@ -71,6 +71,10 @@ function generatePostCards(data) {
         $(btnEdit).attr("type", "button");
         $(btnEdit).addClass("btn btn-primary");
         $(btnEdit).data("post", x);
+        $(btnEdit).attr("style","margin-left:5px; margin-bottom:5px");
+        $(btnEdit).css("background-color","#1C939B");
+        $(btnEdit).css("border-color","white");
+        //$(btnEdit).css("padding","5px");
         $(btnEdit).click(function() {
             localStorage.postToEdit = JSON.stringify($(this).data("post"));
             window.location.replace("/postfood.html");
@@ -83,6 +87,12 @@ function generatePostCards(data) {
         $(btnDelete).attr("type", "button");
         $(btnDelete).addClass("btn btn-danger");
         $(btnDelete).css("float", "right");
+        $(btnDelete).css("margin-right","5px");
+        $(btnDelete).css("background-color","#1C939B");
+        $(btnDelete).css("border-color","white");
+       // $(btnDelete).css("padding","5px");
+       // $(btnDelete).attr("style","display: inline-block");
+    
         $(btnDelete).data("post", x);
         $(btnDelete).click(function() {
             if (confirm("Are you sure you want to delete this post?")) {
