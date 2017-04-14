@@ -34,10 +34,10 @@ $(document).ready(function(){
     $("#btnClearAll").click(function(){
         clearAll();
     })
-    $("#btnSeePosts").click(function(){
-        $("#seePostsModal").modal('show');
-        seePost();
-    })
+    //$("#btnSeePosts").click(function(){
+   //     $("#seePostsModal").modal('show');
+   //     seePost();
+   // })
 })
 
 function getPostedFoods(x){
@@ -104,17 +104,19 @@ function getPostedFoods(x){
                         seeButton.attr("type","button");
                         seeButton.attr("id","seePostBtn");
                         seeButton.addClass("btn btn-default pull-right ");
+                        seeButton.data("foodJson",x);
                         seeButton.attr("data-toggle","modal");
                         seeButton.attr("data-target","#seePostsModal");
-                        //seeButton.click(function() {
-                        //    $('#seePostsModal').modal('show');
-                        ///})
-                        
-   
+                        seeButton.click(function() {
+                            var foodPost = $(this).data("foodJson");
+                            seePost(foodPost);
+                                  });
+                    
                         var glyph = $("<span>")
                         glyph.addClass("glyphicon glyphicon-eye-open")
                         glyph.appendTo(seeButton);
                         seeButton.appendTo(bodyCon);
+                        
 
                         // CALCULATE COLUMN
                         colNum = toPrint-1;
@@ -159,9 +161,7 @@ function filterFoods(dataPass){
 
             var checkAgain = (Object.keys(filters)[category]).toString();
             var postCheck = foodPost[checkAgain]; //grab it from post
-                var xox = filters[Object.keys(filters)[category]]; //alert(xox[0]);  /// e.g breakfast
-
-                
+                var xox = filters[Object.keys(filters)[category]]; 
                 for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                         if (xox[listInCategory] == postCheck){
                                 visibility = true;
@@ -316,10 +316,149 @@ function clearAll(){
         $('input:checkbox').prop('checked', false);
 }
 
-function seePost(){
-    $("#modalHeader").text("Text");
+function seePost(x){
     
+    // REMOVE PREVIOUS POSTS
+    $("#modalLeftColumn").html("");
+    $("#modalRightColumn").html("");
+    
+    // ADD TO TITLE
+    $("#modalPostTitle").text(x.title);
+    
+    /********BODY OF MODAL LEFT COLUMN *********/
+    //INSERT IMAGE
+    var imgDiv = $('<div>');
+    imgDiv.addClass("text-center");
+    var img2 = $('<img>');
+    img = (x.image).toString();
+    if (img == ""){
+        img2 = $('<span>');
+        img2.addClass("glyphicon glyphicon-picture");
+        img2.attr("style","margin-top:20px");
+    }
+    else{
+        img2.attr("src",(x.image).toString());
+        img2.addClass("center");
+        img2.attr("style", "height:160px; width:auto")
+    }
+    img2.appendTo(imgDiv);
+    $("#modalLeftColumn").append(imgDiv);
+    
+    //INSERT TYPE BY COUNTRY
+    var typeCountry = $('<p>');
+    var typeCountryLabel = "<br><i>Country: </i>"
+    $("#modalLeftColumn").append(typeCountryLabel);
+    typeCountry.text(x.mealtypecountry.toString())
+    $("#modalLeftColumn").append(typeCountry);
+    
+    //INSERT TYPE OF FOOD
+    var typeFood = $('<p>');
+    var typeFoodLabel = "<br><i>Type of Food: </i>"
+    $("#modalLeftColumn").append(typeFoodLabel);
+    typeFood.text(x.mealtypefood.toString())
+    $("#modalLeftColumn").append(typeFood);
+    
+    //INSERT SIZE/WEIGHT
+    var sizeweight = $('<p>');
+    var sizeweightLabel = "<br><i>Size/Weight: </i>"
+    $("#modalLeftColumn").append(sizeweightLabel);
+    sizeweight.text(x.mealweight.toString());
+    $("#modalLeftColumn").append(sizeweight);
+    
+    
+    /********BODY OF MODAL RIGHT COLUMN *********/
+    
+    //INSERT DESCRIPTION
+    var description = $('<p>');
+    var descriptionLabel = "<i>Description: </i>"
+    $("#modalRightColumn").append(descriptionLabel);
+    description.text(x.description);
+    $("#modalRightColumn").append(description);
+    
+    // DIETARY REQUIREMENTS
+    var dietaryRequirements = $('<p>');
+    var dietaryRequirementsLabel = "<i>Dietary requirements: </i><br>"
+    $("#modalRightColumn").append(dietaryRequirementsLabel);
+    var add = "";
+    if (x.mealTypeDietary == undefined){
+        add = "None"
+    }
+    else{
+        for (var thing=0; thing<x.mealTypeDietary.length; thing++){
+            if (thing < x.mealTypeDietary.length - 1){
+                add += x.mealTypeDietary[thing].toString() + ", ";
+            }
+            else{
+                add += x.mealTypeDietary[thing].toString();
+            }
+        }
+    }
+    dietaryRequirements.text(add);
+    $("#modalRightColumn").append(add);
+   /* 
+    //MEAL TYPE
+    var mealTypeDiv1 = $('div');
+    mealTypeDiv1.addClass("panel panel-default");
+    var mealTypeDivHeader = $('div');
+    mealTypeDivHeader.addClass("panel-heading");
+    mealTypeDivHeader.text("Meal Type");
+    //  var mealTypeHeader = ('<h4');
+    // mealTypeHeader.text("Meal Type")
+    //mealTypeDiv1.append(mealTypeDivHeader);
+    var mealTypeDivBody = $('div');
+    mealTypeDivBody.addClass("panel-body");
+    // var mealTypeHeader = ('<h4');
+    //mealTypeHeader.text("Meal Type")
+    mealTypeDivBody.text(x.mealtypefood)
+    //mealTypeDiv1.append(mealTypeDivBody);
+    $("#test").append(mealTypeDiv1);
+    
+    */
+    
+   /* <div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-body">Panel Content</div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-body">Panel Content</div>
+  </div>
+</div>*/
+   /* var testGroup = $("div");
+    testGroup.addClass("panel-group");
+    var test= $("div");
+    test.addClass("panel panel-primary");
+    var test1= $("div");
+    test1.addClass("panel-body");
+    test1.text("TEST");
+    test.append(test1);
+    testGroup.append(test);
+    $("#modalRightColumn").append(testGroup);
+    */
+    
+    var mealType = $('<p>');
+    var mealTypeLabel = "<br><i>Meal Type: </i>"
+    mealType.text(x.mealtypefood);
+    $("#modalRightColumn").append(mealTypeLabel);
+    $("#modalRightColumn").append(mealType);
+        
+    //DISTANCE AWAY
+    var dist = calculateDistance(x.latitude, x.longitude);
+    var distance = $('<p>');
+    var distanceLabel = "<br><i>Distance Away: </i>"
+    distance.text(dist);
+    $("#modalRightColumn").append(distanceLabel);
+    $("#modalRightColumn").append(distance);
+
+            
+    // EXPIRATION DATE
+    var expires = $('<p>');
+    var expiresLabel = "<br><i>Expiration Date: </i>"
+    expires.text(x.expirationDate);
+    $("#modalRightColumn").append(expiresLabel);
+    $("#modalRightColumn").append(expires);
+
 }
+
 
 // TODO eventually move notifications into global functions? 
 // TODO has to loop every noe and then. Set timer??

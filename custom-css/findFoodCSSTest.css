@@ -52,7 +52,17 @@ max-height:260px;
     background-repeat:no-repeat;
     border: none;
     cursor:pointer;
-  
-
     
+}
+.modal-header{
+    background-color: #1C939B;
+    color: white;
+}
+
+.modal-body{
+    background-color:#DFF6F7;   
+}
+
+#modalPanels{
+    background-color:#1C939B;
 }
