@@ -40,6 +40,7 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use('/fonts', express.static(__dirname + '/node_modules/bootstrap/fonts'));
+app.use('/quagga', express.static(__dirname + '/node_modules/quagga/dist'));
 app.use(express.static('pages'));
 app.use(express.static('scripts'));
 app.use(express.static('post-images'));
@@ -376,107 +377,148 @@ app.get("/socket.io/socket.io.js", function(req, res) {
 });
 
 app.get("/getRooms", function(req, res) {
-  var username = req.query.username;
-  console.log('Attempting to get rooms for user', username);
-  db.collection("rooms").findOne({username: username}, function(err, results) {
-    res.setHeader("Content-Type", "application/json");
-    if (err) {
-      res.send(JSON.stringify({
-        "error": err
-      }));
-    } else {
-      res.send(JSON.stringify(results));
-    }
-  });
+    var username = req.query.username;
+    console.log('Attempting to get rooms for user', username);
+    db.collection("rooms").findOne({
+        username: username
+    }, function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
+        } else {
+            res.send(JSON.stringify(results));
+        }
+    });
 });
 
 app.get("/getMessages", function(req, res) {
-  var room = req.query.room;
-  console.log('Attempting to get messages for room', room);
-  db.collection("messages").findOne({room: room}, function(err, results) {
-    res.setHeader("Content-Type", "application/json");
-    if (err) {
-      res.send(JSON.stringify({
-        "error": err
-      }));
-    } else {
-      res.send(JSON.stringify(results));
-    }
-  });
+    var room = req.query.room;
+    console.log('Attempting to get messages for room', room);
+    db.collection("messages").findOne({
+        room: room
+    }, function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
+        } else {
+            res.send(JSON.stringify(results));
+        }
+    });
 });
 
 app.post("/saveMessage", function(req, res) {
-  var room = req.body.room;
-  var messageData = req.body.messageData;
-  // Add this message to the list of messages for this room
-  db.collection("messages").update({room: room}, {$push:{messages: messageData}});
-  // Check if more than 100 messages are now stored
-  db.collection("messages").find({room: room}).toArray(function(err, results) {
-    res.setHeader("Content-Type", "application/json");
-    if (err) {
-      return;
-    } else if(results[0]) {
-      if(results[0].messages.length > 100) {
-        // Sort the messages list by date (ascending), and remove the oldest one (i.e. last, i.e. just pop() it)
-        var messages = results[0].messages;
-        messages.sort(function(a,b){
-          var c = new Date(a.date);
-          var d = new Date(b.date);
-          return c-d;
-        });
-        messages.reverse();
-        // Remove messages until the size is at most 100
-        while(messages.length > 100) {
-          messages.pop();
+    var room = req.body.room;
+    var messageData = req.body.messageData;
+    // Add this message to the list of messages for this room
+    db.collection("messages").update({
+        room: room
+    }, {
+        $push: {
+            messages: messageData
         }
-        // Save the new message list to the database
-        db.collection("messages").update({room: room}, {$set:{messages: messages.reverse()}});
-      }
-    }
-  });
+    });
+    // Check if more than 100 messages are now stored
+    db.collection("messages").find({
+        room: room
+    }).toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            return;
+        } else if (results[0]) {
+            if (results[0].messages.length > 100) {
+                // Sort the messages list by date (ascending), and remove the oldest one (i.e. last, i.e. just pop() it)
+                var messages = results[0].messages;
+                messages.sort(function(a, b) {
+                    var c = new Date(a.date);
+                    var d = new Date(b.date);
+                    return c - d;
+                });
+                messages.reverse();
+                // Remove messages until the size is at most 100
+                while (messages.length > 100) {
+                    messages.pop();
+                }
+                // Save the new message list to the database
+                db.collection("messages").update({
+                    room: room
+                }, {
+                    $set: {
+                        messages: messages.reverse()
+                    }
+                });
+            }
+        }
+    });
 });
 
 app.post("/addRoom", function(req, res) {
-  var user = req.body.user;
-  var room = req.body.room;
-  // First, add a new document to the messages collection for this room if there isn't one
-  db.collection("messages").findOne({room: room}, function(err, results) {
-    if(!results) {
-      db.collection("messages").insert(
-      {
-        room: room,
-        messages: []
-      });
-    }
-    // Now, add this room to the rooms list of the user
-    db.collection("rooms").findOne({username: user}, function(err, results) {
-      // If no result is found, add an entry for this user
-      if(!results) {
-        db.collection("rooms").insert({username: user, rooms: []});
-      }
-      // Check if this room is already in the user's list of rooms
-      db.collection("rooms").findOne({username: user}, function(err, results) {
-        if(!err) {
-          if(results.rooms.indexOf(room) < 0) {
-            // Room is not already stored, so add it
-            db.collection("rooms").update({username: user}, {$push:{rooms: room}}, function(err, results) {
-              if(err) {
-                // Reply with sucess
-                res.send(JSON.stringify({status: 'failure'}));
-              } else {
-                res.send(JSON.stringify({status: 'success'}));
-              }
+    var user = req.body.user;
+    var room = req.body.room;
+    // First, add a new document to the messages collection for this room if there isn't one
+    db.collection("messages").findOne({
+        room: room
+    }, function(err, results) {
+        if (!results) {
+            db.collection("messages").insert({
+                room: room,
+                messages: []
             });
-          } else {
-            // Reply with success
-            res.send(JSON.stringify({status: 'success'}));
-          }
-        } else {
-          // Reply with failure, as something went wrong
-          res.send(JSON.stringify({status: 'failure'}));}
-      });
+        }
+        // Now, add this room to the rooms list of the user
+        db.collection("rooms").findOne({
+            username: user
+        }, function(err, results) {
+            // If no result is found, add an entry for this user
+            if (!results) {
+                db.collection("rooms").insert({
+                    username: user,
+                    rooms: []
+                });
+            }
+            // Check if this room is already in the user's list of rooms
+            db.collection("rooms").findOne({
+                username: user
+            }, function(err, results) {
+                if (!err) {
+                    if (results.rooms.indexOf(room) < 0) {
+                        // Room is not already stored, so add it
+                        db.collection("rooms").update({
+                            username: user
+                        }, {
+                            $push: {
+                                rooms: room
+                            }
+                        }, function(err, results) {
+                            if (err) {
+                                // Reply with sucess
+                                res.send(JSON.stringify({
+                                    status: 'failure'
+                                }));
+                            } else {
+                                res.send(JSON.stringify({
+                                    status: 'success'
+                                }));
+                            }
+                        });
+                    } else {
+                        // Reply with success
+                        res.send(JSON.stringify({
+                            status: 'success'
+                        }));
+                    }
+                } else {
+                    // Reply with failure, as something went wrong
+                    res.send(JSON.stringify({
+                        status: 'failure'
+                    }));
+                }
+            });
+        });
     });
-  });
 });
 
 app.get("*", function(req, res) {
@@ -489,89 +531,91 @@ server.listen(process.env.PORT || 8080, function() {
 });
 
 //Chat stuff
-io.on('connection', function (socket) {
-  var addedUser = false;
-  
-  // when the client performs initial handshake, store their username in local variable
-  socket.on('handshake', function (username) {
-    if (addedUser) {return;}
-    // store the username in the socket session for this client
-    socket.username = username;
-    addedUser = true;
-    console.log('Handshake completed with ', username);
-    socket.emit('login');
-  });
-  
-  // when the client emits 'joinRoom', this adds the client to that room
-  socket.on('joinRoom', function (room) { // TODO - this seems to somehow be bugged in IE
-    // Only add socket if it is not already in the room
-    if(!socket.rooms[room]) {
-      socket.join(room);
-      socket.emit('joined', room);
-    }
-  });
-    
-  // when the client emits 'leaveRoom', this removes the client from that room
-  socket.on('leaveRoom', function (room) {
-    // Only remove socket if it is already in the room
-    if(socket.rooms[room]) {
-      socket.leave(room);
-      socket.emit('left', room);
-    }
-  });
-  
-  // when the client emits 'toggleRoom', remove them if they're in the room, or add them if they're not
-  socket.on('toggleRoom', function (room) {
-    // Only add socket if it is not already in the room
-    if(!socket.rooms[room]) {
-      socket.join(room);
-      socket.emit('joined', room);
-    }// Only remove socket if it is already in the room
-    else {
-      socket.leave(room);
-      socket.emit('left', room);
-    }
-  });
-  
-  // when the client emits 'direct message', send the msg to the given room
-  socket.on('direct message', function(room, msg) {
-    socket.to(room).emit('chat message', socket.username, msg);
-  });
-  
-  var addedUser = false;
+io.on('connection', function(socket) {
+    var addedUser = false;
 
-  // when the client emits 'broadcast message', this listens and executes
-  socket.on('broadcast message', function (data) {
-    // we tell the client to execute 'new message'
-    socket.broadcast.emit('broadcast message', {
-      username: socket.username,
-      message: data
+    // when the client performs initial handshake, store their username in local variable
+    socket.on('handshake', function(username) {
+        if (addedUser) {
+            return;
+        }
+        // store the username in the socket session for this client
+        socket.username = username;
+        addedUser = true;
+        console.log('Handshake completed with ', username);
+        socket.emit('login');
     });
-  });
 
-  // when the client emits 'typing', we broadcast it to others
-  socket.on('typing', function () {
-    socket.broadcast.emit('typing', {
-      username: socket.username
+    // when the client emits 'joinRoom', this adds the client to that room
+    socket.on('joinRoom', function(room) { // TODO - this seems to somehow be bugged in IE
+        // Only add socket if it is not already in the room
+        if (!socket.rooms[room]) {
+            socket.join(room);
+            socket.emit('joined', room);
+        }
     });
-  });
 
-  // when the client emits 'stop typing', we broadcast it to others
-  socket.on('stop typing', function () {
-    socket.broadcast.emit('stop typing', {
-      username: socket.username
+    // when the client emits 'leaveRoom', this removes the client from that room
+    socket.on('leaveRoom', function(room) {
+        // Only remove socket if it is already in the room
+        if (socket.rooms[room]) {
+            socket.leave(room);
+            socket.emit('left', room);
+        }
     });
-  });
-  
-  // when the user emits 'getRooms', we respond with a list of the rooms that user is in
-  socket.on('getRooms', function() {
-    socket.emit('postRooms', socket.rooms);
-  });
 
-  // when the user disconnects, perform this
-  socket.on('disconnect', function () {
-    if (addedUser) {
-      console.log(socket.username, 'disconnected');
-    }
-  });
+    // when the client emits 'toggleRoom', remove them if they're in the room, or add them if they're not
+    socket.on('toggleRoom', function(room) {
+        // Only add socket if it is not already in the room
+        if (!socket.rooms[room]) {
+            socket.join(room);
+            socket.emit('joined', room);
+        } // Only remove socket if it is already in the room
+        else {
+            socket.leave(room);
+            socket.emit('left', room);
+        }
+    });
+
+    // when the client emits 'direct message', send the msg to the given room
+    socket.on('direct message', function(room, msg) {
+        socket.to(room).emit('chat message', socket.username, msg);
+    });
+
+    var addedUser = false;
+
+    // when the client emits 'broadcast message', this listens and executes
+    socket.on('broadcast message', function(data) {
+        // we tell the client to execute 'new message'
+        socket.broadcast.emit('broadcast message', {
+            username: socket.username,
+            message: data
+        });
+    });
+
+    // when the client emits 'typing', we broadcast it to others
+    socket.on('typing', function() {
+        socket.broadcast.emit('typing', {
+            username: socket.username
+        });
+    });
+
+    // when the client emits 'stop typing', we broadcast it to others
+    socket.on('stop typing', function() {
+        socket.broadcast.emit('stop typing', {
+            username: socket.username
+        });
+    });
+
+    // when the user emits 'getRooms', we respond with a list of the rooms that user is in
+    socket.on('getRooms', function() {
+        socket.emit('postRooms', socket.rooms);
+    });
+
+    // when the user disconnects, perform this
+    socket.on('disconnect', function() {
+        if (addedUser) {
+            console.log(socket.username, 'disconnected');
+        }
+    });
 });

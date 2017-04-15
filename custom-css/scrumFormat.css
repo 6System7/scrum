@@ -41,7 +41,7 @@ body {
     width: calc(100vh - 120px);
     height: calc(100vh - 300px);
     padding-bottom: 20px;
-    overflow-y: scroll; 
+    overflow-y: scroll;
 }
 #notificationsButton{
     max-height: 50px;
@@ -59,11 +59,22 @@ body {
     color: white;
 }
 
-
-
 .panel-group .panel-default {
     margin-bottom: 10px;
 }
 #pageheader {
     text-align: center;
+}
+
+#btnScanBarcode {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+#btnStopBarcodeScanning {
+    margin: 8px;
+}
+
+.drawingBuffer {
+    display: none;
 }

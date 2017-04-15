@@ -76,7 +76,7 @@
                     <li><a href="findfood.html">Find Food</a></li>
                     <li><a href="loginAndRegister.html">Login &amp; Register</a></li>
                     <li><a href="account.html">Account Settings</a></li>
-            <li><a href="chat.html">Messages</a></li>
+                    <li><a href="chat.html">Messages</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -87,12 +87,80 @@
             <!--/.nav-collapse -->
         </div>
     </nav>
-<!-- TODO Mike - streamline for mobile -->
-<!-- TODO Mike - Snack/(Other/Misc) meal time type -->
+    <!-- TODO Mike - streamline for mobile -->
     <div class="container">
         <!--Initial data when landing on page-->
         <div class="scrumFormat">
             <h1 id="pageTitleH1">Post a food item</h1>
+        </div>
+        <div id="pnlBarcodeScreen" style="display:none;" class="panel">
+            <div class="controls">
+                <fieldset class="input-group">
+                    <button id="btnStopBarcodeScanning" class="stop btn btn-primary">Stop Scanning</button>
+                </fieldset>
+                <fieldset class="reader-config-group">
+                    <label style="display:none;">
+                                <span>Barcode-Type</span>
+                                <select name="decoder_readers">
+                                    <option value="code_128" selected="selected">Code 128</option>
+                                    <option value="code_39">Code 39</option>
+                                    <option value="code_39_vin">Code 39 VIN</option>
+                                    <option value="ean">EAN</option>
+                                    <option value="ean_extended">EAN-extended</option>
+                                    <option value="ean_8">EAN-8</option>
+                                    <option value="upc">UPC</option>
+                                    <option value="upc_e">UPC-E</option>
+                                    <option value="codabar">Codabar</option>
+                                    <option value="i2of5">ITF</option>
+                                </select>
+                            </label>
+                    <label style="display:none;">
+                                <span>Resolution (long side)</span>
+                                <select name="input-stream_constraints">
+                                    <option value="320x240">320px</option>
+                                    <option selected="selected" value="640x480">640px</option>
+                                    <option value="800x600">800px</option>
+                                    <option value="1280x720">1280px</option>
+                                    <option value="1600x960">1600px</option>
+                                    <option value="1920x1080">1920px</option>
+                                </select>
+                            </label>
+                    <label style="display:none;">
+                                <span>Patch-Size</span>
+                                <select name="locator_patch-size">
+                                    <option value="x-small">x-small</option>
+                                    <option value="small">small</option>
+                                    <option selected="selected" value="medium">medium</option>
+                                    <option value="large">large</option>
+                                    <option value="x-large">x-large</option>
+                                </select>
+                            </label>
+                    <label style="display:none;">
+                                <span>Half-Sample</span>
+                                <input type="checkbox" checked="checked" name="locator_half-sample" />
+                            </label>
+                    <label style="display:none;">
+                                <span>Workers</span>
+                                <select name="numOfWorkers">
+                                    <option value="0">0</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option selected="selected" value="4">4</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </label>
+                    <label>
+                                <span>Camera</span>
+                                <select name="input-stream_constraints" id="deviceSelection">
+                                </select>
+                            </label>
+                </fieldset>
+            </div>
+            <div id="result_strip">
+                <ul class="thumbnails"></ul>
+                <ul class="collector"></ul>
+            </div>
+            <div id="interactive" class="viewport"></div>
         </div>
         <form id="frmPost" action="#">
             <div class="row">
@@ -111,7 +179,8 @@
                         <p>Click a new location, or drag the marker to change location.</p>
                         <div id="map"></div>
                         <form method="post" action="#">
-                            Latitude: <input type="text" id="lat" readonly="yes"> Longitude: <input type="text" id="lng" readonly="yes">
+                            <label>Latitude: <input type="text" id="lat" readonly="yes"></label>
+                            <label>Longitude: <input type="text" id="lng" readonly="yes"></label>
                         </form>
                     </div>
                     <div class="form-group">
@@ -125,6 +194,8 @@
                     <br/>
                 </div>
                 <div class="col-md-4">
+                    <button id="btnScanBarcode" type="button" class="btn btn-primary" onclick="scanBarcode()">Scan Barcode</button>
+
                     <div class="panel panel-default">
                         <div class="panel-heading">Dietary Requirements</div>
                         <div class="panel-body">
@@ -142,6 +213,7 @@
                                 <option value="breakfast">Breakfast</option>
                                 <option value="lunch">Lunch</option>
                                 <option value="dinner">Dinner</option>
+                                <option value="snackmisc">Snack/Other</option>
                             </select>
                         </div>
                         <!-- </div>
@@ -199,6 +271,8 @@
     <!-- /.container -->
     <!-- Bootstrap core JS -->
     <script src="/js/bootstrap.min.js"></script>
+    <!-- Barcode scanning -->
+    <script src="/quagga/quagga.js"></script>
     <!-- Our own JS -->
     <script type="text/javascript" src="postfood.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
