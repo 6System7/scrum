@@ -27,7 +27,13 @@ body {
 
 }
 #navbar-logo {
-    max-width: 50px;
+    max-width: 45px;
+    max-height:45px;
+    padding-top:0px;
+    position: absolute;
+    top:5%;
+     /* 50% of your logo width */
+    
     /*background-color: #fff2e6;*/
 }
 
@@ -44,7 +50,9 @@ body {
     overflow-y: scroll;
 }
 #notificationsButton{
+    margin-left:30px;
     max-height: 50px;
+    margin-right:0px;
 }
 .panel {
     border-width: 2px;
