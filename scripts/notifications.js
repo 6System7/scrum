@@ -70,6 +70,25 @@ function checkNearbyFoods(dataPassReturned){
                 headerDiv.addClass('panel-heading');
                 headerDiv.text("New food post in your local area!");
                 headerDiv.appendTo(notifDiv);
+                
+                var seePostButton = $('<button>');
+                seePostButton.addClass("btn btn-primary");
+                seePostButton.text("See Post");
+                seePostButton.attr("style","float:right;padding-top:0px;postion:absolute; background-color: transparent; border-color: transparent");
+                seePostButton.data("foodJson",foodPost);
+                seePostButton.attr("href","findFood.html");
+                //seePostButton.attr("onClick", "return openModal()")
+                seePostButton.click(function(){
+                  //  alert(foodPost.title);
+                    window.location = "findFood.html";
+                    openModal();
+                  //  var food = $(this).data('foodJson');
+                  //  $('#seePostsModal').modal('show');
+                   // window.location = "findFood.html";
+                    seePost(food);
+                   // $('#seePostsModal').modal('show');
+                                    })
+                seePostButton.appendTo(headerDiv);
 
                 // CREATE PANEL BODY
                 var bodyDiv = $('<div>');

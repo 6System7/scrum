@@ -464,6 +464,10 @@ function seePost(x){
     $("#modalRightColumn").append(userLabel);
     $("#modalRightColumn").append(user);
 }
+
+function openModal(){
+    alert("hey");    
+}
 // TODO user button: pass in new value for the button with the username and send offff??
 
 
