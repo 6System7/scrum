@@ -78,3 +78,12 @@ body {
 .drawingBuffer {
     display: none;
 }
+
+
+.badge-error {
+  background-color: red;
+}
+#counter{
+    float:right;
+    padding-left: 3px;
+}

@@ -13,7 +13,6 @@
     <script type="text/javascript" src="/jquery/jquery.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="scrumFormat.css" rel="stylesheet">
       <!-- Map for location selection -->
@@ -41,10 +40,13 @@
 
             <li class="dropdown dropdown-notifications" >
                 <!--Todo: want to make it pull left. -->
-            <a href="#notifications-panel" class="dropdown-toggle" data-toggle = "dropdown" id = "notificationsButton">
-
-              <i data-count="2" class="glyphicon glyphicon-bell "></i>
-            </a>
+                    <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton"><span class="badge badge-error" id="notificationsBadge">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <div id = "counter">
+                            
+                            </div>
+                            </span>  
+                    </a>
               <ul class = "dropdown-menu" id = "notificationsPanel">
                 <div class="container">
                   <h3>Notifications</h3>
@@ -114,6 +116,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
+          <script type="text/javascript" src="notifications.js"></script>
     <script type="text/javascript" src="dataAnalysis.js"></script>
   </body>
 </html>

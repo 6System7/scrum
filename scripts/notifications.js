@@ -17,6 +17,11 @@ $(document).ready(function(){
       //  getUserDistance();
        // changeUserDistance
     })
+    $("#notificationsButton").click(function(){
+        $(".badge-error").css("background-color", "grey");
+       // $("#notificationsBadge").text("");
+        $("#counter").text("");
+    })
     
 }) // end of getNotifications
 
@@ -28,6 +33,7 @@ function checkNearbyFoods(dataPassReturned){
     // GET CURRENT POSITIONS
     memberLang = 0;
     memberLong = 0;
+    var counter = 0;
     if (navigator.geolocation) { 
         navigator.geolocation.getCurrentPosition(function(pos) {
                 memberLang = pos.coords.latitude;
@@ -45,6 +51,7 @@ function checkNearbyFoods(dataPassReturned){
             var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, memberLang, memberLong)
             var title = foodPost.title;
             if (dist < userDistance){
+                counter++;
                 
 
                 // CREATE NEARBY POST
@@ -80,6 +87,8 @@ function checkNearbyFoods(dataPassReturned){
 
             } 
         }
+    // CHANGE NOTIFCAITON NUMBER
+   $("#counter").text("  " +counter.toString());
 }
     
 

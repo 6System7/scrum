@@ -29,8 +29,6 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- Custom styles for this template -->
     <link href="/css/scrumFormat.css" rel="stylesheet">
      </head>
@@ -55,10 +53,13 @@
 
             <li class="dropdown dropdown-notifications" >
                 <!--Todo: want to make it pull left. -->
-            <a href="#notifications-panel" class="dropdown-toggle" data-toggle = "dropdown" id = "notificationsButton">
-
-              <i data-count="2" class="glyphicon glyphicon-bell "></i>
-            </a>
+            <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton"><span class="badge badge-error" id="notificationsBadge">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <div id = "counter">
+                            
+                            </div>
+                            </span>  
+                        </a>
               <ul class = "dropdown-menu" id = "notificationsPanel">
                 <div class="container">
                   <h3>Notifications</h3>
@@ -155,6 +156,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
+    <script type="text/javascript" src="notifications.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="chat.js"></script>

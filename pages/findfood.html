@@ -17,12 +17,12 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Can remove this one?
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">-->
-
+s
     <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
     <!--this makes the drop down notifcations work! -->
     <!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
        <!-- this makes the bell pretty -->
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+   <!-- <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">-->
 
 
     <!-- Custom styles for this template -->
@@ -54,9 +54,12 @@
                           
                     <li class="dropdown dropdown-notifications">
                         <!--Todo: want to make it pull left. -->
-                        <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton">
-                            <i data-count="2" class="glyphicon glyphicon-bell"></i>
-                            <!--<i data-count="2" class="glyphicon glyphicon-comment "></i>-->
+                        <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton"><span class="badge badge-error" id="notificationsBadge">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <div id = "counter">
+                            
+                            </div>
+                            </span>  
                         </a>
 
                         <ul class="dropdown-menu" id="notificationsPanel">
@@ -150,6 +153,7 @@
                             <label class="checkbox-inline"><input type="checkbox" name="breakfast" value="">Breakfast</label>
                             <label class="checkbox-inline"><input type="checkbox" name ="lunch" value="">Lunch</label>
                             <label class="checkbox-inline"><input type="checkbox" name ="dinner" value="">Dinner</label>
+                            <label class="checkbox-inline"><input type="checkbox" name ="snackmisc" value="">Snack/Miscellenaeous</label>
                         </div>
                     </div>
                 </div>

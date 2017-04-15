@@ -139,7 +139,7 @@ function filterFoods(dataPass){
     var filters = loadFilters();
     for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
         var visibility = false;
-        var foodPost = dataPass[foodPostElem];  //alert(foodPost._id);  
+        var foodPost = dataPass[foodPostElem];   
         
         // CALCULATE DISTANCE AND CHECK ITS CORRECT
         var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
