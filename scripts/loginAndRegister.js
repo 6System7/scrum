@@ -46,6 +46,7 @@ function processLogin(username){
     localStorage.username = username;
     saveAuthKey(username);
     $("#loginFeedback").append("<p class='text-success'>Logged in Successfully!</p>");
+    window.open("/home.html", "_self");
     getUsername();
 }
 
@@ -150,7 +151,12 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
 
     var passwordContainsNumbers = false;
     for(var digit = 0; digit < 10; digit++) {
-        passwordContainsNumbers = password.includes(digit);
+        for(var passwordChar in password){
+            if(passwordChar === digit.toString()){
+                passwordContainsNumbers = true;
+                break;
+            }
+        }
         if (passwordContainsNumbers === true) {
             break;
         }
@@ -381,7 +387,7 @@ function genResetPasswordLink(username){
 
 function sendResetPasswordEmail(emailAddress, username, resetLink){
 
-    var subject = "Scrum App - Username Recovery";
+    var subject = "Scrum App - Password Reset";
     var message = "Dear " + username + '\n' +
         "As requested here is a link to reset your password: " + '\n \n' +
         "Link: " + resetLink + '\n' +
