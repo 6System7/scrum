@@ -15,6 +15,7 @@
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="scrumFormat.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
       <!-- Map for location selection -->
       <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCW6XlFsL0Ik5e5xDECavIvI24400NMx2g"></script>
      </head>
@@ -74,17 +75,43 @@
       </div>
     </nav>
 
+    <header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
+      <img class="w3-image" src="ScrumHomeBanner.png" alt="Scrum" width="1500" height="500">
+      <div class="w3-display-middle w3-margin-top w3-center">
+        <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Scrum</b></span> <span class="w3-hide-small w3-text-black">App</span></h1>
+      </div>
+    </header>
 
     <div class="container">
 
     <!--Initial data when landing on page-->
       <div class="scrumFormat">
-        <h1>Scrum Home Page</h1>
-        <p class="lead">Place holder text, insert welcome message here.<br>Place holder text, insert scrum description here.<br></p>
 
-        <p>Todo:<br>- A large picture<br>- Link to download from app store?<br>- About us (small print)<br>- Log in and register system (potentially in it's own page?)<br>- Notifications/Recomendations</p>
+        <div class="w3-container w3-padding-32" id="aboutUs">
+          <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">About Scrum</h2>
+        </div>
+        <p>
+          Simply put we created Scrum to help reduce food wastage.
+          Food wastage is a growing concern as many people are without food in not only in third world countries.
+          But even on our own streets. Therefore we made it as easy as possible to get the food to those who need it.
+          Deep down we all want to doo good and help but we don't always have the time or ability too so we made it easy for everyone.
+          Register with us today and start helping us work towards a better future.
+        </p>
 
-        <button class="btn btn-primary" type="submit" id="loadStatsButton">Load Stats</button>
+        <div class="w3-container w3-padding-32" id="appStore">
+          <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Coming Soon: Available on the app store!</h2>
+        </div>
+        <img class="w3-image" src="google-play-badge.png" alt="GooglePlayBadge" width="320" height="240">
+        <img class="w3-image" src="app-store-badge.svg" alt="AppStoreBadge" width="280" height="210">
+
+        <div class="w3-container w3-padding-32" id="ourStats">
+          <h2 class="w3-border-bottom w3-border-light-grey w3-padding-16">Our Stats</h2>
+        </div>
+        <p>
+          We have nothing to hide and in the process of helping everyone build a better future we want to educate as well.
+          So see below for all the stats we collect and calculate whether you're a concerned individual or a big business looking to help.
+        </p>
+
         <br><br>
           <table id="statList" class="table table-striped" style="text-align: left">
               <tr>
@@ -105,7 +132,7 @@
 
     <script type="text/javascript">
 
-        $(document).on('click', '#loadStatsButton', function(){
+        $(document).ready( function(){
             loadStats();
         });
 
