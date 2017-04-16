@@ -10,7 +10,20 @@ $(document).ready(function() {
             success: function(data) {
                 var foodsToShow = []
                 var dataReturned = JSON.parse(JSON.stringify(data));
-                generatePostCards(dataReturned);
+
+                // Put collected last
+                var uncollected = [];
+                var collected = [];
+                for (var i = 0; i < dataReturned.length; i++) {
+                    if (dataReturned[i].collected) {
+                        collected.push(dataReturned[i]);
+                    } else {
+                        uncollected.push(dataReturned[i]);
+                    }
+                }
+                uncollected.push.apply(uncollected, collected);
+
+                generatePostCards(uncollected);
             }
         });
     }
@@ -71,9 +84,9 @@ function generatePostCards(data) {
         $(btnEdit).attr("type", "button");
         $(btnEdit).addClass("btn btn-primary");
         $(btnEdit).data("post", x);
-        $(btnEdit).attr("style","margin-left:5px; margin-bottom:5px");
-        $(btnEdit).css("background-color","#1C939B");
-        $(btnEdit).css("border-color","white");
+        $(btnEdit).attr("style", "margin-left:5px; margin-bottom:5px");
+        $(btnEdit).css("background-color", "#1C939B");
+        $(btnEdit).css("border-color", "white");
         //$(btnEdit).css("padding","5px");
         $(btnEdit).click(function() {
             localStorage.postToEdit = JSON.stringify($(this).data("post"));
@@ -87,12 +100,11 @@ function generatePostCards(data) {
         $(btnDelete).attr("type", "button");
         $(btnDelete).addClass("btn btn-danger");
         $(btnDelete).css("float", "right");
-        $(btnDelete).css("margin-right","5px");
-        $(btnDelete).css("background-color","#1C939B");
-        $(btnDelete).css("border-color","white");
-       // $(btnDelete).css("padding","5px");
-       // $(btnDelete).attr("style","display: inline-block");
-
+        $(btnDelete).css("margin-right", "5px");
+        // $(btnDelete).css("background-color", "#1C939B");
+        $(btnDelete).css("border-color", "white");
+        // $(btnDelete).css("padding","5px");
+        // $(btnDelete).attr("style","display: inline-block");
         $(btnDelete).data("post", x);
         $(btnDelete).click(function() {
             if (confirm("Are you sure you want to delete this post?")) {
@@ -114,6 +126,51 @@ function generatePostCards(data) {
             }
         });
         $(divEl).append(btnDelete);
+
+        // ADD COLLECTED BUTTON
+        var btnCollected = $("<button>");
+        if (x.collected) {
+            // $(btnCollected).addClass("disabled");
+            $(btnCollected).text("Mark not collected");
+            $(btnCollected).addClass("btn btn-warning");
+        } else {
+            $(btnCollected).text("Mark collected");
+            $(btnCollected).addClass("btn btn-success");
+        }
+        // $(btnCollected).css("background-color", "#1C939B");
+        $(btnCollected).attr("type", "button");
+        $(btnCollected).css("float", "right");
+        $(btnCollected).css("margin-right", "5px");
+        $(btnCollected).css("border-color", "white");
+        $(btnCollected).data("post", x);
+        $(btnCollected).click(function() {
+            var post = $(this).data("post");
+            if (post.collected) {
+                delete post.collected;
+            } else {
+                post.collected = true;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/addPost",
+                data: {
+                    postToPost: post
+                },
+                dataType: "json",
+                success: function(data) {
+                    // console.log("Success when posting");
+                },
+                error: function() {
+                    // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
+                    // console.log("Failed when posting");
+                    // alert("Could not add post\nPlease try again soon!");
+                }
+            });
+            window.location.reload();
+
+        });
+        $(divEl).append(btnCollected);
 
         // CALCULATE COLUMN
         colNum = toPrint - 1;
