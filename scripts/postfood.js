@@ -1,12 +1,22 @@
 function useBarcodeInfo(item) {
-    var title = item.generic_name; // (_en)
+    var title = item.generic_name;
     var imageUrl = item.image_url;
     var labelTags = item.labels_tags;
     var labels = item.labels;
-    var ingredients = item.ingredients_text_with_allergens; // (_en)
+    var ingredients = item.ingredients_text_with_allergens;
     if (title || imageUrl || labelTags || labels || ingredients) {
-        alert(title + "\n\n" + imageUrl + "\n\n" + labelTags + "\n\n" + labels + "\n\n" + ingredients);
-        // TODO Mike - FILL FORM
+        if (confirm("Do you want to use the following information?\n\n" + title + "\n" + imageUrl + "\n" + ingredients)) {
+            if (title) {
+                $("#txtTitle").val(title);
+            }
+            if (ingredients) {
+                $("#txtDescription").val(ingredients);
+            }
+            if (imageUrl) {
+                // TODO download and then attach image as if was uploaded by user
+                previewFile(imageUrl);
+            }
+        }
     } else {
         alert("Product info contains no useful information");
     }
@@ -16,11 +26,9 @@ function getBarcodeInfo(code) {
     var fakePositives = {
         // TODO populate fake positives
         "5012035930592": {
-            generic_name: "Haribo Golden Bears",
-            image_url: "no image",
-            labels_tags: "",
-            labels: "",
-            ingredients_text_with_allergens: ""
+            generic_name: "Haribo Gold Bears",
+            image_url: "http://i.imgur.com/nHty93e.jpg",
+            ingredients_text_with_allergens: "no ingredients yet (fake positive scan because API is shocking)"
         }
     };
     if (fakePositives.hasOwnProperty(code)) {
@@ -33,7 +41,7 @@ function getBarcodeInfo(code) {
             dataType: "json",
             success: function(data) {
                 if (data.status == 0) {
-                    alert("No product info available for barcode", code);
+                    alert("No product info available for barcode" + code);
                 } else {
                     useBarcodeInfo(data.product);
                 }
@@ -405,40 +413,43 @@ function sendPostData() {
     }
 }
 
-function previewFile() {
+function previewFile(webURL) {
     var preview = $("#imgPreview");
-    var file = document.querySelector("input[type=file]").files[0];
-    var reader = new FileReader();
-
-    reader.onloadend = function() {
-        var image = new Image();
-        image.onload = function() {
-            // Resize image down
-            var canvas = document.createElement('canvas'),
-                max_size = 380,
-                width = image.width,
-                height = image.height;
-            if (width > height) {
-                if (width > max_size) {
-                    height *= max_size / width;
-                    width = max_size;
-                }
-            } else {
-                if (height > max_size) {
-                    width *= max_size / height;
-                    height = max_size;
-                }
+    var file, reader;
+    var image = new Image();
+    image.onload = function() {
+        // Resize image down
+        var canvas = document.createElement('canvas'),
+            max_size = 380,
+            width = image.width,
+            height = image.height;
+        if (width > height) {
+            if (width > max_size) {
+                height *= max_size / width;
+                width = max_size;
             }
-            canvas.width = width;
-            canvas.height = height;
-            canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-            var dataUrl = canvas.toDataURL('image/jpeg');
-            preview.attr("src", dataUrl);
+        } else {
+            if (height > max_size) {
+                width *= max_size / height;
+                height = max_size;
+            }
         }
-        image.src = reader.result;
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+        var dataUrl = canvas.toDataURL('image/jpeg');
+        preview.attr("src", dataUrl);
     }
 
-    if (file) {
+    if (webURL) {
+        image.crossOrigin = "anonymous";
+        image.src = webURL;
+    } else if (file) {
+        file = document.querySelector("input[type=file]").files[0];
+        reader = new FileReader();
+        reader.onloadend = function() {
+            image.src = reader.result;
+        }
         reader.readAsDataURL(file); //reads the data as a URL
     } else {
         preview.attr("src", "");
@@ -575,5 +586,3 @@ $(document).ready(function() {
         postID = false;
     }
 });
-
-// TODO Mike - https://en.wiki.openfoodfacts.org/API Open Food Facts API for barcode -> product information for auto fill of form data
