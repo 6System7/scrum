@@ -180,6 +180,7 @@ app.post("/addUser", function(req, res) {
     user.rating = Number(req.body.rating);
     user.realname = req.body.realName;
     user.email = req.body.email;
+    user.settings = req.body.settings;
 
     db.collection("users").save(user, function(err, results) {
         if (err) {

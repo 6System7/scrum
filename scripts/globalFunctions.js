@@ -65,3 +65,48 @@ function startChat(user){
   window.open('/chat.html?contact=' + user, '_self');
 }
 
+//Move this wherever Maddy
+// Call like     changeUserSettings("TestAccount1", "notifDistance", 5);
+function changeUserSettings(username, setting, newValue){
+
+    console.log("Changing setting " + setting + " to " + newValue);
+    $.getJSON("/getUsers", function(jsonData){
+
+        var currentSettings;
+        var userFound = false;
+        for(var i = 0; i < jsonData.length; i++){
+            var userData = jsonData[i];
+            if(userData.username === username){
+                userFound = true;
+                if(userData.hasOwnProperty("settings")) {
+                    currentSettings = userData.settings;
+                } else {
+                    currentSettings = {};
+                }
+                break;
+            }
+        }
+
+        if(userFound) {
+
+            var newSettings = currentSettings;
+            newSettings[setting] = newValue;
+
+            var updateData = {username: username, field: "settings", newValue: newSettings};
+
+            $.ajax({
+                type: "POST",
+                url: "/editUser",
+                data: updateData,
+                dataType: "json"
+            });
+
+        } else {
+            console.log("Invalid username given!");
+        }
+
+    });
+
+
+}
+

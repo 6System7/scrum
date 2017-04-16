@@ -252,8 +252,8 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
 function registerUser(username, password, authKey, rating, realName, email){
 
     console.log("Sending user registration request...");
-
-    var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email};
+    var defaultSettings = {notifDistance: 0}; //Maddy add to this object
+    var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email, settings: defaultSettings};
 
     $.ajax({
         type: "POST",
@@ -455,3 +455,50 @@ $(document).ready(function() {
         }
     });
 });
+
+
+//Move this wherever Maddy
+function changeUserSettings(username, setting, newValue){
+
+    console.log("Changing setting " + setting + " to " + newValue);
+    $.getJSON("/getUsers", function(jsonData){
+
+
+        console.log(jsonData);
+        // var currentSettings;
+        // var userFound = false;
+        // for(var i = 0; i < jsonData.length; i++){
+        //     var userData = jsonData[i];
+        //     if(userData.username === username){
+        //         userFound = true;
+        //         if(userData.hasOwnProperty("settings")) {
+        //             currentSettings = userData.settings;
+        //         } else {
+        //             currentSettings = {};
+        //         }
+        //         break;
+        //     }
+        // }
+        //
+        // if(userFound) {
+        //
+        //     var newSettings = currentSettings;
+        //     newSettings[setting] = newValue;
+        //
+        //     var updateData = {username: username, field: "settings", newValue: newSettings};
+        //
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/editUser",
+        //         data: updateData,
+        //         dataType: "json"
+        //     });
+        //
+        // } else {
+        //     console.log("Invalid username given!");
+        // }
+
+    });
+
+
+}
