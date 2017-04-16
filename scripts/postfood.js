@@ -221,8 +221,23 @@ function scanBarcode() {
                 }
             });
         } else {
-            // TODO Mike - proper warning css bootstrap stuff
-            $("#pnlBarcodeScreen").text("Your browser does not support the user media devices API");
+            var alertDiv = $("<div>");
+            alertDiv.addClass("alert alert-warning alert-dismissible");
+            alertDiv.attr("role", "alert");
+            alertDiv.css("width", "80%");
+            alertDiv.css("margin", "0 auto");
+            var closeButton = $("<button>");
+            closeButton.addClass("btn btn-primary");
+            closeButton.attr("data-dismiss", "alert");
+            closeButton.text("Dismiss");
+            closeButton.css("float", "right");
+            closeButton.click(function() {
+                $("#pnlBarcodeScreen").hide();
+            });
+            alertDiv.append(closeButton);
+            alertDiv.append("<strong>Woops!</strong> Your browser does not support giving us access to your media devices!")
+            $("#pnlBarcodeScreen").empty();
+            $("#pnlBarcodeScreen").append(alertDiv);
         }
     } else {
         $("#pnlBarcodeScreen").hide();
@@ -518,5 +533,4 @@ $(document).ready(function() {
     }
 });
 
-// TODO Mike - quagga.js for barcode
 // TODO Mike - https://en.wiki.openfoodfacts.org/API Open Food Facts API for barcode -> product information for auto fill of form data
