@@ -46,6 +46,7 @@ function processLogin(username){
     localStorage.username = username;
     saveAuthKey(username);
     $("#loginFeedback").append("<p class='text-success'>Logged in Successfully!</p>");
+    wipeForms();
     window.open("/home.html", "_self");
     getUsername();
 }
@@ -76,8 +77,9 @@ $(document).on("click", "#registerButton", function() {
     var firstName = $("#firstNameRegisterInput").val();
     var lastName = $("#lastNameRegisterInput").val();
     var email = $("#emailRegisterInput").val();
+    var confirmEmail = $("#confirmEmailRegisterInput").val();
     $.getJSON("/getUsers", function(jsonData){
-        if(registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email)){
+        if(registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email, confirmEmail)){
             console.log("All fields valid!");
             registerUser(username, password, "", 3, firstName  + " " + lastName, email);
         } else {
@@ -86,7 +88,7 @@ $(document).on("click", "#registerButton", function() {
     });
 });
 
-function registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email){
+function registerFieldsValid(jsonData, username, password, confirmPassword, firstName, lastName, email, confirmEmail){
     
     var invalidField = false;
     var usernameRegisterFeedbackSelector = $("#usernameRegisterFeedback");
@@ -95,6 +97,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     var firstNameRegisterFeedbackSelector = $("#firstNameRegisterFeedback");
     var lastNameRegisterFeedbackSelector = $("#lastNameRegisterFeedback");
     var emailRegisterFeedbackSelector = $("#emailRegisterFeedback");
+    var confirmEmailRegisterFeedbackSelector = $("#confirmEmailRegisterFeedback");
     var registerFeedbackSelector = $("#registerFeedback");
     usernameRegisterFeedbackSelector.html("");
     passwordRegisterFeedbackSelector.html("");
@@ -102,6 +105,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
     firstNameRegisterFeedbackSelector.html("");
     lastNameRegisterFeedbackSelector.html("");
     emailRegisterFeedbackSelector.html("");
+    confirmEmailRegisterFeedbackSelector.html("");
     registerFeedbackSelector.html("");
 
     // USERNAME CHECKS
@@ -226,6 +230,16 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
         $("#emailRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
     }
 
+    //CONFIRM EMAIL CHECKS
+    if(confirmEmail !== email){
+        console.log("Confirm Email must match Email");
+        $("#confirmEmailRegisterGroup").removeClass("form-group has-success").addClass("form-group has-error");
+        confirmEmailRegisterFeedbackSelector.append("<p class='text-danger'>Confirm Email must match Email</p>");
+        invalidField = true;
+    } else {
+        $("#confirmEmailRegisterGroup").removeClass("form-group has-error").addClass("form-group has-success");
+    }
+
     if(invalidField){
         registerFeedbackSelector.append("<p class='text-danger'>Error in registration, please review and try again!</p>");
         return false;
@@ -248,16 +262,16 @@ function registerUser(username, password, authKey, rating, realName, email){
         dataType: "json"
     });
 
-    sendEmailConfirmation(username, password, email, realName);
+    wipeForms();
+    sendEmailConfirmation(username, email, realName);
 }
 
-function sendEmailConfirmation(username, password, emailAddress, realName){
+function sendEmailConfirmation(username, emailAddress, realName){
 
     var subject = "Scrum App - Email confirmation";
     var message = "Dear " + realName + '\n' +
         "Welcome to to the Scrum App! Below are your account details: " + '\n \n' +
         "Username: " + username + '\n' +
-        "Password: " + password + '\n' +
         '\n' +
         "Best wishes," + '\n' +
         "Scrum Bot";
@@ -406,6 +420,19 @@ function sendResetPasswordEmail(emailAddress, username, resetLink){
 
     console.log("Username Recovery Email Sent");
 
+}
+
+function wipeForms(){
+    console.log("Wiping forms...");
+    $("#usernameLoginInput").val("");
+    $("#passwordLoginInput").val("");
+    $("#usernameRegisterInput").val("");
+    $("#firstNameRegisterInput").val("");
+    $("#lastNameRegisterInput").val("");
+    $("#passwordRegisterInput").val("");
+    $("#confirmPasswordRegisterInput").val("");
+    $("#emailRegisterInput").val("");
+    $("#confirmEmailRegisterInput").val("");
 }
 
 /* Enter key submission **/
