@@ -92,7 +92,7 @@ function generatePostCards(data) {
         $(btnDelete).css("border-color","white");
        // $(btnDelete).css("padding","5px");
        // $(btnDelete).attr("style","display: inline-block");
-    
+
         $(btnDelete).data("post", x);
         $(btnDelete).click(function() {
             if (confirm("Are you sure you want to delete this post?")) {
