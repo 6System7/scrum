@@ -13,7 +13,7 @@ function useBarcodeInfo(item) {
                 $("#txtDescription").val(ingredients);
             }
             if (imageUrl) {
-                // TODO download and then attach image as if was uploaded by user
+                // Only works if image supports cross origin access (like imgur)
                 previewFile(imageUrl);
             }
         }
@@ -418,6 +418,7 @@ function previewFile(webURL) {
     var file, reader;
     var image = new Image();
     image.onload = function() {
+        imageSelected = true;
         // Resize image down
         var canvas = document.createElement('canvas'),
             max_size = 380,
