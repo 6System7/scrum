@@ -72,7 +72,7 @@ function scanBarcode() {
                             name = $target.attr("name"),
                             state = self._convertNameToState(name);
 
-                        console.log("Value of " + state + " changed to " + value);
+                        // console.log("Value of " + state + " changed to " + value);
                         self.setState(state, value);
                     });
                 },
@@ -122,7 +122,7 @@ function scanBarcode() {
 
                     self._accessByPath(self.state, path, value);
 
-                    console.log(JSON.stringify(self.state));
+                    // console.log(JSON.stringify(self.state));
                     App.detachListeners();
                     Quagga.stop();
                     App.init();
@@ -213,11 +213,37 @@ function scanBarcode() {
             Quagga.onDetected(function(result) {
                 var code = result.codeResult.code;
 
+                // TODO Mike - Maybe a list of previous codes? Sometimes it detects ones that aren't there
                 if (App.lastResult !== code) {
                     App.lastResult = code;
                     var $node = null,
                         canvas = Quagga.canvas.dom.image;
-                    alert("New code found " + code); // TODO Mike - GET INFO FROM OPEN FOOD FACTS API AND FILL FORM
+
+                    var apiURL = "http://world.openfoodfacts.org/api/v0/product/" + code + ".json";
+                    console.log("Querying ", apiURL);
+                    $.ajax({
+                        type: "GET",
+                        url: apiURL,
+                        dataType: "json",
+                        success: function(data) {
+                            if (data.status == 0) {
+                                console.log("No product info found for barcode", code);
+                            } else {
+                                console.log("Found product info", data);
+                                var item = data.product;
+                                var title = item.generic_name; // (_en)
+                                var imageUrl = item.image_url;
+                                var labelTags = item.labels_tags;
+                                var labels = item.labels;
+                                var ingredients = item.ingredients_text_with_allergens; // (_en)
+
+                                alert(title + "\n\n" + imageUrl + "\n\n" + labelTags + "\n\n" + labels);
+
+                                // TODO Mike - FILL FORM
+                            }
+                        },
+                        error: function() {}
+                    });
                 }
             });
         } else {
