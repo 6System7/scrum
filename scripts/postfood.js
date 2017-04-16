@@ -16,6 +16,7 @@ function useBarcodeInfo(item) {
                 // Only works if image supports cross origin access (like imgur)
                 previewFile(imageUrl);
             }
+            $("#btnStopBarcodeScanning").click();
         }
     } else {
         alert("Product info contains no useful information");
