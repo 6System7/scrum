@@ -253,7 +253,7 @@ function getUsageByLocation(postList){
         var city = post.location;
 
         if(!usage.hasOwnProperty(city)){
-            usage[city] = 0;
+            usage[city] = 1;
         } else {
             usage[city] += 1;
         }
