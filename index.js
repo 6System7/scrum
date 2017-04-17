@@ -265,6 +265,19 @@ app.post("/rateUser", function(req, res) {
     }
 });
 
+app.get("/getUserRating", function(req, res) {
+    res.setHeader("Content-Type", "application/json");
+    var user = req.query.username;
+    db.collection("users").findOne({
+        username: user
+    }, function(err, document) {
+        res.send(JSON.stringify({
+            rating: document.rating,
+            username: user
+        }));
+    });
+});
+
 // FUNCTIONS
 app.get("/sha1", function(req, res) {
     var inputString = req.query.string;
