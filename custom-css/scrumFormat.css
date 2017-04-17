@@ -1,44 +1,46 @@
 body {
-  padding-top: 50px;
-  background-color: #F7FFFF; // change to f0ffff
+    padding-top: 50px;
+    background-color: #F7FFFF; // change to f0ffff
 }
-#navbar{
+
+#navbar {
     background-color: #1C939B;
 }
-#navbarContent{
+
+#navbarContent {
     background-color: #1C939B;
 }
 
 #navbarheader {
     color: white;
 }
-.nav.navbar-nav > li > a {
+
+.nav.navbar-nav>li>a {
     color: white;
 }
 
 .scrumFormat {
-  padding: 40px 15px;
-  text-align: center;
+    padding: 40px 15px;
+    text-align: center;
 }
 
-#allNotifs{
-    position:relative;
+#allNotifs {
+    position: relative;
     width: calc(100% - 18px);
-
 }
+
 #navbar-logo {
     max-width: 45px;
-    max-height:45px;
-    padding-top:0px;
+    max-height: 45px;
+    padding-top: 0px;
     position: absolute;
-    top:5%;
-     /* 50% of your logo width */
-    
+    top: 5%;
+    /* 50% of your logo width */
     /*background-color: #fff2e6;*/
 }
 
-.glyphicon.glyphicon-cutlery{
-    margin-right:10px;
+.glyphicon.glyphicon-cutlery {
+    margin-right: 10px;
 }
 
 #notificationsPanel {
@@ -49,19 +51,23 @@ body {
     padding-bottom: 20px;
     overflow-y: scroll;
 }
-#notificationsButton{
-    margin-left:30px;
+
+#notificationsButton {
+    margin-left: 30px;
     max-height: 50px;
-    margin-right:0px;
+    margin-right: 0px;
 }
+
 .panel {
     border-width: 2px;
     border-color: black;
     background-color: #A6EAEF;
 }
+
 .panel-default {
     max-width: inherit;
 }
+
 .panel-default>.panel-heading {
     background-color: #1C939B;
     color: white;
@@ -70,6 +76,7 @@ body {
 .panel-group .panel-default {
     margin-bottom: 10px;
 }
+
 #pageheader {
     text-align: center;
 }
@@ -77,9 +84,9 @@ body {
 #btnScanBarcode {
     width: 100%;
     margin-bottom: 8px;
-    background-color:#1C939B;
+    background-color: #1C939B;
     border-color: black;
-    border-width:2px;
+    border-width: 2px;
 }
 
 #btnStopBarcodeScanning {
@@ -90,11 +97,47 @@ body {
     display: none;
 }
 
-
 .badge-error {
-  background-color: red;
+    background-color: red;
 }
-#counter{
-    float:right;
+
+#counter {
+    float: right;
     padding-left: 3px;
+}
+
+.starRating:not(old) {
+    display: inline-block;
+    width: 7.5em;
+    height: 1.5em;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+.starRating:not(old)>input {
+    margin-right: -100%;
+    opacity: 0;
+}
+
+.starRating:not(old)>label {
+    display: block;
+    float: right;
+    position: relative;
+    background: url('star-off.svg');
+    background-size: contain;
+}
+
+.starRating:not(old)>label:before {
+    content: '';
+    display: block;
+    width: 1.5em;
+    height: 1.5em;
+    background: url('star-on.svg');
+    background-size: contain;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+}
+
+.starRating:not(old)>label:hover:before, .starRating:not(old)>label:hover~label:before, .starRating:not(:hover)> :checked~label:before {
+    opacity: 1;
 }
