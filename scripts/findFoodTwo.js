@@ -171,14 +171,14 @@ function filterFoods(dataPass){
             var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
             if (parseInt(dist) <= filters.distance){
                 // TAKE ALL POSTS IN THIS DISTANCE
-                
+
                 if (whatToPrint == "false"){
-                    visibility = true; 
+                    visibility = true;
                     foodsToPost.push(foodPost._id);
                 }
                 else {
                 // COMPARE DESCRIPTION AND KEYWORDS
-                   
+
                     var description = foodPost.description;
                     description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
                     var filterDesc = filters.description;
@@ -190,7 +190,7 @@ function filterFoods(dataPass){
 
                             if (description.indexOf(wordStr) !== -1){
 
-                                visibility = true; 
+                                visibility = true;
                                 if (whatToPrint == "falseButdescription"){
 
                                     foodsToPost.push(foodPost._id);
@@ -201,7 +201,7 @@ function filterFoods(dataPass){
                     }
                     }
                     if (whatToPrint == "true") {
-                  
+
                     for (var category = 0; category < Object.keys(filters).length; category++){
 
                     var checkAgain = (Object.keys(filters)[category]).toString();
@@ -210,17 +210,17 @@ function filterFoods(dataPass){
                         for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                                 if (xox[listInCategory] == postCheck){
                                     visibility = true;
-                                    
+
                                     }
                                 }
                             }
 
                     if (visibility == true){
-                      
+
                         foodsToPost.push(foodPost._id);
                     }
 
-        
+
                      }
         }
         }
@@ -256,7 +256,7 @@ function loadFilters(){
     }) // put in mealtype if its not empty?? TODO
     if (mealtypeList.length != 0){
         checkHowMany++
-    }    
+    }
     filters["mealtype"] = mealtypeList;
 
     // MEAL TYPE COUNTRY
@@ -342,11 +342,11 @@ function loadFilters(){
             }
         }
     }*/
-  
+
     if (checkHowMany == 0){
             //justDistance = true;
         if (filters["description"] != "" && filters["description"] != ","){
-            filters["usefilters"] = "falseButdescription"; 
+            filters["usefilters"] = "falseButdescription";
         }
         else if (filters["description"] == "," || filters["description"] == ""){
             var fil = "false";
@@ -571,7 +571,7 @@ function seePost(x){
     var userRating = $("<span>");
     var userRatingLabel = "<br><i>Rate " + x.username + "</i><br>";
     userRating.addClass("starRating");
-    // TODO Mike - load 'my' rating of this post's user, and display it!
+    // TODO Mike - load 'my' rating of this post's user, and display it?
     for (var i = 5; i > 0; i--) {
         var starInput = $("<input>");
         starInput.attr("id", "rating" + i);
