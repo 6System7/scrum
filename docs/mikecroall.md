@@ -29,16 +29,16 @@ The above contributions include client side and server side code, and initially 
 ### Viewing past and present posts
 #### Marking as collected, or deleting posts
 1. Ensure you are logged in, and navigate to **Manage Posts**
-..* Any posts you have will be listed here. Un-collected posts will be listed first, then collected posts.
+    * Any posts you have will be listed here. Un-collected posts will be listed first, then collected posts.
 2. To mark a post as collected, click **Mark collected** on that post
-..* Once complete, the button will turn from green to yellow
-..* Click the button again to undo your action
+    * Once complete, the button will turn from green to yellow
+    * Click the button again to undo your action
 3. To delete a post, click **Delete** on that post
-..* You will need to confirm this, as this action is irreversible
+    * You will need to confirm this, as this action is irreversible
 
 ### Viewing and contributing to the ratings of other users
 1. Ensure you are logged in, and navigate to **Find Food**
-..* Each post will show the username on the card, with that user's rating next to their name
+    * Each post will show the username on the card, with that user's rating next to their name
 2. Click on the eye, to the view the full post information
 3. Under the username, click on the stars to choose a rating for the user who made this post
 4. Once clicked, the users new average rating will be updated when the results are refreshed
