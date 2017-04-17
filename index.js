@@ -230,6 +230,41 @@ app.post("/editUser", function(req, res) {
     }
 });
 
+app.post("/rateUser", function(req, res) {
+    var rater = req.body.me;
+    var ratee = req.body.them;
+    var rating = req.body.rating;
+    if (rater && ratee && rating && rater !== ratee) {
+        db.collection("users").find({
+            username: ratee
+        }).toArray(function(err, results) {
+            if (results.length > 0) {
+                var user = results[0];
+                if (!user.ratings) {
+                    user.ratings = {};
+                }
+                user.ratings[rater] = rating;
+                var sum = 0;
+                var count = 0;
+                for (var username in user.ratings) {
+                    sum += Number(user.ratings[username]);
+                    count += 1;
+                }
+                user.rating = sum / count;
+                db.collection("users").save(user, function(err, results) {
+                    if (err) {
+                        res.send(err.toString());
+                        console.log("Updating user rating failed: " + err.toString());
+                    } else {
+                        res.send("Done");
+                        console.log("Updating user rating succeeded");
+                    }
+                });
+            }
+        });
+    }
+});
+
 // FUNCTIONS
 app.get("/sha1", function(req, res) {
     var inputString = req.query.string;

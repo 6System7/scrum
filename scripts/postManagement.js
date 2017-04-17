@@ -180,7 +180,6 @@ function generatePostCards(data) {
                     // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
                 },
                 complete: function() {
-                    console.log("post added");
                     $.getJSON("/getArchiveData", function(jsonData) {
                         $.ajax({
                             type: "POST",

@@ -6,7 +6,7 @@ $(document).ready(function(){
         currentLang = pos.coords.latitude;
         currentLong = pos.coords.longitude;
         console.log(currentLang);
-       
+
     $.ajax({
         url: "/getPosts",
         type: "GET",
@@ -24,7 +24,7 @@ $(document).ready(function(){
             getPostedFoods(foodsToShow);
         }
     });
-        
+
 
     $("#btnUpdate").click(function(){
         var foodsToPost = filterFoods(dataPass);
@@ -71,8 +71,8 @@ function getPostedFoods(x){
                     if ((x._id).toString() == checkArray[y]){
                         if(x.collected != "true"){
                         toPrint++;
-                        
-                         // CREATE CARD 
+
+                         // CREATE CARD
                         var divEl = $('<div>');
                         divEl.addClass("w3-card-4");
 
@@ -110,7 +110,7 @@ function getPostedFoods(x){
                         var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i></small><br>";
                         bodyCon.append(authorCon);
                         bodyCon.appendTo(container);
-                        
+
                         // CREATE SEE BUTTON
                         var seeButton = $("<button>");
                         seeButton.attr("type","button");
@@ -123,12 +123,12 @@ function getPostedFoods(x){
                             var foodPost = $(this).data("foodJson");
                             seePost(foodPost);
                                   });
-                    
+
                         var glyph = $("<span>")
                         glyph.addClass("glyphicon glyphicon-eye-open")
                         glyph.appendTo(seeButton);
                         seeButton.appendTo(bodyCon);
-                        
+
 
                         // CALCULATE COLUMN
                         colNum = toPrint-1;
@@ -142,7 +142,7 @@ function getPostedFoods(x){
             }
         }
     })
-} 
+}
 
 // Create's a array of IDs: these posts will be displayed
 function filterFoods(dataPass){
@@ -156,25 +156,25 @@ function filterFoods(dataPass){
                 var x = data[property];
                 foodsToPost.push((x._id).toString());
             }
-          
+
         }
     else{*/
         for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
             var visibility = false;
-            var foodPost = dataPass[foodPostElem];   
+            var foodPost = dataPass[foodPostElem];
 
             // CALCULATE DISTANCE AND CHECK ITS CORRECT
             var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
             if (parseInt(dist) <= filters.distance){
                 // TAKE ALL POSTS IN THIS DISTANCE
-                
+
                 if (foodPost.usefilters == "false"){
-                    visibility = true; 
+                    visibility = true;
                    console.log("and now heres");
 
                     foodsToPost.push(foodPost._id);
                 }
-                else { 
+                else {
                 // COMPARE DESCRIPTION AND KEYWORDS
                     console.log("compea re decsiption nad keywords");
                     var description = foodPost.description;
@@ -188,17 +188,17 @@ function filterFoods(dataPass){
 
                             if (description.indexOf(wordStr) !== -1){
                                 console.log("TRAITOR??");
-                                
-                                visibility = true; 
+
+                                visibility = true;
                                 if (foodPost.usefilters == "falseButdescription"){
                                     console.log("NOW HERE");
                                     foodsToPost.push(foodPost._id);
                                 }
-                                
+
                             }
                         }
                     }// atm if Z
-                    
+
 
                     // NOW CHECK WHETHER ANY FILTERS HAVE BEEN DEALTH WITH
                  /*   if (filters.usefilters == "false"){
@@ -216,7 +216,7 @@ function filterFoods(dataPass){
 
                     var checkAgain = (Object.keys(filters)[category]).toString();
                     var postCheck = foodPost[checkAgain]; //grab it from post
-                        var xox = filters[Object.keys(filters)[category]]; 
+                        var xox = filters[Object.keys(filters)[category]];
                         for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                                 if (xox[listInCategory] == postCheck){
                                     //console.log(postCheck);
@@ -236,15 +236,15 @@ function filterFoods(dataPass){
                     }
                 }
         }
-    
+
     return foodsToPost;
 }
-   
+
 // Makes a list of checked filters
 function loadFilters(){
     var filters =  {
         /* TODO
-        keywords??        
+        keywords??
         */
         usefilters: "true",
         mealtype: " ",
@@ -252,67 +252,67 @@ function loadFilters(){
         mealtypefood: " ",
         mealweight: " ",
         mealexpires: " ",
-        mealTypeDietary: " ", //captails??  
+        mealTypeDietary: " ", //captails??
         collectionbusiness: " ",
         distance: " ",
         description: " "
     };
-    
-    
+
+
     // MEAL TYPE
     var mealtypeList = [];
     $("#collapseMealType input:checked").each(function(){
-      
-        mealtypeList.push($(this).attr('name'))   
+
+        mealtypeList.push($(this).attr('name'))
     }) // put in mealtype if its not empty?? TODO
     filters["mealtype"] = mealtypeList;
-    
+
     // MEAL TYPE COUNTRY
     var mealtypecountrylist = [];
     $("#collapseTypeCountry input:checked").each(function(){
             mealtypecountrylist.push($(this).attr('value'))
     })
     filters["mealtypecountry"] = mealtypecountrylist;
-    
+
     // MEAL TYPE FOOD
     var mealtypefoodlist = [];
     $("#collapseTypeOfFood input:checked").each(function(){
             mealtypefoodlist.push($(this).attr('value'))
     })
     filters["mealtypefood"] = mealtypefoodlist;
-    
+
     // SIZE / WEIGHT
     var sizeweightlist = [];
     $("#collapseSizeWeight input:checked").each(function(){
             sizeweightlist.push($(this).attr('value'))
     })
     filters["mealweight"] = sizeweightlist;
-    
+
     // EXPIRATION DATE
     var mealexpireslist = [];
     $("#collapseExpirationDate input:checked").each(function(){
             mealexpireslist.push($(this).attr('value'))
     })
     filters["mealexpires"] = mealexpireslist;
-    
+
     // COLLECTION AND BUSINESS
     var collectionbusinesslist = [];
     $("#collapseCollectionOnly input:checked").each(function(){
             collectionbusinesslist.push($(this).attr('value'))
     })
     filters["collectionbusiness"] = mealexpireslist;
-    
+
     // DIETARY REQUIREMENTS
     var mealtypedietarylist = [];
     $("#collapseDietryRequirements input:checked").each(function(){
             mealtypedietarylist.push($(this).attr('value'))
     })
     filters["mealTypeDietary"] = mealtypedietarylist;
-    
+
     // DISTANCE AWAY:
     var distanceAwayKm = $("#trcDistanceSlider").val();
     filters["distance"] = distanceAwayKm;
-    
+
     // KEYWORDS
     var keywords = [];
     var take = $("#txtKeyWord").val()
@@ -321,7 +321,7 @@ function loadFilters(){
         keywords = punctuationless.split(" ");
         filters["description"] = keywords;
     }
-        
+
     // CHECK WHETHER ANY HAVE VALUES AND IF NO JUST DO DISTANCE
     justDistance = false;
     checkHowMany = 0;
@@ -335,7 +335,7 @@ function loadFilters(){
     if (checkHowMany == 0){
             //justDistance = true;
         if (filters["description"] != " "){
-            filters["usefilters"] = "falseButdescription"; 
+            filters["usefilters"] = "falseButdescription";
         }
         else{
             filters["usefilters"] = "false"
@@ -343,14 +343,14 @@ function loadFilters(){
     }
     alert(filters.usefilters);
     return filters;
-} 
+}
 
 function updateSlider(slideValue){
     document.getElementById("distLabel").innerHTML = "Search radius(km): " + slideValue;
 }
 
 function sortColumn(colToSortId){
-    if (colToSortId == "colDistance"){     
+    if (colToSortId == "colDistance"){
     }
 }
 
@@ -358,7 +358,7 @@ function calculateDistance(latitude, longitude){
     var lat = latitude;
     var long = longitude;
     var dist;
-    // check they want to use this location not another one TOD) 
+    // check they want to use this location not another one TOD)
    dist = getDistanceFromLatLonInKm(currentLang, currentLong, lat, long).toFixed(1);
    console.log(dist);
     return dist;
@@ -367,13 +367,13 @@ function calculateDistance(latitude, longitude){
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
-  var dLon = deg2rad(lon2-lon1); 
-  var a = 
+  var dLon = deg2rad(lon2-lon1);
+  var a =
     Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
     Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    ;
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c; // Distance in km
   return d;
 }
@@ -388,14 +388,14 @@ function clearAll(){
 }
 
 function seePost(x){
-    
+
     // REMOVE PREVIOUS POSTS
     $("#modalLeftColumn").html("");
     $("#modalRightColumn").html("");
-    
+
     // ADD TO TITLE
     $("#modalPostTitle").text(x.title);
-    
+
     /********BODY OF MODAL LEFT COLUMN *********/
     //INSERT IMAGE
     var imgDiv = $('<div>');
@@ -415,38 +415,38 @@ function seePost(x){
     }
     img2.appendTo(imgDiv);
     $("#modalLeftColumn").append(imgDiv);
-    
+
     //INSERT TYPE BY COUNTRY
     var typeCountry = $('<p>');
     var typeCountryLabel = "<br><i>Country: </i>"
     $("#modalLeftColumn").append(typeCountryLabel);
     typeCountry.text(x.mealtypecountry.toString())
     $("#modalLeftColumn").append(typeCountry);
-    
+
     //INSERT TYPE OF FOOD
     var typeFood = $('<p>');
     var typeFoodLabel = "<br><i>Type of Food: </i>"
     $("#modalLeftColumn").append(typeFoodLabel);
     typeFood.text(x.mealtypefood.toString())
     $("#modalLeftColumn").append(typeFood);
-    
+
     //INSERT SIZE/WEIGHT
     var sizeweight = $('<p>');
     var sizeweightLabel = "<br><i>Size/Weight: </i>"
     $("#modalLeftColumn").append(sizeweightLabel);
     sizeweight.text(x.mealweight.toString());
     $("#modalLeftColumn").append(sizeweight);
-    
-    
+
+
     /********BODY OF MODAL RIGHT COLUMN *********/
-    
+
     //INSERT DESCRIPTION
     var description = $('<p>');
     var descriptionLabel = "<i>Description: </i>"
     $("#modalRightColumn").append(descriptionLabel);
     description.text(x.description);
     $("#modalRightColumn").append(description);
-    
+
     // DIETARY REQUIREMENTS
     var dietaryRequirements = $('<p>');
     var dietaryRequirementsLabel = "<i>Dietary requirements: </i><br>"
@@ -467,7 +467,7 @@ function seePost(x){
     }
     dietaryRequirements.text(add);
     $("#modalRightColumn").append(add);
-   /* 
+   /*
     //MEAL TYPE
     var mealTypeDiv1 = $('div');
     mealTypeDiv1.addClass("panel panel-default");
@@ -484,9 +484,9 @@ function seePost(x){
     mealTypeDivBody.text(x.mealtypefood)
     //mealTypeDiv1.append(mealTypeDivBody);
     $("#test").append(mealTypeDiv1);
-    
+
     */
-    
+
    /* <div class="panel-group">
   <div class="panel panel-default">
     <div class="panel-body">Panel Content</div>
@@ -506,13 +506,13 @@ function seePost(x){
     testGroup.append(test);
     $("#modalRightColumn").append(testGroup);
     */
-    
+
     var mealType = $('<p>');
     var mealTypeLabel = "<br><i>Meal Type: </i>"
     mealType.text(x.mealtypefood);
     $("#modalRightColumn").append(mealTypeLabel);
     $("#modalRightColumn").append(mealType);
-        
+
     //DISTANCE AWAY
     var dist = calculateDistance(x.latitude, x.longitude);
     var distance = $('<p>');
@@ -527,7 +527,7 @@ function seePost(x){
     location.text(x.location);
     $("#modalRightColumn").append(locationLabel);
     $("#modalRightColumn").append(location);
-            
+
     // EXPIRATION DATE
     var expires = $('<p>');
     var expiresLabel = "<br><i>Expiration Date: </i>"
@@ -541,10 +541,53 @@ function seePost(x){
     user.text(x.username);
     $("#modalRightColumn").append(userLabel);
     $("#modalRightColumn").append(user);
+    // USER RATING (ADDED BY MIKE, SORRY IF IT MAKES THE MODAL LOOK BAD)
+    var userRating = $("<span>");
+    var userRatingLabel = "<br><i>Rate " + x.username + "</i><br>";
+    userRating.addClass("starRating");
+    // TODO Mike - load 'my' rating of this post's user, and display it!
+    for (var i = 5; i > 0; i--) {
+        var starInput = $("<input>");
+        starInput.attr("id", "rating" + i);
+        starInput.attr("type", "radio");
+        starInput.attr("name", "userrating");
+        starInput.attr("value", i);
+        starInput.data("user", x.username);
+        var starLabel = $("<label>");
+        starLabel.attr("for", "rating" + i);
+        starLabel.text(i);
+        userRating.append(starInput);
+        userRating.append(starLabel);
+    }
+    $("#modalRightColumn").append(userRatingLabel);
+    $("#modalRightColumn").append(userRating);
+
+    $("input[name='userrating']").change(function(e) {
+        var me = localStorage.username;
+        var them = $(this).data("user");
+        if (me === them) {
+            alert("You can't rate yourself!");
+        } else {
+            var rating = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/rateUser",
+                data: {
+                    me: me,
+                    them: them,
+                    rating: rating
+                },
+                dataType: "json",
+                success: function(data) {
+                    alert("User rating updated");
+                }
+            });
+        }
+    });
 }
 
 function openModal(){
-    alert("hey");    
+    alert("hey");
 }
 
 function setStorage(array){
