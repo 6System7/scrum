@@ -35,7 +35,16 @@ $(document).ready(function(){
             $("#column1").append(divEl);
         }
         else {
-			setStorage(foodsToPost);
+            if ($("#sortByOptions").val() == "proximityClosest") {
+                var sortBy = "ascending";
+                foodsToPost = sortFoodsToPost(foodsToPost, dataPass, sortBy);
+            }
+            if($("#sortByOptions").val() == "proximityFurthest"){
+                var sortBy = "descending";
+
+                foodsToPost = sortFoodsToPost(foodsToPost,dataPass,sortBy);
+            }
+            setStorage(foodsToPost);
             getPostedFoods(foodsToPost);
         }
     });
@@ -50,12 +59,13 @@ $(document).ready(function(){
 })
 })
 
-function getPostedFoods(x){
+function getPostedFoods(xx){
     $("#column0").html("");
      $("#column1").html("");
      $("#column2").html("");
 
-    var checkArray = x;
+    var checkArray = xx;
+  
     var dataReturned;
     $.ajax({
         url: "/getPosts",
@@ -64,13 +74,21 @@ function getPostedFoods(x){
         success: function(data){
             var toPrint = 0;
             dataReturned = JSON.parse(JSON.stringify(data));
-            for(var property=0; property < dataReturned.length; property++) {
+            /*for(var property=0; property < dataReturned.length; property++) {
                 var x = dataReturned[property];
                 for (y in checkArray){
                     if ((x._id).toString() == checkArray[y]){
                         if(x.collected != "true"){
                         toPrint++;
-
+*/
+            for (y in checkArray){
+                for (var property = 0; property < dataReturned.length; property++){
+                    x = dataReturned[property];
+                    if (checkArray[y] == (x._id).toString()){
+                        console.log(x.title);
+                        if (x.collected != "true"){
+                            toPrint++
+                     
                          // CREATE CARD
                         var divEl = $('<div>');
                         divEl.addClass("w3-card-4");
@@ -224,7 +242,9 @@ function filterFoods(dataPass){
                      }
         }
         }
-
+    //sortFoodsToPost(foodsToPost,dataPass);
+    //foodsToPost = sortFoodsToPost(foodsToPost,dataPass);// MADELEINE DOES THIS GO HEREE???
+    //console.log(foodsToPost[0]);
     return foodsToPost;
 }
 
@@ -615,10 +635,55 @@ function seePost(x){
     });
 }
 
+function sortFoodsToPost(idList, dataReturned, sortBy){
+    sortArray = [];
+    console.log("HERE");
+    for(var property=0; property < dataReturned.length; property++) {
+                var x = dataReturned[property];
+                for (y in idList){
+                    if ((x._id).toString() == idList[y]){
+                        var dist = calculateDistance(x.latitude, x.longitude);
+                        user = [];
+                        user.push(x._id);
+                        user.push(dist);
+                    }
+                }
+        sortArray.push(user);
+    }
+    if (sortBy == "ascending"){
+        sortArray.sort(function(a,b){
+            return a[1] - b[1];
+        });
+    }
+    else if (sortBy == "descending"){
+        sortArray.sort(function(a,b){
+            return b[1] - a[1];
+        });
+     }
+    
+    for (var xox in sortArray){
+        console.log(sortArray[xox][0] + "  : " + sortArray[xox][1]);
+    }
+    newFoodsToPostList =[];
+    for (var post = 0; post<sortArray.length;post++){
+        newFoodsToPostList.push(sortArray[post][0]);
+    
+    }
+    console.log(newFoodsToPostList[0]);
+    return newFoodsToPostList;
+                                    
+                        
+    
+    
+}
+
+
 function openModal(){
     alert("hey");
 }
 
+
+// MAP FUNCTION
 function setStorage(array){
 	mapData = JSON.stringify(array);
 	localStorage.setItem("GetData" , mapData);
