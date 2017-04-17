@@ -187,6 +187,7 @@ function filterFoods(dataPass){
                             }
                         }
                     }
+                    }
                     if (whatToPrint == "true") {
                   
                     for (var category = 0; category < Object.keys(filters).length; category++){
@@ -208,9 +209,9 @@ function filterFoods(dataPass){
                     }
 
         
-                }
+                     }
         }
-
+        }
 
     return foodsToPost;
 }
@@ -594,6 +595,7 @@ function setStorage(array){
 	localStorage.setItem("GetData" , mapData);
 	return;
 }
+
 // TODO user button: pass in new value for the button with the username and send offff??
 
 
