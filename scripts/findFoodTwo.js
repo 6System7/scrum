@@ -106,7 +106,19 @@ function getPostedFoods(x){
                         // CREATE DESCRIPTION & AUTHOR
                         var bodyCon = $("<p>");
                         bodyCon.text(x.description);
-                        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i></small><br>";
+                        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i><span class='userAvgRating" + x.username + "'></span></small><br>";
+                        $.ajax({
+                            type: "GET",
+                            url: "/getUserRating",
+                            data: {
+                                username: x.username
+                            },
+                            success: function(data) {
+                                $(".userAvgRating" + data.username).each(function(i, obj) {
+                                    $(obj).text(" ★" + data.rating);
+                                });
+                            }
+                        });
                         bodyCon.append(authorCon);
                         bodyCon.appendTo(container);
 
@@ -539,6 +551,20 @@ function seePost(x){
     var user = $('<p>');
     var userLabel = "<br><i>Uploaded by </i>"
     user.text(x.username);
+    var userStars = $("<span>");
+    userStars.attr("id", "userAvgRating");
+    $.ajax({
+        type: "GET",
+        url: "/getUserRating",
+        data: {
+            username: x.username
+        },
+        success: function(data) {
+            // $("#userAvgRating").html("&#2973;");
+            $("#userAvgRating").text(" ★" + data.rating);
+        }
+    });
+    user.append(userStars);
     $("#modalRightColumn").append(userLabel);
     $("#modalRightColumn").append(user);
     // USER RATING (ADDED BY MIKE, SORRY IF IT MAKES THE MODAL LOOK BAD)
@@ -598,6 +624,8 @@ function setStorage(array){
 	localStorage.setItem("GetData" , mapData);
 	return;
 }
+
+
 
 // TODO user button: pass in new value for the button with the username and send offff??
 

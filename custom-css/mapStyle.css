@@ -1,4 +1,6 @@
-#mapid {height: 600px;
-	width: 600px;}
+#mapid {
+    height: 300px;
+	width: inherit;
+}
 	  
 #butt {padding-left: 3cm;}

@@ -87,3 +87,13 @@ img {
     background-color:transparent;
     border-color:transparent;
 }
+#mapIframe {
+    height: 300px;
+    width: 70%;
+    border-color:black;
+
+}
+#iframediv {
+    padding-bottom: 20px;
+
+}
