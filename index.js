@@ -371,6 +371,60 @@ app.post("/sendEmail", function(req, res) {
 
 });
 
+// ARCHIVE DATA
+
+app.post("/addArchiveData", function(req, res) {
+    var user = {};
+    user.set = "set1";
+
+    db.collection("archiveData").save(user, function(err, results) {
+        if (err) {
+            res.send(err.toString());
+            console.log("Saving archive data template failed: " + err.toString());
+        } else {
+            res.send(results);
+            console.log("Saved archive data template successfully");
+        }
+    });
+});
+
+app.get("/getArchiveData", function(req, res) {
+    db.collection("archiveData").find().toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
+        } else {
+            res.send(JSON.stringify(results));
+        }
+    });
+});
+
+app.post("/updateArchiveData", function(req, res) {
+    var updateField = req.body.field;
+    var newValue = req.body.newValue;
+    var updateData = {};
+    updateData[updateField] = newValue;
+    if (updateField !== undefined && newValue !== undefined) {
+        db.collection("archiveData").update(
+            {
+                "set": "set1"
+            }, {
+                $set: updateData
+            },
+            function(err, results) {
+            if (err) {
+                res.send(err.toString());
+                console.log("Updating archive data failed: " + err.toString());
+            } else {
+                res.send(results);
+                console.log("Updating archive data success");
+            }
+        });
+    }
+});
+
 // CHAT
 
 app.get("/socket.io/socket.io.js", function(req, res) {
