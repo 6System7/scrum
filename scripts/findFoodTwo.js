@@ -5,7 +5,6 @@ $(document).ready(function(){
     navigator.geolocation.getCurrentPosition(function(pos) {
         currentLang = pos.coords.latitude;
         currentLong = pos.coords.longitude;
-        console.log(currentLang);
        
     $.ajax({
         url: "/getPosts",
@@ -149,19 +148,7 @@ function filterFoods(dataPass){
     var data = dataPass;
     foodsToPost = []
     var filters = loadFilters();
-    console.log("HEReeE");
     var whatToPrint = filters.usefilters;
-    alert(whatToPrint);
-    /*if (filters.value == "none"){
-        console.log("HERE");
-        for(var property=0; property < data.length; property++) {
-                var size = 0;
-                var x = data[property];
-                foodsToPost.push((x._id).toString());
-            }
-          
-        }
-    else{*/
         for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
             var visibility = false;
             var foodPost = dataPass[foodPostElem];   
@@ -173,13 +160,11 @@ function filterFoods(dataPass){
                 
                 if (whatToPrint == "false"){
                     visibility = true; 
-                   console.log("and now heres");
-
                     foodsToPost.push(foodPost._id);
                 }
                 else { 
                 // COMPARE DESCRIPTION AND KEYWORDS
-                    console.log("hey " + whatToPrint);
+                   
                     var description = foodPost.description;
                     description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
                     var filterDesc = filters.description;
@@ -190,32 +175,17 @@ function filterFoods(dataPass){
                         if (wordStr !=""){
 
                             if (description.indexOf(wordStr) !== -1){
-                                console.log("TRAITOR??");
-                                
                                 visibility = true; 
-                                console.log(foodPost.usefilters);
                                 if (whatToPrint == "falseButdescription"){
-                                    console.log("NOW HERE");
+                                
                                     foodsToPost.push(foodPost._id);
                                 }
                                 
                             }
                         }
-                    }// atm if Z}
-                    
-
-                    // NOW CHECK WHETHER ANY FILTERS HAVE BEEN DEALTH WITH
-                 /*   if (filters.usefilters == "false"){
-                        console.log("HeeeeeERe");
-                        if (visibility == true){
-                        console.log("HERe");
-                        foodsToPost.push(foodPost._id);
-                        }
-
-
-                    }*/
+                    }
                     if (whatToPrint == "true") {
-                        console.log("HeeERe");
+                  
                     for (var category = 0; category < Object.keys(filters).length; category++){
 
                     var checkAgain = (Object.keys(filters)[category]).toString();
@@ -223,18 +193,14 @@ function filterFoods(dataPass){
                         var xox = filters[Object.keys(filters)[category]]; 
                         for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                                 if (xox[listInCategory] == postCheck){
-                                    //console.log(postCheck);
-                                    //console.log(xox[listInCategory]);
-                                        visibility = true;
-                                    //console.log("HEYA");
+                                    visibility = true;
+                                    
                                     }
                                 }
                             }
 
-                    console.log(visibility);
-
                     if (visibility == true){
-                        console.log("HERe");
+                      
                         foodsToPost.push(foodPost._id);
                     }
                     }
@@ -358,23 +324,17 @@ function loadFilters(){
             }
         }
     }*/
-    
-    console.log("CHECKING HERE");
-    console.log(checkHowMany);
+  
     if (checkHowMany == 0){
             //justDistance = true;
         if (filters["description"] != "" && filters["description"] != ","){
-            alert(filters["description"]);
             filters["usefilters"] = "falseButdescription"; 
         }
-        else if (filters["description"] == ","){
-            alert("HERE");
+        else if (filters["description"] == "," || filters["description"] == ""){
             var fil = "false";
             filters["usefilters"] = fil;
         }
     }
-    
-    alert(filters.usefilters);
     return filters;
 } 
 
@@ -393,7 +353,6 @@ function calculateDistance(latitude, longitude){
     var dist;
     // check they want to use this location not another one TOD) 
    dist = getDistanceFromLatLonInKm(currentLang, currentLong, lat, long).toFixed(1);
-   console.log(dist);
     return dist;
 }
 
@@ -416,8 +375,10 @@ function deg2rad(deg) {
 }
 
 function clearAll(){
+    $("#trcDistanceSlider").val("1000");
+    $("#distLabel").text("Search radius(km): 1000");
     $("#txtKeyWord").val(" ");
-        $('input:checkbox').prop('checked', false);
+    $('input:checkbox').prop('checked', false);
 }
 
 function seePost(x){
