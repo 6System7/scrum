@@ -25,6 +25,7 @@ function useBarcodeInfo(item) {
 
 function getBarcodeInfo(code) {
     var fakePositives = {
+        // TODO Mike - and everyone - populate fake positives
         "5012035930592": {
             generic_name: "Haribo Gold Bears",
             image_url: "http://i.imgur.com/nHty93e.jpg",
