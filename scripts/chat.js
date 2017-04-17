@@ -21,13 +21,13 @@ $(function() {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      // tell server to execute 'direct message' to the given room
+      // tell server to execute 'message' to the given room
       if(currentRoom != undefined) {
         addChatMessage({
           username: username,
           message: message
         });
-        socket.emit('direct message', currentRoom, message);
+        socket.emit('message', currentRoom, message);
         // store this message in the db
         $.post("/saveMessage", {
           room: currentRoom,
@@ -165,7 +165,9 @@ $(function() {
   
   // Updates the list of rooms on the page
   function updateRooms (rooms) {
-    // Sort the rooms in order of time since last message received/sent - TODO
+    if(rooms.indexOf(socket.id) >= 0) {
+      rooms.splice(rooms.indexOf(socket.id), 1);
+    }
     console.log('New rooms:', rooms);
     //Clear any previously displayed rooms
     $('#rooms').html('');
@@ -310,7 +312,7 @@ $(function() {
             console.log('Requesting to join room', rooms[i]);
           }
           // Update the page
-          socket.emit('getRooms');
+          updateRooms(rooms);
         }
       });
     });
@@ -327,7 +329,7 @@ $(function() {
           console.log('Requesting to join room', rooms[i]);
         }
         // Update the page
-        socket.emit('getRooms');
+        updateRooms(rooms);
       }
     });
   }
@@ -340,6 +342,7 @@ $(function() {
 
   // Socket events
   
+  // When the server emits 'chat message', add this to the list of messages displayed on the screen
   socket.on('chat message', function(user, msg){
     console.log('message received');
     $('#messages').append('<li><strong>' + user + ': </strong>' + msg + '</li>');
@@ -356,25 +359,6 @@ $(function() {
     });
   });
   
-  // Whenever the server emits 'broadcast message', update the chat body
-  socket.on('broadcast message', function (data) {
-    addChatMessage(data);
-  });
-  
-  // When the server emits 'postRooms', parse the list of rooms and update the list on the page
-  socket.on('postRooms', function (rooms) {
-    var rooms_list = [];
-    console.log('Rooms received from server:', rooms);
-    for(var room in rooms) {
-      // Omit the socket's ID's room
-      if(room != socket.id) {
-        rooms_list.push(room);
-      }
-    }
-    // Update the list on the page
-    updateRooms(rooms_list);
-  });
-  
   // When the server emits 'joined', log this and update the page
   socket.on('joined', function (room) {
     console.log('joined,', room);
@@ -383,6 +367,11 @@ $(function() {
   // When the server emits 'left', log this
   socket.on('left', function (room) {
     console.log('left,', room);
+  });
+  
+  // When the server emits 'notify', send a notification to the given user
+  socket.on('notify', function(user, msg) {
+    //TODO - call a function from notification.js/globalFunction.js
   });
 
   $(document).on('click', '#connectButton', function(){
