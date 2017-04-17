@@ -1,7 +1,18 @@
 var userDistance;
 //Notifications 
+var userLong;
+var userLang;
+
 $(document).ready(function(){
     getUserDistance();
+    var currentLong;
+    var currentLang;
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        currentLang = pos.coords.latitude;
+        currentLong = pos.coords.longitude;
+        //console.log(currentLong);
+    
+  //  console.log(currentLong);
     
     $.ajax({
         url: "/getPosts",
@@ -9,7 +20,7 @@ $(document).ready(function(){
         dataPassType: "json",
         success: function(dataPass){
             var dataPassReturned = JSON.parse(JSON.stringify(dataPass));
-            checkNearbyFoods(dataPassReturned);
+            checkNearbyFoods(dataPassReturned, currentLang, currentLong);
         }
     })
     $("#changeNearbyDistance").click(function(){
@@ -24,31 +35,19 @@ $(document).ready(function(){
     })
     
 }) // end of getNotifications
+});
+
 
 // TODOeventually pass in distance as parameter?
-function checkNearbyFoods(dataPassReturned){
-   // alert(userDistance);
+function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
     var dataPass = dataPassReturned;
-    
-    // GET CURRENT POSITIONS
-    memberLang = 0;
-    memberLong = 0;
     var counter = 0;
-    if (navigator.geolocation) { 
-        navigator.geolocation.getCurrentPosition(function(pos) {
-                memberLang = pos.coords.latitude;
-                memberLong = pos.coords.longitude;
-            });
-        } else {
-            initMap(54.775250, -1.584852);
-            alert("ERROR IN GETTING LOCATION - Using default location")
-        }
-        
+  
         // CALCULATE DISTANCE OF POSTS AND COMPARE
         for (var foodPostElem = 0; foodPostElem < dataPass.length; foodPostElem++){ //iterate through posts
               //  alert(foodPostElem);
             var foodPost = dataPass[foodPostElem]; //alert(foodPost._id);  
-            var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, memberLang, memberLong)
+            var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, currentLang, currentLong)
             var title = foodPost.title;
             if (dist < userDistance){
                 counter++;
@@ -123,6 +122,7 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
     ; 
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c; // Distance in km
+   
   return d;
 }
 
@@ -170,7 +170,8 @@ function changeDistance(){
     userDistance = $('#distanceNearby').val();
     if (userDistance == undefined || userDistance ==""){
         alert("it's undefined");
-        userDistance = "10000"
+        //userDistance = "10000"
+        
     }
     if (userDistance < 1){
         var text = $("<p>");

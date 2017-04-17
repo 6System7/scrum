@@ -59,6 +59,7 @@ function getPostedFoods(x){
                 var x = dataReturned[property];
                 for (y in checkArray){
                     if ((x._id).toString() == checkArray[y]){
+                        if(x.collected != "true"){
                         toPrint++;
                         
                          // CREATE CARD 
@@ -127,6 +128,7 @@ function getPostedFoods(x){
                         (divEl).after("<br>");
                     }
                 }
+                }
             }
         }
     })
@@ -153,8 +155,12 @@ function filterFoods(dataPass){
             for (var word = 0; word< filterDesc.length; word++){
                 
                 var wordStr = (filterDesc[word]);
-                if (description.indexOf(wordStr) !== -1){
-                    visibility = true;     
+                if (wordStr !=""){
+
+                    if (description.indexOf(wordStr) !== -1){
+                        console.log("TRAITOR??");
+                        visibility = true;     
+                    }
                 }
             }
             
@@ -165,14 +171,18 @@ function filterFoods(dataPass){
                 var xox = filters[Object.keys(filters)[category]]; 
                 for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
                         if (xox[listInCategory] == postCheck){
+                            console.log(postCheck);
+                            console.log(xox[listInCategory]);
                                 visibility = true;
                             console.log("HEYA");
                             }
                         }
                     }
                  
+            console.log(visibility);
             
             if (visibility == true){
+                console.log("HERe");
                 foodsToPost.push(foodPost._id);
             }
         }
@@ -261,6 +271,7 @@ function loadFilters(){
         filters["description"] = keywords;
  
     }
+    
     return filters;
 } 
 
@@ -332,13 +343,14 @@ function seePost(x){
     imgDiv.addClass("text-center");
     var img2 = $('<img>');
     img = (x.image).toString();
+    console.log(img);
     if (img == ""){
         img2 = $('<span>');
         img2.addClass("glyphicon glyphicon-picture");
         img2.attr("style","margin-top:20px");
     }
     else{
-        img2.attr("src",(x.image).toString());
+        img2.attr("src",(img));
         img2.addClass("center");
         img2.attr("style", "height:160px; width:auto")
     }
@@ -449,11 +461,18 @@ function seePost(x){
     distance.text(dist);
     $("#modalRightColumn").append(distanceLabel);
     $("#modalRightColumn").append(distance);
+
+    //LOCATION
+    var location = $('<p>');
+    var locationLabel = "<br><i>Location: </i>"
+    location.text(x.location);
+    $("#modalRightColumn").append(locationLabel);
+    $("#modalRightColumn").append(location);
             
     // EXPIRATION DATE
     var expires = $('<p>');
     var expiresLabel = "<br><i>Expiration Date: </i>"
-    expires.text(x.expirationDate);
+    expires.text(x.mealexpires);
     $("#modalRightColumn").append(expiresLabel);
     $("#modalRightColumn").append(expires);
 

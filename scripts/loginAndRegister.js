@@ -252,7 +252,7 @@ function registerFieldsValid(jsonData, username, password, confirmPassword, firs
 function registerUser(username, password, authKey, rating, realName, email){
 
     console.log("Sending user registration request...");
-    var defaultSettings = {notifDistance: 0}; //Maddy add to this object
+    var defaultSettings = {notifDistance: 20}; //Maddy add to this object
     var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email, settings: defaultSettings};
 
     $.ajax({

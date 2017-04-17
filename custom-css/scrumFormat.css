@@ -77,6 +77,9 @@ body {
 #btnScanBarcode {
     width: 100%;
     margin-bottom: 8px;
+    background-color:#1C939B;
+    border-color: black;
+    border-width:2px;
 }
 
 #btnStopBarcodeScanning {
