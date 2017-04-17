@@ -116,7 +116,19 @@ function generatePostCards(data) {
                     },
                     dataType: "json",
                     success: function(data) {
-                        location.reload();
+                        $.getJSON("/getArchiveData", function(jsonData) {
+                            $.ajax({
+                                type: "POST",
+                                url: "/updateArchiveData",
+                                data: {
+                                    field: "deletedPostsAmount",
+                                    newValue: Number(jsonData[0].deletedPostsAmount) + 1
+                                },
+                                complete: function(data) {
+                                    location.reload();
+                                }
+                            });
+                        });
                     },
                     error: function() {
                         alert("Delete request failed, please try again later");
@@ -145,10 +157,13 @@ function generatePostCards(data) {
         $(btnCollected).data("post", x);
         $(btnCollected).click(function() {
             var post = $(this).data("post");
+            var difference;
             if (post.collected) {
                 delete post.collected;
+                difference = -1;
             } else {
                 post.collected = true;
+                difference = 1;
             }
 
             $.ajax({
@@ -163,12 +178,24 @@ function generatePostCards(data) {
                 },
                 error: function() {
                     // NOTE commented out because refreshing the page below causes this to 'fail' when it doesn't
-                    // console.log("Failed when posting");
-                    // alert("Could not add post\nPlease try again soon!");
+                },
+                complete: function() {
+                    console.log("post added");
+                    $.getJSON("/getArchiveData", function(jsonData) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/updateArchiveData",
+                            data: {
+                                field: "collectedPostsAmount",
+                                newValue: Number(jsonData[0].collectedPostsAmount) + difference
+                            },
+                            complete: function(data) {
+                                location.reload();
+                            }
+                        });
+                    });
                 }
             });
-            window.location.reload();
-
         });
         $(divEl).append(btnCollected);
 
