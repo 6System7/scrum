@@ -104,6 +104,7 @@ app.post("/addPost", function(req, res) {
             console.log("Saving post failed: " + err.toString());
         } else {
             console.log("Saving post success");
+            res.send("Success");
         }
     });
 });
@@ -115,7 +116,6 @@ app.post("/deletePost", function(req, res) {
         db.collection("posts").remove({
             _id: ObjectID.createFromHexString(req.body.id)
         });
-        // TODO Mike - Increment Jordan's archived data stat 
         res.send(JSON.stringify({
             note: "success?"
         }));
