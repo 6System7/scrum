@@ -28,6 +28,7 @@ $(document).ready(function(){
             $("#column1").append(divEl);
         }
         else {
+			setStorage(foodsToPost);
             getPostedFoods(foodsToPost);
         }
     });
@@ -467,6 +468,12 @@ function seePost(x){
 
 function openModal(){
     alert("hey");    
+}
+
+function setStorage(array){
+	mapData = JSON.stringify(array);
+	localStorage.setItem("GetData" , mapData);
+	return;
 }
 // TODO user button: pass in new value for the button with the username and send offff??
 
