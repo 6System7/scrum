@@ -635,6 +635,8 @@ server.listen(process.env.PORT || 8080, function() {
 });
 
 //Chat stuff
+var online_users = [];
+
 io.on('connection', function(socket) {
     var addedUser = false;
 
@@ -645,6 +647,7 @@ io.on('connection', function(socket) {
         }
         // store the username in the socket session for this client
         socket.username = username;
+        online_users.push(username);
         addedUser = true;
         console.log('Handshake completed with ', username);
         socket.emit('login');
@@ -668,58 +671,30 @@ io.on('connection', function(socket) {
         }
     });
 
-    // when the client emits 'toggleRoom', remove them if they're in the room, or add them if they're not
-    socket.on('toggleRoom', function(room) {
-        // Only add socket if it is not already in the room
-        if (!socket.rooms[room]) {
-            socket.join(room);
-            socket.emit('joined', room);
-        } // Only remove socket if it is already in the room
-        else {
-            socket.leave(room);
-            socket.emit('left', room);
-        }
-    });
-
-    // when the client emits 'direct message', send the msg to the given room
-    socket.on('direct message', function(room, msg) {
+    // when the client emits 'message', send the msg to the given room
+    socket.on('message', function(room, msg) {
         socket.to(room).emit('chat message', socket.username, msg);
-    });
-
-    var addedUser = false;
-
-    // when the client emits 'broadcast message', this listens and executes
-    socket.on('broadcast message', function(data) {
-        // we tell the client to execute 'new message'
-        socket.broadcast.emit('broadcast message', {
-            username: socket.username,
-            message: data
-        });
-    });
-
-    // when the client emits 'typing', we broadcast it to others
-    socket.on('typing', function() {
-        socket.broadcast.emit('typing', {
-            username: socket.username
-        });
-    });
-
-    // when the client emits 'stop typing', we broadcast it to others
-    socket.on('stop typing', function() {
-        socket.broadcast.emit('stop typing', {
-            username: socket.username
-        });
-    });
-
-    // when the user emits 'getRooms', we respond with a list of the rooms that user is in
-    socket.on('getRooms', function() {
-        socket.emit('postRooms', socket.rooms);
+        // Check if the other user in this room is online. If not, prompt this user to notify that user
+        var other_user;
+        var room_users = rooms[index].split("-");
+        if(room_users[0] == username) {
+            other_user = room_users[1];
+        } else if(room_users[1] == username) {
+            other_user = room_users[0];
+        } else {
+            console.log("Error in chat notification code.");
+        }
+        if(online_users.indexOf(other_user) < 0) {
+            // User is not online, so prompt client to send a notification
+            socket.emit('notify', other_user, msg);
+        }
     });
 
     // when the user disconnects, perform this
     socket.on('disconnect', function() {
         if (addedUser) {
             console.log(socket.username, 'disconnected');
+            online_users.splice(online_users.indexOf(socket.username), 1);
         }
     });
 });
