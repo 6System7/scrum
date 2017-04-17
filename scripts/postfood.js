@@ -1,3 +1,57 @@
+function useBarcodeInfo(item) {
+    var title = item.generic_name;
+    var imageUrl = item.image_url;
+    var labelTags = item.labels_tags;
+    var labels = item.labels;
+    var ingredients = item.ingredients_text_with_allergens;
+    if (title || imageUrl || labelTags || labels || ingredients) {
+        if (confirm("Do you want to use the following information?\n\n" + title + "\n" + imageUrl + "\n" + ingredients)) {
+            if (title) {
+                $("#txtTitle").val(title);
+            }
+            if (ingredients) {
+                $("#txtDescription").val(ingredients);
+            }
+            if (imageUrl) {
+                // Only works if image supports cross origin access (like imgur)
+                previewFile(imageUrl);
+            }
+            $("#btnStopBarcodeScanning").click();
+        }
+    } else {
+        alert("Product info contains no useful information");
+    }
+}
+
+function getBarcodeInfo(code) {
+    var fakePositives = {
+        // TODO populate fake positives
+        "5012035930592": {
+            generic_name: "Haribo Gold Bears",
+            image_url: "http://i.imgur.com/nHty93e.jpg",
+            ingredients_text_with_allergens: "Glucose syrup, sugar, gelatine, dextrose, fruit juice from concentrate (apple, strawberry, raspberry, orange, lemon, pineapple), acid (citric acid), fruit and plant concentrates (nettle, orange, lemon, mango, passion fruit, elderberry, blackcurrant, apple, spinach, aronia, grape), flavour, elderberry extract, glazing agents (white and yellow beeswax, carnauba wax), fruit extract (carob), invert sugar syrup."
+        }
+    };
+    if (fakePositives.hasOwnProperty(code)) {
+        useBarcodeInfo(fakePositives[code]);
+    } else {
+        var apiURL = "http://world.openfoodfacts.org/api/v0/product/" + code + ".json";
+        $.ajax({
+            type: "GET",
+            url: apiURL,
+            dataType: "json",
+            success: function(data) {
+                if (data.status == 0) {
+                    alert("No product info available for barcode" + code);
+                } else {
+                    useBarcodeInfo(data.product);
+                }
+            },
+            error: function() {}
+        });
+    }
+}
+
 function scanBarcode() {
     if ($("#pnlBarcodeScreen").css("display") == "none") {
         $("#pnlBarcodeScreen").show();
@@ -213,37 +267,9 @@ function scanBarcode() {
             Quagga.onDetected(function(result) {
                 var code = result.codeResult.code;
 
-                // TODO Mike - Maybe a list of previous codes? Sometimes it detects ones that aren't there
                 if (App.lastResult !== code) {
                     App.lastResult = code;
-                    var $node = null,
-                        canvas = Quagga.canvas.dom.image;
-
-                    var apiURL = "http://world.openfoodfacts.org/api/v0/product/" + code + ".json";
-                    console.log("Querying ", apiURL);
-                    $.ajax({
-                        type: "GET",
-                        url: apiURL,
-                        dataType: "json",
-                        success: function(data) {
-                            if (data.status == 0) {
-                                console.log("No product info found for barcode", code);
-                            } else {
-                                console.log("Found product info", data);
-                                var item = data.product;
-                                var title = item.generic_name; // (_en)
-                                var imageUrl = item.image_url;
-                                var labelTags = item.labels_tags;
-                                var labels = item.labels;
-                                var ingredients = item.ingredients_text_with_allergens; // (_en)
-
-                                alert(title + "\n\n" + imageUrl + "\n\n" + labelTags + "\n\n" + labels);
-
-                                // TODO Mike - FILL FORM
-                            }
-                        },
-                        error: function() {}
-                    });
+                    getBarcodeInfo(code);
                 }
             });
         } else {
@@ -388,40 +414,44 @@ function sendPostData() {
     }
 }
 
-function previewFile() {
+function previewFile(webURL) {
     var preview = $("#imgPreview");
-    var file = document.querySelector("input[type=file]").files[0];
-    var reader = new FileReader();
-
-    reader.onloadend = function() {
-        var image = new Image();
-        image.onload = function() {
-            // Resize image down
-            var canvas = document.createElement('canvas'),
-                max_size = 380,
-                width = image.width,
-                height = image.height;
-            if (width > height) {
-                if (width > max_size) {
-                    height *= max_size / width;
-                    width = max_size;
-                }
-            } else {
-                if (height > max_size) {
-                    width *= max_size / height;
-                    height = max_size;
-                }
+    var file, reader;
+    var image = new Image();
+    image.onload = function() {
+        imageSelected = true;
+        // Resize image down
+        var canvas = document.createElement('canvas'),
+            max_size = 380,
+            width = image.width,
+            height = image.height;
+        if (width > height) {
+            if (width > max_size) {
+                height *= max_size / width;
+                width = max_size;
             }
-            canvas.width = width;
-            canvas.height = height;
-            canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-            var dataUrl = canvas.toDataURL('image/jpeg');
-            preview.attr("src", dataUrl);
+        } else {
+            if (height > max_size) {
+                width *= max_size / height;
+                height = max_size;
+            }
         }
-        image.src = reader.result;
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+        var dataUrl = canvas.toDataURL('image/jpeg');
+        preview.attr("src", dataUrl);
     }
 
-    if (file) {
+    if (webURL) {
+        image.crossOrigin = "anonymous";
+        image.src = webURL;
+    } else if (file) {
+        file = document.querySelector("input[type=file]").files[0];
+        reader = new FileReader();
+        reader.onloadend = function() {
+            image.src = reader.result;
+        }
         reader.readAsDataURL(file); //reads the data as a URL
     } else {
         preview.attr("src", "");
@@ -558,5 +588,3 @@ $(document).ready(function() {
         postID = false;
     }
 });
-
-// TODO Mike - https://en.wiki.openfoodfacts.org/API Open Food Facts API for barcode -> product information for auto fill of form data
