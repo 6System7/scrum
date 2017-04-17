@@ -587,7 +587,7 @@ function seePost(x){
     }
     $("#modalRightColumn").append(userRatingLabel);
     $("#modalRightColumn").append(userRating);
-  
+
     // CHAT BUTTON (ADDED BY SIMON, SORRY IF IT MESSES ANYTHING UP)
     $("#messageUser").attr("onclick","startChat('" + x.username + "')");
 
