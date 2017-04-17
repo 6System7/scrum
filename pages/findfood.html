@@ -85,16 +85,6 @@
         <!--Initial data when landing on page-->
         <div class="scrumFormat" id="testing">
             <h1>Find Food Posts</h1>
-            <div class="panel-body-inline">
-                            Sort By:
-                            <select name="sortByOptions" id="sortByOptions">
-                                <option value="options">See Options</option>
-                                <option value="proximityClosest">Proximity - closest</option>
-                                <option value="proximityFurthest">Proximity - furthest</option>
-                            </select>
-                        </div>
-
-        
 
 
             <!-- Load results by location (done by gps?) -->
@@ -136,6 +126,15 @@
                         <label for="trcDistanceSlider" id="distLabel">Search radius(km): 1000</label>
                         <input type="range" id="trcDistanceSlider" id="points" value="1000" min="0" max="1000" data-show-value="true" onchange="updateSlider(this.value)">
                        
+                      
+                            Sort By:
+                            <select name="sortByOptions" id="sortByOptions">
+                                <option value="options">See Options</option>
+                                <option value="proximityClosest">Proximity - closest</option>
+                                <option value="proximityFurthest">Proximity - furthest</option>
+                            </select>
+                       
+
                     </div>
                 </div>
             </div>
