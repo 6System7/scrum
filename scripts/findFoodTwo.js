@@ -149,6 +149,9 @@ function filterFoods(dataPass){
     var data = dataPass;
     foodsToPost = []
     var filters = loadFilters();
+    console.log("HEReeE");
+    var whatToPrint = filters.usefilters;
+    alert(whatToPrint);
     /*if (filters.value == "none"){
         console.log("HERE");
         for(var property=0; property < data.length; property++) {
@@ -168,7 +171,7 @@ function filterFoods(dataPass){
             if (parseInt(dist) <= filters.distance){
                 // TAKE ALL POSTS IN THIS DISTANCE
                 
-                if (foodPost.usefilters == "false"){
+                if (whatToPrint == "false"){
                     visibility = true; 
                    console.log("and now heres");
 
@@ -176,7 +179,7 @@ function filterFoods(dataPass){
                 }
                 else { 
                 // COMPARE DESCRIPTION AND KEYWORDS
-                    console.log("compea re decsiption nad keywords");
+                    console.log("hey " + whatToPrint);
                     var description = foodPost.description;
                     description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
                     var filterDesc = filters.description;
@@ -190,14 +193,15 @@ function filterFoods(dataPass){
                                 console.log("TRAITOR??");
                                 
                                 visibility = true; 
-                                if (foodPost.usefilters == "falseButdescription"){
+                                console.log(foodPost.usefilters);
+                                if (whatToPrint == "falseButdescription"){
                                     console.log("NOW HERE");
                                     foodsToPost.push(foodPost._id);
                                 }
                                 
                             }
                         }
-                    }// atm if Z
+                    }// atm if Z}
                     
 
                     // NOW CHECK WHETHER ANY FILTERS HAVE BEEN DEALTH WITH
@@ -210,7 +214,7 @@ function filterFoods(dataPass){
 
 
                     }*/
-                    if (foodPost.usefilters == "true") {
+                    if (whatToPrint == "true") {
                         console.log("HeeERe");
                     for (var category = 0; category < Object.keys(filters).length; category++){
 
@@ -232,16 +236,17 @@ function filterFoods(dataPass){
                     if (visibility == true){
                         console.log("HERe");
                         foodsToPost.push(foodPost._id);
-                    }}
                     }
-                }
-        }
-    
+                    }
+                    }
+                }}
+            
     return foodsToPost;
 }
    
 // Makes a list of checked filters
 function loadFilters(){
+    var checkHowMany = 0;
     var filters =  {
         /* TODO
         keywords??        
@@ -255,7 +260,7 @@ function loadFilters(){
         mealTypeDietary: " ", //captails??  
         collectionbusiness: " ",
         distance: " ",
-        description: " "
+        description: "none"
     };
     
     
@@ -265,6 +270,9 @@ function loadFilters(){
       
         mealtypeList.push($(this).attr('name'))   
     }) // put in mealtype if its not empty?? TODO
+    if (mealtypeList.length != 0){
+        checkHowMany++
+    }    
     filters["mealtype"] = mealtypeList;
     
     // MEAL TYPE COUNTRY
@@ -272,6 +280,9 @@ function loadFilters(){
     $("#collapseTypeCountry input:checked").each(function(){
             mealtypecountrylist.push($(this).attr('value'))
     })
+    if (mealtypecountrylist.length != 0){
+        checkHowMany++
+    }
     filters["mealtypecountry"] = mealtypecountrylist;
     
     // MEAL TYPE FOOD
@@ -279,6 +290,9 @@ function loadFilters(){
     $("#collapseTypeOfFood input:checked").each(function(){
             mealtypefoodlist.push($(this).attr('value'))
     })
+    if (mealtypefoodlist.length != 0){
+        checkHowMany++
+    }
     filters["mealtypefood"] = mealtypefoodlist;
     
     // SIZE / WEIGHT
@@ -286,6 +300,9 @@ function loadFilters(){
     $("#collapseSizeWeight input:checked").each(function(){
             sizeweightlist.push($(this).attr('value'))
     })
+    if (sizeweightlist.length != 0){
+        checkHowMany++
+    }
     filters["mealweight"] = sizeweightlist;
     
     // EXPIRATION DATE
@@ -293,6 +310,9 @@ function loadFilters(){
     $("#collapseExpirationDate input:checked").each(function(){
             mealexpireslist.push($(this).attr('value'))
     })
+    if (mealexpireslist.length != 0){
+        checkHowMany++
+    }
     filters["mealexpires"] = mealexpireslist;
     
     // COLLECTION AND BUSINESS
@@ -300,6 +320,9 @@ function loadFilters(){
     $("#collapseCollectionOnly input:checked").each(function(){
             collectionbusinesslist.push($(this).attr('value'))
     })
+    if (collectionbusinesslist.length != 0){
+        checkHowMany++
+    }
     filters["collectionbusiness"] = mealexpireslist;
     
     // DIETARY REQUIREMENTS
@@ -307,6 +330,9 @@ function loadFilters(){
     $("#collapseDietryRequirements input:checked").each(function(){
             mealtypedietarylist.push($(this).attr('value'))
     })
+    if (mealtypedietarylist.length != 0){
+        checkHowMany++
+    }
     filters["mealTypeDietary"] = mealtypedietarylist;
     
     // DISTANCE AWAY:
@@ -324,23 +350,30 @@ function loadFilters(){
         
     // CHECK WHETHER ANY HAVE VALUES AND IF NO JUST DO DISTANCE
     justDistance = false;
-    checkHowMany = 0;
+    /*checkHowMany = 0;
     for (var category = 0; category < Object.keys(filters).length; category++){
-        if (Object.keys(filters)[0] != "distance" || Object.keys(filters)[0] != "description"){
-            if (Object.keys(filters)[0] == " "){
+        if (Object.keys(filters)[category] != "distance" || Object.keys(filters)[category] != "description"){
+            if (Object.keys(filters)[category] != " " || Object.keys(filters)[category] != []){
                 checkHowMany++
             }
         }
-    }
+    }*/
+    
+    console.log("CHECKING HERE");
+    console.log(checkHowMany);
     if (checkHowMany == 0){
             //justDistance = true;
-        if (filters["description"] != " "){
+        if (filters["description"] != "" && filters["description"] != ","){
+            alert(filters["description"]);
             filters["usefilters"] = "falseButdescription"; 
         }
-        else{
-            filters["usefilters"] = "false"
+        else if (filters["description"] == ","){
+            alert("HERE");
+            var fil = "false";
+            filters["usefilters"] = fil;
         }
     }
+    
     alert(filters.usefilters);
     return filters;
 } 
