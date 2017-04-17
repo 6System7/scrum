@@ -242,8 +242,6 @@ function getMealTypeData(postList){
 
 function getPercentageCollected(postList, archiveData){
 
-    console.log(archiveData);
-
     var totalNumberOfPosts = postList.length + archiveData.deletedPostsAmount;
     var totalCollectedPosts = archiveData.collectedPostsAmount;
 
