@@ -1,5 +1,12 @@
+var currentLang;
+var currentLong;
 $(document).ready(function(){
     var dataPass;
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        currentLang = pos.coords.latitude;
+        currentLong = pos.coords.longitude;
+        console.log(currentLang);
+       
     $.ajax({
         url: "/getPosts",
         type: "GET",
@@ -17,6 +24,7 @@ $(document).ready(function(){
             getPostedFoods(foodsToShow);
         }
     });
+        
 
     $("#btnUpdate").click(function(){
         var foodsToPost = filterFoods(dataPass);
@@ -39,6 +47,7 @@ $(document).ready(function(){
    //     $("#seePostsModal").modal('show');
    //     seePost();
    // })
+})
 })
 
 function getPostedFoods(x){
@@ -139,54 +148,94 @@ function filterFoods(dataPass){
     var data = dataPass;
     foodsToPost = []
     var filters = loadFilters();
-    for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
-        var visibility = false;
-        var foodPost = dataPass[foodPostElem];   
-        
-        // CALCULATE DISTANCE AND CHECK ITS CORRECT
-        var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
-        if (parseInt(dist) <= filters.distance){ 
-            
-            // COMPARE DESCRIPTION AND KEYWORDS
-            var description = foodPost.description;
-            description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
-            var filterDesc = filters.description;
-            console.log(foodPost.title);
-            for (var word = 0; word< filterDesc.length; word++){
-                
-                var wordStr = (filterDesc[word]);
-                if (wordStr !=""){
-
-                    if (description.indexOf(wordStr) !== -1){
-                        console.log("TRAITOR??");
-                        visibility = true;     
-                    }
-                }
+    /*if (filters.value == "none"){
+        console.log("HERE");
+        for(var property=0; property < data.length; property++) {
+                var size = 0;
+                var x = data[property];
+                foodsToPost.push((x._id).toString());
             }
-            
-            for (var category = 0; category < Object.keys(filters).length; category++){
+          
+        }
+    else{*/
+        for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
+            var visibility = false;
+            var foodPost = dataPass[foodPostElem];   
 
-            var checkAgain = (Object.keys(filters)[category]).toString();
-            var postCheck = foodPost[checkAgain]; //grab it from post
-                var xox = filters[Object.keys(filters)[category]]; 
-                for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
-                        if (xox[listInCategory] == postCheck){
-                            console.log(postCheck);
-                            console.log(xox[listInCategory]);
-                                visibility = true;
-                            console.log("HEYA");
+            // CALCULATE DISTANCE AND CHECK ITS CORRECT
+            var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
+            if (parseInt(dist) <= filters.distance){
+                // TAKE ALL POSTS IN THIS DISTANCE
+                
+                if (foodPost.usefilters == "false"){
+                    visibility = true; 
+                   console.log("and now heres");
+
+                    foodsToPost.push(foodPost._id);
+                }
+                else { 
+                // COMPARE DESCRIPTION AND KEYWORDS
+                    console.log("compea re decsiption nad keywords");
+                    var description = foodPost.description;
+                    description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
+                    var filterDesc = filters.description;
+                    //console.log(foodPost.title);
+                    for (var word = 0; word< filterDesc.length; word++){
+
+                        var wordStr = (filterDesc[word]);
+                        if (wordStr !=""){
+
+                            if (description.indexOf(wordStr) !== -1){
+                                console.log("TRAITOR??");
+                                
+                                visibility = true; 
+                                if (foodPost.usefilters == "falseButdescription"){
+                                    console.log("NOW HERE");
+                                    foodsToPost.push(foodPost._id);
+                                }
+                                
                             }
                         }
+                    }// atm if Z
+                    
+
+                    // NOW CHECK WHETHER ANY FILTERS HAVE BEEN DEALTH WITH
+                 /*   if (filters.usefilters == "false"){
+                        console.log("HeeeeeERe");
+                        if (visibility == true){
+                        console.log("HERe");
+                        foodsToPost.push(foodPost._id);
+                        }
+
+
+                    }*/
+                    if (foodPost.usefilters == "true") {
+                        console.log("HeeERe");
+                    for (var category = 0; category < Object.keys(filters).length; category++){
+
+                    var checkAgain = (Object.keys(filters)[category]).toString();
+                    var postCheck = foodPost[checkAgain]; //grab it from post
+                        var xox = filters[Object.keys(filters)[category]]; 
+                        for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
+                                if (xox[listInCategory] == postCheck){
+                                    //console.log(postCheck);
+                                    //console.log(xox[listInCategory]);
+                                        visibility = true;
+                                    //console.log("HEYA");
+                                    }
+                                }
+                            }
+
+                    console.log(visibility);
+
+                    if (visibility == true){
+                        console.log("HERe");
+                        foodsToPost.push(foodPost._id);
+                    }}
                     }
-                 
-            console.log(visibility);
-            
-            if (visibility == true){
-                console.log("HERe");
-                foodsToPost.push(foodPost._id);
-            }
+                }
         }
-    }
+    
     return foodsToPost;
 }
    
@@ -196,6 +245,7 @@ function loadFilters(){
         /* TODO
         keywords??        
         */
+        usefilters: "true",
         mealtype: " ",
         mealtypecountry: " ",
         mealtypefood: " ",
@@ -269,9 +319,28 @@ function loadFilters(){
         var punctuationless = take.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
         keywords = punctuationless.split(" ");
         filters["description"] = keywords;
- 
     }
-    
+        
+    // CHECK WHETHER ANY HAVE VALUES AND IF NO JUST DO DISTANCE
+    justDistance = false;
+    checkHowMany = 0;
+    for (var category = 0; category < Object.keys(filters).length; category++){
+        if (Object.keys(filters)[0] != "distance" || Object.keys(filters)[0] != "description"){
+            if (Object.keys(filters)[0] == " "){
+                checkHowMany++
+            }
+        }
+    }
+    if (checkHowMany == 0){
+            //justDistance = true;
+        if (filters["description"] != " "){
+            filters["usefilters"] = "falseButdescription"; 
+        }
+        else{
+            filters["usefilters"] = "false"
+        }
+    }
+    alert(filters.usefilters);
     return filters;
 } 
 
@@ -285,23 +354,12 @@ function sortColumn(colToSortId){
 }
 
 function calculateDistance(latitude, longitude){
-
-    var memberLang = 0;
-    var memberLong = 0;
     var lat = latitude;
     var long = longitude;
-    // check they want to use this location not another one TODO
-    if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(pos) {
-                memberLang = pos.coords.latitue;
-                memberLong = pos.coords.longitude;
-            });
-        } else {
-            memberLang = 54.775250;
-            memberLong = -1.584852;
-            
-    }
-    dist = getDistanceFromLatLonInKm(memberLang, memberLong, lat, long).toFixed(1);
+    var dist;
+    // check they want to use this location not another one TOD) 
+   dist = getDistanceFromLatLonInKm(currentLang, currentLong, lat, long).toFixed(1);
+   console.log(dist);
     return dist;
 }
 
