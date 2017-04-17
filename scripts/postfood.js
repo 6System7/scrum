@@ -227,10 +227,12 @@ function scanBarcode() {
                         type: "LiveStream",
                         constraints: {
                             width: {
-                                min: 640
+                                min: 320,
+                                max: 800
                             },
                             height: {
-                                min: 480
+                                min: 180,
+                                max: 450
                             },
                             facingMode: "environment",
                             aspectRatio: {
@@ -272,6 +274,7 @@ function scanBarcode() {
                     getBarcodeInfo(code);
                 }
             });
+            window.scrollTo(0, 0);
         } else {
             var alertDiv = $("<div>");
             alertDiv.addClass("alert alert-warning alert-dismissible");
