@@ -191,10 +191,10 @@
                     <div class="form-group">
                         <label for="txtLocation">Pick-up location</label>
                         <p>Click a new location, or drag the marker to change location.</p>
-                        <div id="map"></div>
+                        <div id="map" class="googleMapPostLocationDiv"></div>
                         <form method="post" action="#">
-                            <label>Latitude: <input type="text" id="lat" readonly="yes"></label>
-                            <label>Longitude: <input type="text" id="lng" readonly="yes"></label>
+                            <label class="lblLatLongNeedMargins">Latitude: <input type="text" id="lat" readonly="yes"></label>
+                            <label class="lblLatLongNeedMargins">Longitude: <input type="text" id="lng" readonly="yes"></label>
                         </form>
                     </div>
                     <div class="form-group">
@@ -204,13 +204,13 @@
                     </div>
                     <label class="checkbox-inline"><input type="checkbox" name="collection" id="chkCollectionOnly">Collection only</label>
                     <br/>
-                    <label class="checkbox-inline"><input type="checkbox" name="business" id="chkBusiness">Business</label>
+                    <label class="checkbox-inline marginbottomfivepixels"><input type="checkbox" name="business" id="chkBusiness">Business</label>
                     <br/>
                 </div>
                 <div class="col-md-4">
                     <button id="btnScanBarcode" type="button" class="btn btn-primary" onclick="scanBarcode()">Scan Barcode</button>
 
-                    <div class="panel panel-default">
+                    <div id="pnlDietaryRequirementsForMargin" class="panel panel-default">
                         <div class="panel-heading">Dietary Requirements</div>
                         <div class="panel-body">
                             <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="glutenfree" id="chkGlutenFree"/>Gluten-free</label>
@@ -220,7 +220,7 @@
                             <label class="checkbox-inline"><input type="checkbox" name="mealTypeDietary[]" value="fishfree" id="chkFishFree"/>Fish-free</label>
                         </div>
                     </div>
-                    <div class="panel panel-default">
+                    <div id="pnlMiscOptionsForMargin" class="panel panel-default">
                         <div class="panel-heading">Meal Type</div>
                         <div class="panel-body">
                             <select name="mealtype" id="slcMealType">
@@ -279,7 +279,7 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-default" onclick="sendPostData()">Submit</button>
+            <button id="btnSubmitPost" type="button" class="btn btn-primary" onclick="sendPostData()">Submit</button>
         </form>
     </div>
     <!-- /.container -->
