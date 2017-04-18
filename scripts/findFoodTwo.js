@@ -65,7 +65,7 @@ function getPostedFoods(xx){
      $("#column2").html("");
 
     var checkArray = xx;
-  
+
     var dataReturned;
     $.ajax({
         url: "/getPosts",
@@ -88,7 +88,7 @@ function getPostedFoods(xx){
                         console.log(x.title);
                         if (x.collected != "true"){
                             toPrint++
-                     
+
                          // CREATE CARD
                         var divEl = $('<div>');
                         divEl.addClass("w3-card-4");
@@ -96,17 +96,27 @@ function getPostedFoods(xx){
                         // CREATE IMAGE
                         var imgDiv = $('<div>');
                         imgDiv.addClass("text-center");
+                        imgDiv.attr("id", "postImgDivNumber" + property);
                         var img2 = $('<img>');
                         img = (x.image).toString();
                         if (img == ""){
                             img2 = $('<span>');
                             img2.addClass("glyphicon glyphicon-picture");
                             img2.attr("style","margin-top:20px");
-                        }
-                        else{
+                        } else {
+                            img2.data("parentDivId", "postImgDivNumber" + property);
                             img2.attr("src",(x.image).toString());
                             img2.addClass("center");
-                            img2.attr("style", "height:160px; width:auto")
+                            img2.attr("style", "height:160px; width:auto");
+                            img2.on("error", function() {
+                                var parentDiv = $("#" + $(this).data("parentDivId"))[0];
+                                console.log("Error loading image for post " + $(this).data("parentDivId") + " - Switching to gylphicon");
+                                var newimg2 = $('<span>');
+                                newimg2.addClass("glyphicon glyphicon-picture");
+                                newimg2.attr("style","margin-top:20px");
+                                $(parentDiv).empty();
+                                $(parentDiv).append(newimg2);
+                            });
                         }
                         img2.appendTo(imgDiv);
                         imgDiv.appendTo(divEl);
@@ -660,21 +670,21 @@ function sortFoodsToPost(idList, dataReturned, sortBy){
             return b[1] - a[1];
         });
      }
-    
+
     for (var xox in sortArray){
         console.log(sortArray[xox][0] + "  : " + sortArray[xox][1]);
     }
     newFoodsToPostList =[];
     for (var post = 0; post<sortArray.length;post++){
         newFoodsToPostList.push(sortArray[post][0]);
-    
+
     }
     console.log(newFoodsToPostList[0]);
     return newFoodsToPostList;
-                                    
-                        
-    
-    
+
+
+
+
 }
 
 
