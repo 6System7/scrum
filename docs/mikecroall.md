@@ -6,6 +6,7 @@
 + Ability to mark one's own posts as collected, or fully delete them
 + Ability to scan barcodes to auto-fill create post form
 + Ability to rate other users, and view users' average ratings
++ Minor aesthetic and functional tweaks
 
 The above contributions include client side and server side code, and initially creating relevant database collections.
 

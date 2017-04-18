@@ -1,3 +1,4 @@
+// Auto fill form from product object
 function useBarcodeInfo(item) {
     var title = item.generic_name;
     var imageUrl = item.image_url;
@@ -23,9 +24,11 @@ function useBarcodeInfo(item) {
     }
 }
 
+// Take a barcode, attempt to find a product object and call useBarcodeInfo
 function getBarcodeInfo(code) {
+    // API is beta and very underpopulated, so this mimics it with a few items that the API should contain but doesn't yet
     var fakePositives = {
-        // TODO Mike - and everyone - populate fake positives
+        // TODO Mike AND EVERYONE - populate fake positives
         "5012035930592": {
             generic_name: "Haribo Gold Bears",
             image_url: "http://i.imgur.com/nHty93e.jpg",
@@ -52,6 +55,7 @@ function getBarcodeInfo(code) {
     }
 }
 
+// Sets up a Quagga.js viewport to scan a barcode, and call getBarcodeInfo when a barcode is recognised
 function scanBarcode() {
     if ($("#pnlBarcodeScreen").css("display") == "none") {
         $("#pnlBarcodeScreen").show();
@@ -301,9 +305,9 @@ function scanBarcode() {
     }
 }
 
+// Ensure that necessary inputs have values (image is not required)
 function validInputs() {
     // TODO Maddy? - nicer alerts in this section?
-
     var valid = true;
     $("#frmPost :input[type=text], textarea").each(function() {
         if (valid) {
@@ -324,6 +328,7 @@ function validInputs() {
     return valid;
 }
 
+// Serialise form data, attach image BLOB, attach district data from lat/long, send to server for saving
 function sendPostData() {
     if (validInputs()) {
         var formData = $("#frmPost").serializeArray();
@@ -363,8 +368,6 @@ function sendPostData() {
         } else {
             alert("WARNING - SUBMITTING WHILE NOT LOGGED IN");
         }
-
-        // @Mike, I Added saving location here as googleApi wasn't accessible from index.js
 
         var geocoder = new google.maps.Geocoder;
         var latlng = {
@@ -417,6 +420,8 @@ function sendPostData() {
     }
 }
 
+// Takes OPTIONAL webURL, if given, loads and compresses image to max 380x380 at webURL and puts in preview element
+// otherwise does that with selected file from file input
 function previewFile(webURL) {
     var preview = $("#imgPreview");
     var file = document.querySelector("input[type=file]").files[0];
@@ -461,8 +466,11 @@ function previewFile(webURL) {
     }
 }
 
+// Create a google map for location selection, start centered on lat lng
 function initMap(lat, lng) {
-    //The center location of our map. DURHAM IS 54.775250, -1.584852
+    //The center location of our map.
+    // DURHAM IS 54.775250, -1.584852
+    // School of engineering and computing sciences is 54.767230, -1.570390
     var centerOfMap = new google.maps.LatLng(lat, lng);
 
     //Map options.
@@ -504,6 +512,7 @@ function initMap(lat, lng) {
     });
 }
 
+// Update lat lng text boxes from marker position (must be called, not automatic)
 function markerLocation() {
     //Get location.
     var currentLocation = marker.getPosition();
@@ -512,12 +521,12 @@ function markerLocation() {
     $("#lng").val(currentLocation.lng()); //longitude
 }
 
+// When window has loaded, initialise map around current location, or default to school of engineering, durham uni
 google.maps.event.addDomListener(window, 'load', function() {
     navigator.geolocation.getCurrentPosition(function(pos) {
         initMap(pos.coords.latitude, pos.coords.longitude);
     }, function(error) {
-        initMap(54.77525, -1.584852);
-        // alert("Could not get your location, defaulting to Durham");
+        initMap(54.767230, -1.570390); // <--- school of engineering // center of durham --> 54.77525, -1.584852
     });
 });
 
@@ -526,6 +535,7 @@ var map; //Will contain map object.
 var marker = false;
 var postID;
 
+// page initialisation
 $(document).ready(function() {
     $("#pnlBarcodeScreen").hide();
 
@@ -540,6 +550,7 @@ $(document).ready(function() {
         previewFile();
     });
 
+    // Load post to edit if available into form, and clear from local storage to avoid getting stuck in edit mode
     if (localStorage.postToEdit) {
         $("#pageTitleH1").text("Edit a food item");
         // console.log(localStorage.postToEdit);

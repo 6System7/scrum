@@ -1,3 +1,4 @@
+// Load in user's own posts
 $(document).ready(function() {
     if (localStorage.username) {
         $.ajax({
@@ -29,6 +30,7 @@ $(document).ready(function() {
     }
 });
 
+// Take list of posts, generate cards for each post and place on page
 function generatePostCards(data) {
     $("#column0").empty();
     $("#column1").empty();
