@@ -250,7 +250,7 @@ app.post("/rateUser", function(req, res) {
                     sum += Number(user.ratings[username]);
                     count += 1;
                 }
-                user.rating = sum / count;
+                user.rating = Math.round(10 * sum / count) / 10;
                 db.collection("users").save(user, function(err, results) {
                     if (err) {
                         res.send(err.toString());
