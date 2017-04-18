@@ -49,7 +49,7 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
             var foodPost = dataPass[foodPostElem]; //alert(foodPost._id);  
             var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, currentLang, currentLong)
             var title = foodPost.title;
-            if (dist < userDistance){
+            if (dist < userDistance && localStorage.username != foodPost.username){
                 counter++;
                 
 
@@ -95,7 +95,7 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
                 var spanBody = $('<span>'); // NOT WORKING 
                 spanBody.addClass('glyphicon glyphicon-cutlery');
                 spanBody.appendTo(bodyDiv);
-                bodyDiv.text(foodPost.title + " is this far away : " + dist.toString());
+                bodyDiv.text(foodPost.title + " is this far away : " + dist.toFixed(1));
                 
                 // FINALISE
                 bodyDiv.appendTo(notifDiv);
