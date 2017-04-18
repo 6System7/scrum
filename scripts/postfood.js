@@ -33,6 +33,11 @@ function getBarcodeInfo(code) {
             generic_name: "Haribo Gold Bears",
             image_url: "http://i.imgur.com/nHty93e.jpg",
             ingredients_text_with_allergens: "Glucose syrup, sugar, gelatine, dextrose, fruit juice from concentrate (apple, strawberry, raspberry, orange, lemon, pineapple), acid (citric acid), fruit and plant concentrates (nettle, orange, lemon, mango, passion fruit, elderberry, blackcurrant, apple, spinach, aronia, grape), flavour, elderberry extract, glazing agents (white and yellow beeswax, carnauba wax), fruit extract (carob), invert sugar syrup."
+        },
+        "5022313731773": {
+            generic_name: "Tropicana Smooth Orange Juice",
+            image_url: "http://i.imgur.com/LOSol0p.jpg",
+            ingredients_text_with_allergens: "100% orange juice, not from concentrate."
         }
     };
     if (fakePositives.hasOwnProperty(code)) {
