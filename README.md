@@ -7,27 +7,27 @@
   * ~~FR0.2 Posting and Editing Listing~~
   * FR0.3 Filtering Results
   * FR0.4 Account Modification
-  * FR0.5 Barcode Scanning
+  * ~~FR0.5 Barcode Scanning~~
   * ~~FR0.6 Navigation/Links~~
   * FR0.7 Integrated Map (With Markers)
   * FR0.8 Chat Service
   * FR0.9 Point System
-  * FR0.10 User Rating System
+  * ~~FR0.10 User Rating System~~
   * ~~FR0.11 Password Control~~
   * FR0.12 Notifications
   * FR0.13 Server-side Post Filtering
-  * FR0.14 Advanced Filtering Results 
-   
+  * FR0.14 Advanced Filtering Results
+
 ### FR1 - Back-End Server Functionality  
   * ~~FR1.1 Database Management~~  
   * FR1.2 Intelligent Data Analysis  
-  
+
 ## Non-Functional Requirements
 
 ### NFR0 - Security
   * ~~NFR0.1 Encryption~~
   * NFR0.2 Access Control  
-  
+
 ### NFR1 - Usability - Web Page Design
   * NFR1.1 Accommodating for those with additional needs.
   * ~~NFR1.2 Device Compatibility~~  
@@ -35,7 +35,7 @@
 ### NFR2 - Reliability - Server Uptime
   * NFR2.1 Crash Recovery
   * NFR2.2 Server Backup
-  
+
 ## Descriptions
 
 ### FR0.1 Registration / Login System  
@@ -56,7 +56,7 @@
 >* Optional written details
 
 ### FR0.3 Filtering Results
->When viewing the results for an item search a user should be able to filter the results. The data returned from the search will be done server side (see FRx.y) however once the data has been returned, reordering and sorting of the data will be done in the web page. 
+>When viewing the results for an item search a user should be able to filter the results. The data returned from the search will be done server side (see FRx.y) however once the data has been returned, reordering and sorting of the data will be done in the web page.
 >* Some of the possible filters are:
 >* Filter by location
 >* Filter by type of food
@@ -65,8 +65,8 @@
 
 ### FR0.4 Account Modification
 >The user should be able to modify their account information. This includes:
->* Changing the email associated with the account. 
->* Changing their username/password combination. 
+>* Changing the email associated with the account.
+>* Changing their username/password combination.
 >* Alter other account information, e.g. reset home location, etc.  
 >
 >Once the user has confirmed the changes the system should then display the modified account data.
@@ -78,12 +78,12 @@
 >Navigating the website should be easy and user-friendly. This will be achieved via the following:
 >* There will be a Menu Bar at/near the top of the page.
 >* The logo will always be at the same location and will link back to the Home page.
->* Any menu will be well-organised and, if necessary, will include sub-menus allowing the user to efficiently navigate. 
+>* Any menu will be well-organised and, if necessary, will include sub-menus allowing the user to efficiently navigate.
 >* All links should work correctly and follow good website principles such as not taking too many “clicks” to make it to any one sub-webpage.
 
 ### FR0.7 Integrated Map (With Markers)
 >The website should have an embedded Google Maps feature in either a static mode for preview, or interactive mode, for more details. Additionally, the map should have the following features:
->* Markers that highlight specific areas such as the location of other users, or agreed meetup positions. 
+>* Markers that highlight specific areas such as the location of other users, or agreed meetup positions.
 >* Clicking on (or hovering over) a marker should reveal more detail of the marker target.
 >* It should be integrated with the other site functions, such as the filter results option.
 
@@ -126,7 +126,7 @@ Notification scenarios include;
 >* Depending on the sorting method chosen by the user, the results should reload correctly (and independent of the previously used sorting mechanism).
 >* After a user has chosen a new set of filters, the results should reload and display the relevant posts.
 
-### FR0.14 Advanced Filtering Results 
+### FR0.14 Advanced Filtering Results
 >A user can filter results in a list or a map with more advanced options. When viewing the results in a list or a map a user should be able to filter the results according to the following additional criteria:
 >* Age of post
 >* Rating of user who posted
@@ -148,11 +148,11 @@ Or in the case of an admin needing to edit the system manually (Unlikely but pos
  All patterns and data collected off users will be analyzed to make intelligent suggestions for how to reduce waste e.g. If the user has given away bread a lot then a suggestion would be given to buy less bread.
  The suggestions will be given on the home page in a non-intrusive way.
  Some data will also be used externally such as being available to local waste management companies, environmental groups and government groups.
- 
+
 ### NFR0.1 Encryption
 >Ideally all data should be encrypted but as a minimum all sensitive data should be encrypted. E.g. Name, Address, Phone Number, etc.  
  This should be done with the strongest encryption method possible for us to reasonably implement. This will be tested by inspecting sent packages to and from the server for encryption.
- 
+
 ### NFR0.2 Access Control
 >The system should flag every time there is a login to a specific account from a new location or a new device. This flag could be an automatic email sent to the user stating at what time and where the account was accessed from. The email would include a “if this wasn’t you” option where upon clicking it would refer the user to a company phone number. This will be tested by trial running hijacking dummy accounts.
 
