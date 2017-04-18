@@ -419,7 +419,8 @@ function sendPostData() {
 
 function previewFile(webURL) {
     var preview = $("#imgPreview");
-    var file, reader;
+    var file = document.querySelector("input[type=file]").files[0];
+    var reader;
     var image = new Image();
     image.onload = function() {
         imageSelected = true;
@@ -450,7 +451,6 @@ function previewFile(webURL) {
         image.crossOrigin = "anonymous";
         image.src = webURL;
     } else if (file) {
-        file = document.querySelector("input[type=file]").files[0];
         reader = new FileReader();
         reader.onloadend = function() {
             image.src = reader.result;
