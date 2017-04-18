@@ -6,7 +6,7 @@ function useBarcodeInfo(item) {
     var labels = item.labels;
     var ingredients = item.ingredients_text_with_allergens;
     if (title || imageUrl || labelTags || labels || ingredients) {
-        if (confirm("Do you want to use the following information?\n\n" + title + "\n" + imageUrl + "\n" + ingredients)) {
+        if (confirm("Do you want to use the following information?\n\n" + title + "\n\n" + ingredients)) {
             if (title) {
                 $("#txtTitle").val(title);
             }
