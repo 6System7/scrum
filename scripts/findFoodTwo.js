@@ -134,7 +134,11 @@ function getPostedFoods(xx){
                         // CREATE DESCRIPTION & AUTHOR
                         var bodyCon = $("<p>");
                         bodyCon.text(x.description);
-                        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i><span class='userAvgRating" + x.username + "'></span></small><br>";
+                        var usernameToUse = x.username;
+                        if (localStorage.username === x.username) {
+                            usernameToUse += "(You)";
+                        }
+                        var authorCon = "<br><small class = 'text-muted'><i>" + usernameToUse + "</i><span class='userAvgRating" + x.username + "'></span></small><br>";
                         $.ajax({
                             type: "GET",
                             url: "/getUserRating",
@@ -580,7 +584,11 @@ function seePost(x){
     // USER
     var user = $('<p>');
     var userLabel = "<br><i>Uploaded by </i>"
-    user.text(x.username);
+    if (localStorage.username === x.username) {
+        user.text(x.username + "(You)");
+    } else {
+        user.text(x.username);
+    }
     var userStars = $("<span>");
     userStars.attr("id", "userAvgRating");
     $.ajax({
@@ -598,25 +606,40 @@ function seePost(x){
     $("#modalRightColumn").append(userLabel);
     $("#modalRightColumn").append(user);
     // USER RATING (ADDED BY MIKE, SORRY IF IT MAKES THE MODAL LOOK BAD)
-    var userRating = $("<span>");
-    var userRatingLabel = "<br><i>Rate " + x.username + "</i><br>";
-    userRating.addClass("starRating");
-    // TODO Mike - load 'my' rating of this post's user, and display it?
-    for (var i = 5; i > 0; i--) {
-        var starInput = $("<input>");
-        starInput.attr("id", "rating" + i);
-        starInput.attr("type", "radio");
-        starInput.attr("name", "userrating");
-        starInput.attr("value", i);
-        starInput.data("user", x.username);
-        var starLabel = $("<label>");
-        starLabel.attr("for", "rating" + i);
-        starLabel.text(i);
-        userRating.append(starInput);
-        userRating.append(starLabel);
+    if (localStorage.username !== x.username) {
+        var userRating = $("<span>");
+        var userRatingLabel = "<br><i id='rateThisUserNameLabel'>Rate " + x.username + "</i><br>";
+        userRating.addClass("starRating");
+        for (var i = 5; i > 0; i--) {
+            var starInput = $("<input>");
+            starInput.attr("id", "rating" + i);
+            starInput.attr("type", "radio");
+            starInput.attr("name", "userrating");
+            starInput.attr("value", i);
+            starInput.data("user", x.username);
+            var starLabel = $("<label>");
+            starLabel.attr("for", "rating" + i);
+            starLabel.text(i);
+            userRating.append(starInput);
+            userRating.append(starLabel);
+        }
+        $.ajax({
+            type: "GET",
+            url: "/getMyRatingForUser",
+            data: {
+                me: localStorage.username,
+                them: x.username
+            },
+            success: function(data) {
+                if(data.rating) {
+                    $("#rateThisUserNameLabel").text("Change your rating of " + data.user);
+                    $("#rating" + data.rating).prop("checked", true);
+                }
+            }
+        });
+        $("#modalRightColumn").append(userRatingLabel);
+        $("#modalRightColumn").append(userRating);
     }
-    $("#modalRightColumn").append(userRatingLabel);
-    $("#modalRightColumn").append(userRating);
 
     // CHAT BUTTON (ADDED BY SIMON, SORRY IF IT MESSES ANYTHING UP)
     $("#messageUser").attr("onclick","startChat('" + x.username + "')");

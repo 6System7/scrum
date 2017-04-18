@@ -278,6 +278,26 @@ app.get("/getUserRating", function(req, res) {
     });
 });
 
+app.get("/getMyRatingForUser", function(req, res) {
+    res.setHeader("Content-Type", "application/json");
+    var me = req.query.me;
+    var them = req.query.them;
+    db.collection("users").findOne({
+        username: them
+    }, function(err, document) {
+        if (!err && document.ratings && document.ratings[me]) {
+            res.send(JSON.stringify({
+                rating: document.ratings[me],
+                user: them
+            }));
+        } else {
+            res.send(JSON.stringify({
+                error: "You have not rated this user"
+            }));
+        }
+    });
+});
+
 // FUNCTIONS
 app.get("/sha1", function(req, res) {
     var inputString = req.query.string;
