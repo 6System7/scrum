@@ -6,6 +6,7 @@
 + Ability to mark one's own posts as collected, or fully delete them
 + Ability to scan barcodes to auto-fill create post form
 + Ability to rate other users, and view users' average ratings
++ Ability to logout (part of account management)
 + Minor aesthetic and functional tweaks
 
 The above contributions include client side and server side code, and initially creating relevant database collections.
@@ -43,3 +44,7 @@ The above contributions include client side and server side code, and initially 
 2. Click on the eye, to the view the full post information
 3. Under the username, click on the stars to choose a rating for the user who made this post
 4. Once clicked, the users new average rating will be updated when the results are refreshed
+
+### Logging out
+1. If you are logged in, click the **Log Out** link next to your username, in the upper right hand corner
+    * If on mobile, it will be the bottom link in the collapsed navigation bar menu, beneath your username
