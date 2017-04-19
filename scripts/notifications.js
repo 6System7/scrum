@@ -59,6 +59,7 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
     //thisUserData.settings.notifsSeen.push("HERE");
     
     var settings = (thisUserData.settings);
+    console.log(thisUserData.settings);
     for (var x in Object.keys(settings)){
         console.log(Object.keys(settings)[x]);
         console.log(x)

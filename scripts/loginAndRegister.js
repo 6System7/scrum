@@ -253,7 +253,8 @@ function registerUser(username, password, authKey, rating, realName, email){
 
     console.log("Sending user registration request...");
     var notifsSeenSoFar = [];
-    var defaultSettings = {notifDistance: 20, notifsSeen: notifsSeenSoFar}; //Maddy add to this object
+    var defaultSettings = {notifsSeen: "", notifDistance: 20}; //Maddy add to this object
+    defaultSettings["notifsSeen"] = notifsSeenSoFar;
     var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email, settings: defaultSettings};
 
     $.ajax({
