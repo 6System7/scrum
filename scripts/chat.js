@@ -15,6 +15,7 @@ $(function() {
   
   // Sends a chat message
   function sendMessage () {
+    console.log("Current room is:", currentRoom);
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
@@ -230,10 +231,10 @@ $(function() {
         // Sort messages by date/time sent
         // Sorting code adapted from http://stackoverflow.com/questions/10123953/sort-javascript-object-array-by-date
         var messages = data.messages;
-        messages.sort(function(a,b){
-          var c = new Date(a.date);
-          var d = new Date(b.date);
-          return c-d;
+        messages.sort(function(a, b) {
+          a = a.date;
+          b = b.date;
+          return a<b ? -1 : a>b ? 1 : 0;
         });
         // Display all the messages
         for(var index in messages) {
