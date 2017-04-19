@@ -1,4 +1,10 @@
-window.onload = getUsername; redirectCheck();
+window.onload = pageLoad();
+
+function pageLoad(){
+    getUsername();
+    redirectCheck();
+    loadRecommendations(localStorage.username);
+}
 
 function redirectCheck(){
     var lockedPages = ["account", "findfood", "postfood", "postManagement", "chat"];
