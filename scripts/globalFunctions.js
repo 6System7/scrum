@@ -1,4 +1,9 @@
-window.onload = getUsername; redirectCheck();
+window.onload = pageLoad();
+
+function pageLoad(){
+    getUsername();
+    redirectCheck();
+}
 
 function redirectCheck(){
     var lockedPages = ["account", "findfood", "postfood", "postManagement", "chat"];
@@ -23,6 +28,7 @@ function getUsername(){
     if(username !== undefined){
         $("#navBarUsername").text(username);
         $("#btnlogOut").show();
+        loadRecommendations(localStorage.username);
     } else {
         $("#navBarUsername").text("Not Logged In");
         $("#btnlogOut").hide();
