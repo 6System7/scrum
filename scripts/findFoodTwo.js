@@ -35,7 +35,16 @@ $(document).ready(function(){
             $("#column1").append(divEl);
         }
         else {
-			setStorage(foodsToPost);
+            if ($("#sortByOptions").val() == "proximityClosest") {
+                var sortBy = "ascending";
+                foodsToPost = sortFoodsToPost(foodsToPost, dataPass, sortBy);
+            }
+            if($("#sortByOptions").val() == "proximityFurthest"){
+                var sortBy = "descending";
+
+                foodsToPost = sortFoodsToPost(foodsToPost,dataPass,sortBy);
+            }
+            setStorage(foodsToPost);
             getPostedFoods(foodsToPost);
         }
     });
@@ -50,12 +59,13 @@ $(document).ready(function(){
 })
 })
 
-function getPostedFoods(x){
+function getPostedFoods(xx){
     $("#column0").html("");
      $("#column1").html("");
      $("#column2").html("");
 
-    var checkArray = x;
+    var checkArray = xx;
+
     var dataReturned;
     $.ajax({
         url: "/getPosts",
@@ -64,12 +74,20 @@ function getPostedFoods(x){
         success: function(data){
             var toPrint = 0;
             dataReturned = JSON.parse(JSON.stringify(data));
-            for(var property=0; property < dataReturned.length; property++) {
+            /*for(var property=0; property < dataReturned.length; property++) {
                 var x = dataReturned[property];
                 for (y in checkArray){
                     if ((x._id).toString() == checkArray[y]){
                         if(x.collected != "true"){
                         toPrint++;
+*/
+            for (y in checkArray){
+                for (var property = 0; property < dataReturned.length; property++){
+                    x = dataReturned[property];
+                    if (checkArray[y] == (x._id).toString()){
+                        console.log(x.title);
+                        if (x.collected != "true"){
+                            toPrint++
 
                          // CREATE CARD
                         var divEl = $('<div>');
@@ -78,17 +96,27 @@ function getPostedFoods(x){
                         // CREATE IMAGE
                         var imgDiv = $('<div>');
                         imgDiv.addClass("text-center");
+                        imgDiv.attr("id", "postImgDivNumber" + property);
                         var img2 = $('<img>');
                         img = (x.image).toString();
                         if (img == ""){
                             img2 = $('<span>');
                             img2.addClass("glyphicon glyphicon-picture");
                             img2.attr("style","margin-top:20px");
-                        }
-                        else{
+                        } else {
+                            img2.data("parentDivId", "postImgDivNumber" + property);
                             img2.attr("src",(x.image).toString());
                             img2.addClass("center");
-                            img2.attr("style", "height:160px; width:auto")
+                            img2.attr("style", "height:160px; width:auto");
+                            img2.on("error", function() {
+                                var parentDiv = $("#" + $(this).data("parentDivId"))[0];
+                                console.log("Error loading image for post " + $(this).data("parentDivId") + " - Switching to gylphicon");
+                                var newimg2 = $('<span>');
+                                newimg2.addClass("glyphicon glyphicon-picture");
+                                newimg2.attr("style","margin-top:20px");
+                                $(parentDiv).empty();
+                                $(parentDiv).append(newimg2);
+                            });
                         }
                         img2.appendTo(imgDiv);
                         imgDiv.appendTo(divEl);
@@ -106,7 +134,11 @@ function getPostedFoods(x){
                         // CREATE DESCRIPTION & AUTHOR
                         var bodyCon = $("<p>");
                         bodyCon.text(x.description);
-                        var authorCon = "<br><small class = 'text-muted'><i>" + x.username + "</i><span class='userAvgRating" + x.username + "'></span></small><br>";
+                        var usernameToUse = x.username;
+                        if (localStorage.username === x.username) {
+                            usernameToUse += "(You)";
+                        }
+                        var authorCon = "<br><small class = 'text-muted'><i>" + usernameToUse + "</i><span class='userAvgRating" + x.username + "'></span></small><br>";
                         $.ajax({
                             type: "GET",
                             url: "/getUserRating",
@@ -224,7 +256,9 @@ function filterFoods(dataPass){
                      }
         }
         }
-
+    //sortFoodsToPost(foodsToPost,dataPass);
+    //foodsToPost = sortFoodsToPost(foodsToPost,dataPass);// MADELEINE DOES THIS GO HEREE???
+    //console.log(foodsToPost[0]);
     return foodsToPost;
 }
 
@@ -550,7 +584,11 @@ function seePost(x){
     // USER
     var user = $('<p>');
     var userLabel = "<br><i>Uploaded by </i>"
-    user.text(x.username);
+    if (localStorage.username === x.username) {
+        user.text(x.username + "(You)");
+    } else {
+        user.text(x.username);
+    }
     var userStars = $("<span>");
     userStars.attr("id", "userAvgRating");
     $.ajax({
@@ -568,26 +606,41 @@ function seePost(x){
     $("#modalRightColumn").append(userLabel);
     $("#modalRightColumn").append(user);
     // USER RATING (ADDED BY MIKE, SORRY IF IT MAKES THE MODAL LOOK BAD)
-    var userRating = $("<span>");
-    var userRatingLabel = "<br><i>Rate " + x.username + "</i><br>";
-    userRating.addClass("starRating");
-    // TODO Mike - load 'my' rating of this post's user, and display it?
-    for (var i = 5; i > 0; i--) {
-        var starInput = $("<input>");
-        starInput.attr("id", "rating" + i);
-        starInput.attr("type", "radio");
-        starInput.attr("name", "userrating");
-        starInput.attr("value", i);
-        starInput.data("user", x.username);
-        var starLabel = $("<label>");
-        starLabel.attr("for", "rating" + i);
-        starLabel.text(i);
-        userRating.append(starInput);
-        userRating.append(starLabel);
+    if (localStorage.username !== x.username) {
+        var userRating = $("<span>");
+        var userRatingLabel = "<br><i id='rateThisUserNameLabel'>Rate " + x.username + "</i><br>";
+        userRating.addClass("starRating");
+        for (var i = 5; i > 0; i--) {
+            var starInput = $("<input>");
+            starInput.attr("id", "rating" + i);
+            starInput.attr("type", "radio");
+            starInput.attr("name", "userrating");
+            starInput.attr("value", i);
+            starInput.data("user", x.username);
+            var starLabel = $("<label>");
+            starLabel.attr("for", "rating" + i);
+            starLabel.text(i);
+            userRating.append(starInput);
+            userRating.append(starLabel);
+        }
+        $.ajax({
+            type: "GET",
+            url: "/getMyRatingForUser",
+            data: {
+                me: localStorage.username,
+                them: x.username
+            },
+            success: function(data) {
+                if(data.rating) {
+                    $("#rateThisUserNameLabel").text("Change your rating of " + data.user);
+                    $("#rating" + data.rating).prop("checked", true);
+                }
+            }
+        });
+        $("#modalRightColumn").append(userRatingLabel);
+        $("#modalRightColumn").append(userRating);
     }
-    $("#modalRightColumn").append(userRatingLabel);
-    $("#modalRightColumn").append(userRating);
-  
+
     // CHAT BUTTON (ADDED BY SIMON, SORRY IF IT MESSES ANYTHING UP)
     $("#messageUser").attr("onclick","startChat('" + x.username + "')");
 
@@ -615,10 +668,55 @@ function seePost(x){
     });
 }
 
+function sortFoodsToPost(idList, dataReturned, sortBy){
+    sortArray = [];
+    console.log("HERE");
+    for(var property=0; property < dataReturned.length; property++) {
+                var x = dataReturned[property];
+                for (y in idList){
+                    if ((x._id).toString() == idList[y]){
+                        var dist = calculateDistance(x.latitude, x.longitude);
+                        user = [];
+                        user.push(x._id);
+                        user.push(dist);
+                    }
+                }
+        sortArray.push(user);
+    }
+    if (sortBy == "ascending"){
+        sortArray.sort(function(a,b){
+            return a[1] - b[1];
+        });
+    }
+    else if (sortBy == "descending"){
+        sortArray.sort(function(a,b){
+            return b[1] - a[1];
+        });
+     }
+
+    for (var xox in sortArray){
+        console.log(sortArray[xox][0] + "  : " + sortArray[xox][1]);
+    }
+    newFoodsToPostList =[];
+    for (var post = 0; post<sortArray.length;post++){
+        newFoodsToPostList.push(sortArray[post][0]);
+
+    }
+    console.log(newFoodsToPostList[0]);
+    return newFoodsToPostList;
+
+
+
+
+}
+
+
 function openModal(){
     alert("hey");
 }
 
+
+// MAP FUNCTION
 function setStorage(array){
 	mapData = JSON.stringify(array);
 	localStorage.setItem("GetData" , mapData);

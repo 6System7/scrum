@@ -1,3 +1,4 @@
+// Auto fill form from product object
 function useBarcodeInfo(item) {
     var title = item.generic_name;
     var imageUrl = item.image_url;
@@ -5,7 +6,7 @@ function useBarcodeInfo(item) {
     var labels = item.labels;
     var ingredients = item.ingredients_text_with_allergens;
     if (title || imageUrl || labelTags || labels || ingredients) {
-        if (confirm("Do you want to use the following information?\n\n" + title + "\n" + imageUrl + "\n" + ingredients)) {
+        if (confirm("Do you want to use the following information?\n\n" + title + "\n\n" + ingredients)) {
             if (title) {
                 $("#txtTitle").val(title);
             }
@@ -23,17 +24,28 @@ function useBarcodeInfo(item) {
     }
 }
 
+// Take a barcode, attempt to find a product object and call useBarcodeInfo
 function getBarcodeInfo(code) {
-    var fakePositives = {
-        // TODO Mike - and everyone - populate fake positives
+    // PLEASE NOTE
+    // The API we are using for getting product information from a barcode is both in beta and free,
+    // and is therefore very underpopulated, so the below mimics it with a few items that the API should contain
+    // but doesn't yet, and uses the API if the barcode is not found within this object. In production, the API
+    // would contain all the products we need, and this object would be removed entirely.
+    var productsNotYetInAPI = {
+        // TODO Everyone - populate with products that should be in the API but are not yet
         "5012035930592": {
             generic_name: "Haribo Gold Bears",
             image_url: "http://i.imgur.com/nHty93e.jpg",
             ingredients_text_with_allergens: "Glucose syrup, sugar, gelatine, dextrose, fruit juice from concentrate (apple, strawberry, raspberry, orange, lemon, pineapple), acid (citric acid), fruit and plant concentrates (nettle, orange, lemon, mango, passion fruit, elderberry, blackcurrant, apple, spinach, aronia, grape), flavour, elderberry extract, glazing agents (white and yellow beeswax, carnauba wax), fruit extract (carob), invert sugar syrup."
+        },
+        "5022313731773": {
+            generic_name: "Tropicana Smooth Orange Juice",
+            image_url: "http://i.imgur.com/LOSol0p.jpg",
+            ingredients_text_with_allergens: "100% orange juice, not from concentrate."
         }
     };
-    if (fakePositives.hasOwnProperty(code)) {
-        useBarcodeInfo(fakePositives[code]);
+    if (productsNotYetInAPI.hasOwnProperty(code)) {
+        useBarcodeInfo(productsNotYetInAPI[code]);
     } else {
         var apiURL = "http://world.openfoodfacts.org/api/v0/product/" + code + ".json";
         $.ajax({
@@ -52,6 +64,7 @@ function getBarcodeInfo(code) {
     }
 }
 
+// Sets up a Quagga.js viewport to scan a barcode, and call getBarcodeInfo when a barcode is recognised
 function scanBarcode() {
     if ($("#pnlBarcodeScreen").css("display") == "none") {
         $("#pnlBarcodeScreen").show();
@@ -227,10 +240,12 @@ function scanBarcode() {
                         type: "LiveStream",
                         constraints: {
                             width: {
-                                min: 640
+                                min: 320,
+                                max: 800
                             },
                             height: {
-                                min: 480
+                                min: 180,
+                                max: 450
                             },
                             facingMode: "environment",
                             aspectRatio: {
@@ -272,6 +287,7 @@ function scanBarcode() {
                     getBarcodeInfo(code);
                 }
             });
+            window.scrollTo(0, 0);
         } else {
             var alertDiv = $("<div>");
             alertDiv.addClass("alert alert-warning alert-dismissible");
@@ -298,9 +314,9 @@ function scanBarcode() {
     }
 }
 
+// Ensure that necessary inputs have values (image is not required)
 function validInputs() {
     // TODO Maddy? - nicer alerts in this section?
-
     var valid = true;
     $("#frmPost :input[type=text], textarea").each(function() {
         if (valid) {
@@ -321,6 +337,7 @@ function validInputs() {
     return valid;
 }
 
+// Serialise form data, attach image BLOB, attach district data from lat/long, send to server for saving
 function sendPostData() {
     if (validInputs()) {
         var formData = $("#frmPost").serializeArray();
@@ -360,8 +377,6 @@ function sendPostData() {
         } else {
             alert("WARNING - SUBMITTING WHILE NOT LOGGED IN");
         }
-
-        // @Mike, I Added saving location here as googleApi wasn't accessible from index.js
 
         var geocoder = new google.maps.Geocoder;
         var latlng = {
@@ -414,9 +429,12 @@ function sendPostData() {
     }
 }
 
+// Takes OPTIONAL webURL, if given, loads and compresses image to max 380x380 at webURL and puts in preview element
+// otherwise does that with selected file from file input
 function previewFile(webURL) {
     var preview = $("#imgPreview");
-    var file, reader;
+    var file = document.querySelector("input[type=file]").files[0];
+    var reader;
     var image = new Image();
     image.onload = function() {
         imageSelected = true;
@@ -447,7 +465,6 @@ function previewFile(webURL) {
         image.crossOrigin = "anonymous";
         image.src = webURL;
     } else if (file) {
-        file = document.querySelector("input[type=file]").files[0];
         reader = new FileReader();
         reader.onloadend = function() {
             image.src = reader.result;
@@ -458,8 +475,11 @@ function previewFile(webURL) {
     }
 }
 
+// Create a google map for location selection, start centered on lat lng
 function initMap(lat, lng) {
-    //The center location of our map. DURHAM IS 54.775250, -1.584852
+    //The center location of our map.
+    // DURHAM IS 54.775250, -1.584852
+    // School of engineering and computing sciences is 54.767230, -1.570390
     var centerOfMap = new google.maps.LatLng(lat, lng);
 
     //Map options.
@@ -501,6 +521,7 @@ function initMap(lat, lng) {
     });
 }
 
+// Update lat lng text boxes from marker position (must be called, not automatic)
 function markerLocation() {
     //Get location.
     var currentLocation = marker.getPosition();
@@ -509,12 +530,12 @@ function markerLocation() {
     $("#lng").val(currentLocation.lng()); //longitude
 }
 
+// When window has loaded, initialise map around current location, or default to school of engineering, durham uni
 google.maps.event.addDomListener(window, 'load', function() {
     navigator.geolocation.getCurrentPosition(function(pos) {
         initMap(pos.coords.latitude, pos.coords.longitude);
     }, function(error) {
-        initMap(54.77525, -1.584852);
-        // alert("Could not get your location, defaulting to Durham");
+        initMap(54.767230, -1.570390); // <--- school of engineering // center of durham --> 54.77525, -1.584852
     });
 });
 
@@ -523,6 +544,7 @@ var map; //Will contain map object.
 var marker = false;
 var postID;
 
+// page initialisation
 $(document).ready(function() {
     $("#pnlBarcodeScreen").hide();
 
@@ -537,6 +559,7 @@ $(document).ready(function() {
         previewFile();
     });
 
+    // Load post to edit if available into form, and clear from local storage to avoid getting stuck in edit mode
     if (localStorage.postToEdit) {
         $("#pageTitleH1").text("Edit a food item");
         // console.log(localStorage.postToEdit);

@@ -1,3 +1,4 @@
+// Load in user's own posts
 $(document).ready(function() {
     if (localStorage.username) {
         $.ajax({
@@ -29,6 +30,7 @@ $(document).ready(function() {
     }
 });
 
+// Take list of posts, generate cards for each post and place on page
 function generatePostCards(data) {
     $("#column0").empty();
     $("#column1").empty();
@@ -47,6 +49,7 @@ function generatePostCards(data) {
         // CREATE IMAGE
         var imgDiv = $('<div>');
         imgDiv.addClass("text-center");
+        imgDiv.attr("id", "postImgDivNumber" + property);
         var img2 = $('<img>');
         img = (x.image).toString();
         if (img == "") {
@@ -54,9 +57,19 @@ function generatePostCards(data) {
             img2.addClass("glyphicon glyphicon-picture");
             img2.attr("style", "margin-top:20px");
         } else {
+            img2.data("parentDivId", "postImgDivNumber" + property);
             img2.attr("src", (x.image).toString());
             img2.addClass("center");
-            img2.attr("style", "height:160px; width:auto")
+            img2.attr("style", "height:160px; width:auto");
+            img2.on("error", function() {
+                var parentDiv = $("#" + $(this).data("parentDivId"))[0];
+                console.log("Error loading image for post " + $(this).data("parentDivId") + " - Switching to gylphicon");
+                var newimg2 = $('<span>');
+                newimg2.addClass("glyphicon glyphicon-picture");
+                newimg2.attr("style","margin-top:20px");
+                $(parentDiv).empty();
+                $(parentDiv).append(newimg2);
+            });
         }
         img2.appendTo(imgDiv);
         imgDiv.appendTo(divEl);

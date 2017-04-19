@@ -1,70 +1,115 @@
-function loadRecommendations(){
-    $.getJSON("/getposts", function(postList){
+function loadRecommendations(username){
+    $.getJSON("/getPosts", function(postList){
+        $.getJSON("/getArchiveData", function(archiveData) {
 
-        var username = "JCJordan";
-        var filteredPostList = getStatsByUser(postList, username);
+            var filteredPostList = getStatsByUser(postList, username);
+            var statList = calcUserStats(filteredPostList, archiveData);
 
+        });
     });
 }
 
 function loadStats(){
     $.getJSON("/getPosts", function(postList){
+        $.getJSON("/getArchiveData", function(archiveData){
 
-        var statList = {
-            topFoodType: {hr: "Top Food Type", value: ""}, bottomFoodType: {hr: "Bottom Food Type", value: ""},
-            topMealType: {hr: "Top Meal Type", value: ""}, bottomMealType: {hr: "Bottom Meal Type", value: ""},
-            topFoodTypeByArea: {hr: "Top Food Type By Area", value: ""}, bottomFoodTypeByArea: {hr: "Bottom Food Type By Area", value: ""},
-            topMealTypeByArea: {hr: "Top Meal Type By Area", value: ""}, bottomMealTypeByArea: {hr: "Bottom Meal Type By Area", value: ""},
-            percentageCollected: {hr: "Percentage Collected", value: 0},
-            usageByLocation: {hr: "Usage By Location", value: ""}
-        };
+            var statList = calcFullStats(postList, archiveData);
 
-        var foodTypeData = getFoodTypeData(postList);
-        statList.topFoodType.value = foodTypeData.top;
-        statList.bottomFoodType.value = foodTypeData.bottom;
-        var mealTypeData = getMealTypeData(postList);
-        statList.topMealType.value = mealTypeData.top;
-        statList.bottomMealType.value = mealTypeData.bottom;
-        var foodTypeDataByArea = {top: {}, bottom: {}};
-        for(var key in foodTypeData.areaData){
-            foodTypeDataByArea.top[key] = foodTypeData.areaData[key].top;
-            foodTypeDataByArea.bottom[key] = foodTypeData.areaData[key].bottom;
-        }
-        statList.topFoodTypeByArea.value = foodTypeDataByArea.top;
-        statList.bottomFoodTypeByArea.value = foodTypeDataByArea.bottom;
-        var mealTypeDataByArea = {top: {}, bottom: {}};
-        for(var key in mealTypeData.areaData){
-            mealTypeDataByArea.top[key] = mealTypeData.areaData[key].top;
-            mealTypeDataByArea.bottom[key] = mealTypeData.areaData[key].bottom;
-        }
-        statList.topMealTypeByArea.value = mealTypeDataByArea.top;
-        statList.bottomMealTypeByArea.value = mealTypeDataByArea.bottom;
-        statList.percentageCollected.value = getPercentageCollected(postList);
-        statList.usageByLocation.value = getUsageByLocation(postList);
+            for(var key in statList){
 
-        for(var key in statList){
+                var table = document.getElementById("statList");
 
-            var table = document.getElementById("statList");
-
-            var row = table.insertRow(-1);
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            cell1.innerHTML = statList[key].hr;
-            if(typeof(statList[key].value) === "object"){
-                var ul = $('<ul>').css("list-style","none").css("padding-left", 0).appendTo(cell2);
-                for(var statKey in statList[key].value) {
-                    ul.append(
-                        $(document.createElement('li')).text(statKey + ": " + statList[key].value[statKey])
-                    );
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                cell1.innerHTML = statList[key].hr;
+                if(typeof(statList[key].value) === "object"){
+                    var ul = $('<ul>').css("list-style","none").css("padding-left", 0).appendTo(cell2);
+                    for(var statKey in statList[key].value) {
+                        ul.append(
+                            $(document.createElement('li')).text(statKey + ": " + statList[key].value[statKey])
+                        );
+                    }
+                } else {
+                    cell2.innerHTML = statList[key].value;
                 }
-            } else {
-                cell2.innerHTML = statList[key].value;
+
+
             }
-
-
-        }
-
+        });
     });
+}
+
+function calcFullStats(postList, archiveData){
+
+    var statList = {
+        topFoodType: {hr: "Top Food Type", value: ""}, bottomFoodType: {hr: "Bottom Food Type", value: ""},
+        topMealType: {hr: "Top Meal Type", value: ""}, bottomMealType: {hr: "Bottom Meal Type", value: ""},
+        topFoodTypeByArea: {hr: "Top Food Type By Area", value: ""}, bottomFoodTypeByArea: {hr: "Bottom Food Type By Area", value: ""},
+        topMealTypeByArea: {hr: "Top Meal Type By Area", value: ""}, bottomMealTypeByArea: {hr: "Bottom Meal Type By Area", value: ""},
+        percentageCollected: {hr: "Percentage Collected", value: 0},
+        usageByLocation: {hr: "Usage By Location", value: ""}
+    };
+
+    var foodTypeData = getFoodTypeData(postList);
+    statList.topFoodType.value = foodTypeData.top;
+    statList.bottomFoodType.value = foodTypeData.bottom;
+    var mealTypeData = getMealTypeData(postList);
+    statList.topMealType.value = mealTypeData.top;
+    statList.bottomMealType.value = mealTypeData.bottom;
+    var foodTypeDataByArea = {top: {}, bottom: {}};
+    for(var key in foodTypeData.areaData){
+        foodTypeDataByArea.top[key] = foodTypeData.areaData[key].top;
+        foodTypeDataByArea.bottom[key] = foodTypeData.areaData[key].bottom;
+    }
+    statList.topFoodTypeByArea.value = foodTypeDataByArea.top;
+    statList.bottomFoodTypeByArea.value = foodTypeDataByArea.bottom;
+    var mealTypeDataByArea = {top: {}, bottom: {}};
+    for(var key in mealTypeData.areaData){
+        mealTypeDataByArea.top[key] = mealTypeData.areaData[key].top;
+        mealTypeDataByArea.bottom[key] = mealTypeData.areaData[key].bottom;
+    }
+    statList.topMealTypeByArea.value = mealTypeDataByArea.top;
+    statList.bottomMealTypeByArea.value = mealTypeDataByArea.bottom;
+    statList.percentageCollected.value = getPercentageCollected(postList, archiveData[0]);
+    statList.usageByLocation.value = getUsageByLocation(postList);
+
+    return statList;
+
+}
+
+function calcUserStats(postList){
+
+    var statList = {
+        topFoodType: {hr: "Top Food Type", value: ""}, bottomFoodType: {hr: "Bottom Food Type", value: ""},
+        topMealType: {hr: "Top Meal Type", value: ""}, bottomMealType: {hr: "Bottom Meal Type", value: ""},
+        topFoodTypeByArea: {hr: "Top Food Type By Area", value: ""}, bottomFoodTypeByArea: {hr: "Bottom Food Type By Area", value: ""},
+        topMealTypeByArea: {hr: "Top Meal Type By Area", value: ""}, bottomMealTypeByArea: {hr: "Bottom Meal Type By Area", value: ""}
+    };
+
+    var foodTypeData = getFoodTypeData(postList);
+    statList.topFoodType.value = foodTypeData.top;
+    statList.bottomFoodType.value = foodTypeData.bottom;
+    var mealTypeData = getMealTypeData(postList);
+    statList.topMealType.value = mealTypeData.top;
+    statList.bottomMealType.value = mealTypeData.bottom;
+    var foodTypeDataByArea = {top: {}, bottom: {}};
+    for(var key in foodTypeData.areaData){
+        foodTypeDataByArea.top[key] = foodTypeData.areaData[key].top;
+        foodTypeDataByArea.bottom[key] = foodTypeData.areaData[key].bottom;
+    }
+    statList.topFoodTypeByArea.value = foodTypeDataByArea.top;
+    statList.bottomFoodTypeByArea.value = foodTypeDataByArea.bottom;
+    var mealTypeDataByArea = {top: {}, bottom: {}};
+    for(var key in mealTypeData.areaData){
+        mealTypeDataByArea.top[key] = mealTypeData.areaData[key].top;
+        mealTypeDataByArea.bottom[key] = mealTypeData.areaData[key].bottom;
+    }
+    statList.topMealTypeByArea.value = mealTypeDataByArea.top;
+    statList.bottomMealTypeByArea.value = mealTypeDataByArea.bottom;
+
+    return statList;
+
 }
 
 function getFoodTypeData(postList){
@@ -239,9 +284,15 @@ function getMealTypeData(postList){
     return mealTypeData;
 }
 
-// TODO: Figure out how to do this function
-function getPercentageCollected(postList){
-    return 0;
+function getPercentageCollected(postList, archiveData){
+
+    var totalNumberOfPosts = postList.length + archiveData.deletedPostsAmount;
+    var totalCollectedPosts = archiveData.collectedPostsAmount;
+
+    var percentageCollected = (totalCollectedPosts / totalNumberOfPosts * 100);
+
+    return  Number(Math.round(percentageCollected+'e2')+'e-2') + "%";
+
 }
 
 function getUsageByLocation(postList){

@@ -62,13 +62,16 @@ app.get("/", function(req, res) {
 });
 
 // POSTS
+// Path for saving a new or edited post
 app.post("/addPost", function(req, res) {
     var post = req.body.postToPost;
 
+    // Ensure any _id is in mongodb format (when editing a post, this ensures it REPLACES the original)
     if (post._id && typeof post._id === 'string') {
         post._id = ObjectID.createFromHexString(post._id);
     }
 
+    // Save attached images to disk if not already saved
     if (post.image && post.saveImage) {
         var regex = /^data:.+\/(.+);base64,(.*)$/;
         var matches = post.image.match(regex);
@@ -109,6 +112,7 @@ app.post("/addPost", function(req, res) {
     });
 });
 
+// Path for removing a post from the database
 app.post("/deletePost", function(req, res) {
     res.setHeader("Content-Type", "application/json");
     if (req.body.id) {
@@ -117,7 +121,7 @@ app.post("/deletePost", function(req, res) {
             _id: ObjectID.createFromHexString(req.body.id)
         });
         res.send(JSON.stringify({
-            note: "success?"
+            note: "success"
         }));
     } else {
         console.log("No ID for deleting");
@@ -127,6 +131,7 @@ app.post("/deletePost", function(req, res) {
     }
 });
 
+// Path to retrieve list of all posts, with the option to specify a specific post id, or a username, to limit the list
 app.get("/getPosts", function(req, res) {
     var queryObj = {};
     if (req.query.id) {
@@ -146,6 +151,7 @@ app.get("/getPosts", function(req, res) {
     });
 });
 
+// Path to remove any images that are not in use, to free disk space
 app.get("/removeUnusedImages", function(req, res) {
     console.log("Removing any unsused images...");
     var folder = "./post-images/";
@@ -230,6 +236,7 @@ app.post("/editUser", function(req, res) {
     }
 });
 
+// Path to apply a 1-5 rating to a specific user, and calculate their new average rating
 app.post("/rateUser", function(req, res) {
     var rater = req.body.me;
     var ratee = req.body.them;
@@ -250,7 +257,7 @@ app.post("/rateUser", function(req, res) {
                     sum += Number(user.ratings[username]);
                     count += 1;
                 }
-                user.rating = sum / count;
+                user.rating = Math.round(10 * sum / count) / 10;
                 db.collection("users").save(user, function(err, results) {
                     if (err) {
                         res.send(err.toString());
@@ -265,6 +272,7 @@ app.post("/rateUser", function(req, res) {
     }
 });
 
+// Path to retrieve a user's average rating
 app.get("/getUserRating", function(req, res) {
     res.setHeader("Content-Type", "application/json");
     var user = req.query.username;
@@ -275,6 +283,27 @@ app.get("/getUserRating", function(req, res) {
             rating: document.rating,
             username: user
         }));
+    });
+});
+
+// Path to retrieve the specific rating of one user by another
+app.get("/getMyRatingForUser", function(req, res) {
+    res.setHeader("Content-Type", "application/json");
+    var me = req.query.me;
+    var them = req.query.them;
+    db.collection("users").findOne({
+        username: them
+    }, function(err, document) {
+        if (!err && document.ratings && document.ratings[me]) {
+            res.send(JSON.stringify({
+                rating: document.ratings[me],
+                user: them
+            }));
+        } else {
+            res.send(JSON.stringify({
+                error: "You have not rated this user"
+            }));
+        }
     });
 });
 
@@ -623,13 +652,14 @@ app.post("/addRoom", function(req, res) {
     });
 });
 
+// 404 route, for any unrecognised request
 app.get("*", function(req, res) {
     res.redirect('/404.html');
 });
 
-//Start server and listen on port 8080
+//Start server and listen on port 8080, if no port defined (by heroku)
 server.listen(process.env.PORT || 8080, function() {
-    console.log("Live at Port " + (process.env.PORT || "8080"));
+    console.log("Live at port " + (process.env.PORT || "8080"));
 });
 
 //Chat stuff

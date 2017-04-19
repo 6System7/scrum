@@ -81,7 +81,7 @@ body {
     text-align: center;
 }
 
-#btnScanBarcode {
+#btnScanBarcode, #btnSubmitPost {
     width: 100%;
     margin-bottom: 8px;
     background-color: #1C939B;
@@ -89,8 +89,24 @@ body {
     border-width: 2px;
 }
 
+.lblLatLongNeedMargins {
+    margin-top: 10px;
+}
+
+.googleMapPostLocationDiv {
+    max-width: 97%;
+}
+
+.marginbottomfivepixels {
+    margin-bottom: 5px;
+}
+
 #btnStopBarcodeScanning {
     margin: 8px;
+}
+
+#pnlDietaryRequirementsForMargin, #pnlMiscOptionsForMargin {
+    margin-bottom: 8px;
 }
 
 .drawingBuffer {

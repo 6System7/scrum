@@ -125,6 +125,16 @@
                         <!-- TODO -->
                         <label for="trcDistanceSlider" id="distLabel">Search radius(km): 1000</label>
                         <input type="range" id="trcDistanceSlider" id="points" value="1000" min="0" max="1000" data-show-value="true" onchange="updateSlider(this.value)">
+                       
+                      
+                            Sort By:
+                            <select name="sortByOptions" id="sortByOptions">
+                                <option value="options">See Options</option>
+                                <option value="proximityClosest">Proximity - closest</option>
+                                <option value="proximityFurthest">Proximity - furthest</option>
+                            </select>
+                       
+
                     </div>
                 </div>
             </div>
@@ -272,9 +282,11 @@
                 </div>
             </div>
         </div>
+        
         <div id = "iframediv" class ="text-center">
             <iframe id = "mapIframe" src="maps_prototype.html"></iframe>
         </div>
+
         <div class="modal fade" id="seePostsModal" role="dialog">
             <div class="modal-dialog">
             <!-- modal content-->
@@ -344,6 +356,7 @@
     <script type="text/javascript" src="findFoodTwo.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
     <script type="text/javascript" src="notifications.js"></script>
+   <!-- <script type="text/javascript" src="mapScripts.js"></script>-->
 </body>
 
 </html>
