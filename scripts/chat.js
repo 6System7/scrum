@@ -2,7 +2,6 @@
 $(function() {
   
   // Initialize variables
-  var FADE_TIME = 150; // ms
   var $window = $(window);
   var $messages = $('#messages'); // Messages area
   var $inputMessage = $('#input'); // Input message input box
@@ -15,7 +14,6 @@ $(function() {
   
   // Sends a chat message
   function sendMessage () {
-    console.log("Current room is:", currentRoom);
     var message = $inputMessage.val();
     // Prevent markup from being injected into the message
     message = cleanInput(message);
@@ -130,7 +128,6 @@ $(function() {
 
   // Adds a message element to the messages and scrolls to the bottom
   // el - The element to add as a message
-  // options.fade - If the element should fade-in (default = true)
   // options.prepend - If the element should prepend
   //   all other messages (default = false)
   function addMessageElement (el, options) {
@@ -140,23 +137,17 @@ $(function() {
     if (!options) {
       options = {};
     }
-    if (typeof options.fade === 'undefined') {
-      options.fade = true;
-    }
     if (typeof options.prepend === 'undefined') {
       options.prepend = false;
-    }
-
-    // Apply options
-    if (options.fade) {
-      $el.hide().fadeIn(FADE_TIME);
     }
     if (options.prepend) {
       $messages.prepend($el);
     } else {
       $messages.append($el);
     }
-    $messages[0].scrollTop = $messages[0].scrollHeight;
+    $('#messages_div').animate({
+      scrollTop: $messages[0].scrollHeight
+    }, 0);
   }
 
   // Prevents input from having injected markup
@@ -169,7 +160,6 @@ $(function() {
     if(rooms.indexOf(socket.id) >= 0) {
       rooms.splice(rooms.indexOf(socket.id), 1);
     }
-    console.log('New rooms:', rooms);
     //Clear any previously displayed rooms
     $('#rooms').html('');
     //Display the new topics
@@ -193,8 +183,6 @@ $(function() {
       document.getElementById('rooms').innerHTML += '<a id="' + rooms[index] + '" onclick="setItemActive(\'' + rooms[index] + '\'); return false;" class="list-group-item">' + other_user + '</a>';
     }
     // Rooms have now been updated
-    
-    // Make the currentRoom active again - TODO
   }
   
   // Retrieves messages for the given room from the database
@@ -310,7 +298,6 @@ $(function() {
           // Join these rooms
           for(var i = 0; i < rooms.length; i++) {
             socket.emit('joinRoom', rooms[i]);
-            console.log('Requesting to join room', rooms[i]);
           }
           // Update the page
           updateRooms(rooms);
@@ -327,7 +314,6 @@ $(function() {
         // Join these rooms
         for(var i = 0; i < rooms.length; i++) {
           socket.emit('joinRoom', rooms[i]);
-          console.log('Requesting to join room', rooms[i]);
         }
         // Update the page
         updateRooms(rooms);
@@ -344,11 +330,18 @@ $(function() {
   // Socket events
   
   // When the server emits 'chat message', add this to the list of messages displayed on the screen
-  socket.on('chat message', function(user, msg){
-    console.log('message received');
-    $('#messages').append('<li><strong>' + user + ': </strong>' + msg + '</li>');
-    window.scrollTo(0, document.body.scrollHeight);
-    console.log("Incoming message:", msg);
+  socket.on('chat message', function(username, message, room){
+    var data = {
+      username: username,
+      message: message,
+      room: room
+    }
+    console.log("message data", data);
+    // Only display the message if this room is currently selected
+    console.log("room comparison:", data.room, currentRoom);
+    if(data.room == currentRoom) {
+      addChatMessage(data);
+    }
   });
   
   socket.on('login', function() {
