@@ -10,7 +10,7 @@
   * ~~FR0.5 Barcode Scanning~~
   * ~~FR0.6 Navigation/Links~~
   * FR0.7 Integrated Map (With Markers)
-  * FR0.8 Chat Service
+  * ~~FR0.8 Chat Service~~
   * FR0.9 Point System
   * ~~FR0.10 User Rating System~~
   * ~~FR0.11 Password Control~~
