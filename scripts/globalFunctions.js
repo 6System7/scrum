@@ -22,8 +22,30 @@ function getUsername(){
     var username = localStorage.username;
     if(username !== undefined){
         $("#navBarUsername").text(username);
+        $("#btnlogOut").show();
     } else {
         $("#navBarUsername").text("Not Logged In");
+        $("#btnlogOut").hide();
+    }
+}
+
+function logOut() {
+    if(localStorage.username) {
+        $.ajax({
+            type: "POST",
+            url: "/editUser",
+            data: {
+                username: localStorage.username,
+                field: "authkey",
+                newValue: ""
+            },
+            dataType: "json",
+            success: function(data) {
+                delete localStorage.username;
+                delete localStorage.authkey;
+                location.reload();
+            }
+        });
     }
 }
 
@@ -109,4 +131,3 @@ function changeUserSettings(username, setting, newValue){
 
 
 }
-

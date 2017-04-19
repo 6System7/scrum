@@ -6,7 +6,7 @@ function useBarcodeInfo(item) {
     var labels = item.labels;
     var ingredients = item.ingredients_text_with_allergens;
     if (title || imageUrl || labelTags || labels || ingredients) {
-        if (confirm("Do you want to use the following information?\n\n" + title + "\n" + imageUrl + "\n" + ingredients)) {
+        if (confirm("Do you want to use the following information?\n\n" + title + "\n\n" + ingredients)) {
             if (title) {
                 $("#txtTitle").val(title);
             }
@@ -26,9 +26,13 @@ function useBarcodeInfo(item) {
 
 // Take a barcode, attempt to find a product object and call useBarcodeInfo
 function getBarcodeInfo(code) {
-    // API is beta and very underpopulated, so this mimics it with a few items that the API should contain but doesn't yet
-    var fakePositives = {
-        // TODO Mike AND EVERYONE - populate fake positives
+    // PLEASE NOTE
+    // The API we are using for getting product information from a barcode is both in beta and free,
+    // and is therefore very underpopulated, so the below mimics it with a few items that the API should contain
+    // but doesn't yet, and uses the API if the barcode is not found within this object. In production, the API
+    // would contain all the products we need, and this object would be removed entirely.
+    var productsNotYetInAPI = {
+        // TODO Everyone - populate with products that should be in the API but are not yet
         "5012035930592": {
             generic_name: "Haribo Gold Bears",
             image_url: "http://i.imgur.com/nHty93e.jpg",
@@ -40,8 +44,8 @@ function getBarcodeInfo(code) {
             ingredients_text_with_allergens: "100% orange juice, not from concentrate."
         }
     };
-    if (fakePositives.hasOwnProperty(code)) {
-        useBarcodeInfo(fakePositives[code]);
+    if (productsNotYetInAPI.hasOwnProperty(code)) {
+        useBarcodeInfo(productsNotYetInAPI[code]);
     } else {
         var apiURL = "http://world.openfoodfacts.org/api/v0/product/" + code + ".json";
         $.ajax({
