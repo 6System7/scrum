@@ -676,10 +676,10 @@ io.on('connection', function(socket) {
         socket.to(room).emit('chat message', socket.username, msg);
         // Check if the other user in this room is online. If not, prompt this user to notify that user
         var other_user;
-        var room_users = rooms[index].split("-");
-        if(room_users[0] == username) {
+        var room_users = room.split("-");
+        if(room_users[0] == socket.username) {
             other_user = room_users[1];
-        } else if(room_users[1] == username) {
+        } else if(room_users[1] == socket.username) {
             other_user = room_users[0];
         } else {
             console.log("Error in chat notification code.");
