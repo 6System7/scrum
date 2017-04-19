@@ -51,19 +51,13 @@ $(document).ready(function(){
 function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
     var notifsCurrentlySeen = thisUserData.settings.notifsSeen;
     //// iterate thorugh if not in post add it !!
-    //if (notifsCurrentlySeen == undefined){
-        createFirstListOfNotifs = [];
-   // }
- //  notifsCurrentlySeen.push("HEY");
-    
-    //thisUserData.settings.notifsSeen.push("HERE");
-    
-    var settings = (thisUserData.settings);
-    console.log(thisUserData.settings);
-    for (var x in Object.keys(settings)){
-        console.log(Object.keys(settings)[x]);
-        console.log(x)
+    if (notifsCurrentlySeen == ""){
+        console.log("Creating first list of notifcations ")
+        notifsCurrentlySeen = [];
     }
+        // AT THE END REMEMBER TO ADD THIS TO NOTIFSEEN
+   // }
+   //  notifsCurrentlySeen.push("HEY");
     // count all notifs
     // if numbers different, add most recent
     var dataPass = dataPassReturned;
@@ -89,7 +83,12 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
             //alert(localStorage.settings[notificationsSeen]);
             
             if (dist < userDistance && localStorage.username != foodPost.username){
+                // NOW CHECK WHETHERS ITS ALREADY THERE
+            
+                if (notifsCurrentlySeen.includes(foodPost._id) == false){
+                    console.log("HERE");
                 counter++;
+                    notifsCurrentlySeen.push(foodPost._id);
              //   if (notifs)
                 
                     
@@ -141,10 +140,11 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
                 bodyDiv.appendTo(notifDiv);
               
                 $("#notificationList").append(notifList);
-
+                }
 
             }
-    
+    // So it goes through and only adds it if its NOT
+    // in the list. 
         }
     // alert($("#notificationList > li").length)
     // CHANGE NOTIFCAITON NUMBER
@@ -154,10 +154,22 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
         
     //}
         
-    
+    //thisUserData.settings.notifsSeen = notifsCurrentlySeen;
+    var newSettings = thisUserData.settings;
+    newSettings.notifsSeen = notifsCurrentlySeen;
+    console.log("OLD SETTINGS");
+    console.log(thisUserData.settings);
    $("#counter").text("  " +counter.toString());
     var previousCounter = counter;
-   
+    var updateData = {username: localStorage.username, field: "settings", newValue: newSettings};
+    $.ajax({
+        type: "POST",
+        url: "/editUser",
+        data: updateData,
+        dataType: "json"
+        
+    });
+   // NOW REPUSH
 }
     
 
