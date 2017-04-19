@@ -20,7 +20,7 @@
 
 ### FR1 - Back-End Server Functionality  
   * ~~FR1.1 Database Management~~  
-  * FR1.2 Intelligent Data Analysis  
+  * ~~FR1.2 Intelligent Data Analysis~~  
 
 ## Non-Functional Requirements
 
