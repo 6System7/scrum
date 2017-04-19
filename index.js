@@ -40,6 +40,7 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/less', express.static(__dirname + '/node_modules/bootstrap/dist/less'));
 app.use('/jquery', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use('/fonts', express.static(__dirname + '/node_modules/bootstrap/fonts'));
+app.use('/leaflet', express.static(__dirname + '/node_modules/leaflet/dist'));
 app.use('/quagga', express.static(__dirname + '/node_modules/quagga/dist'));
 app.use(express.static('pages'));
 app.use(express.static('scripts'));
