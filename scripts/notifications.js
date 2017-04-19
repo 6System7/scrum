@@ -2,6 +2,7 @@ var userDistance;
 //Notifications 
 var userLong;
 var userLang;
+var thisUserData;
 
 $(document).ready(function(){
     getUserDistance();
@@ -13,7 +14,15 @@ $(document).ready(function(){
         //console.log(currentLong);
     
   //  console.log(currentLong);
-    
+        $.getJSON("/getUsers", function(jsonData){
+            for (var i=0; i<jsonData.length; i++){
+                
+                if (jsonData[i].username == localStorage.username){
+                    thisUserData = (jsonData[i]);
+                    console.log("USER DATA DEFINED");
+                }
+            }
+        })
     $.ajax({
         url: "/getPosts",
         type: "GET",
@@ -35,13 +44,40 @@ $(document).ready(function(){
     })
     
 }) // end of getNotifications
-});
+})
 
 
 // TODOeventually pass in distance as parameter?
 function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
+    var notifsCurrentlySeen = thisUserData.settings.notifsSeen;
+    //// iterate thorugh if not in post add it !!
+    //if (notifsCurrentlySeen == undefined){
+        createFirstListOfNotifs = [];
+   // }
+ //  notifsCurrentlySeen.push("HEY");
+    
+    //thisUserData.settings.notifsSeen.push("HERE");
+    
+    var settings = (thisUserData.settings);
+    for (var x in Object.keys(settings)){
+        console.log(Object.keys(settings)[x]);
+        console.log(x)
+    }
+    // count all notifs
+    // if numbers different, add most recent
     var dataPass = dataPassReturned;
     var counter = 0;
+    
+    var yyy = localStorage.settings;
+    for(var i = 0; i < localStorage.length; i++) {
+        var userData = localStorage[i];
+        //var usernameDB = userData.username;
+    }
+        
+    var chosenPosts = [];
+   // for (var category = 0; category < Object.keys(localStorage)["GetData"].length; category++){
+
+     //        alert((Object.keys(localStorage)[category]).toString());
   
         // CALCULATE DISTANCE OF POSTS AND COMPARE
         for (var foodPostElem = 0; foodPostElem < dataPass.length; foodPostElem++){ //iterate through posts
@@ -49,10 +85,13 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
             var foodPost = dataPass[foodPostElem]; //alert(foodPost._id);  
             var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, currentLang, currentLong)
             var title = foodPost.title;
+            //alert(localStorage.settings[notificationsSeen]);
+            
             if (dist < userDistance && localStorage.username != foodPost.username){
                 counter++;
+             //   if (notifs)
                 
-
+                    
                 // CREATE NEARBY POST
 
                 // CREATE LIST
@@ -99,14 +138,25 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
                 
                 // FINALISE
                 bodyDiv.appendTo(notifDiv);
-                console.log(notifList.toString());
+              
                 $("#notificationList").append(notifList);
 
 
-            } 
+            }
+    
         }
+    // alert($("#notificationList > li").length)
     // CHANGE NOTIFCAITON NUMBER
+    // use counter to check against:
+    //for (var checkPosts = chosenPosts.length; checkPosts > 0; checkPosts--){
+        
+        
+    //}
+        
+    
    $("#counter").text("  " +counter.toString());
+    var previousCounter = counter;
+   
 }
     
 
@@ -190,9 +240,9 @@ function changeDistance(){
         // TODO add a listening click button
     }
 
-
-
 }
+
+
    /* $.get('account.html', null, function(result){
         //var obj = $(result).find($('#distanceNearby').val());
         obj = $(result).find($('distanceNearby').val());

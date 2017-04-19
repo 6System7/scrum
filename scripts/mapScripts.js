@@ -1,6 +1,11 @@
-var markers = new L.LayerGroup();
-markers.clearLayers();
-markers.addTo(mymap);
+var mymap = L.map('mapid').setView([54.77, -1.57], 13);
+			L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+				maxZoom: 20,
+				attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + 
+					'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+					'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+				id: 'mapbox.streets'
+			}).addTo(mymap);
 function setUp(){
 	var lat = [];
 	var lon = [];
@@ -44,6 +49,9 @@ function setUp(){
 	
 	function placePointer(x,y,type,fType,fCountry,desc){
 		var i;
+		var markers = new L.LayerGroup();
+		markers.clearLayers();
+		markers.addTo(mymap);
 		console.log(x,y);
 		for (i =0; i < x.length; i++){
 			marker = new L.marker([x[i],y[i]]).bindPopup("Meal Type: " + type[i] +
