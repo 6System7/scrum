@@ -511,7 +511,6 @@ app.get("/socket.io/socket.io.js", function(req, res) {
 
 app.get("/getRooms", function(req, res) {
     var username = req.query.username;
-    console.log('Attempting to get rooms for user', username);
     db.collection("rooms").findOne({
         username: username
     }, function(err, results) {
@@ -528,7 +527,6 @@ app.get("/getRooms", function(req, res) {
 
 app.get("/getMessages", function(req, res) {
     var room = req.query.room;
-    console.log('Attempting to get messages for room', room);
     db.collection("messages").findOne({
         room: room
     }, function(err, results) {
@@ -616,7 +614,7 @@ app.post("/addRoom", function(req, res) {
             db.collection("rooms").findOne({
                 username: user
             }, function(err, results) {
-                if (!err) {
+                if (results !== null) {
                     if (results.rooms.indexOf(room) < 0) {
                         // Room is not already stored, so add it
                         db.collection("rooms").update({
@@ -703,13 +701,13 @@ io.on('connection', function(socket) {
 
     // when the client emits 'message', send the msg to the given room
     socket.on('message', function(room, msg) {
-        socket.to(room).emit('chat message', socket.username, msg);
+        socket.to(room).emit('chat message', socket.username, msg, room);
         // Check if the other user in this room is online. If not, prompt this user to notify that user
         var other_user;
-        var room_users = rooms[index].split("-");
-        if(room_users[0] == username) {
+        var room_users = room.split("-");
+        if(room_users[0] == socket.username) {
             other_user = room_users[1];
-        } else if(room_users[1] == username) {
+        } else if(room_users[1] == socket.username) {
             other_user = room_users[0];
         } else {
             console.log("Error in chat notification code.");

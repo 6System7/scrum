@@ -1,20 +1,4 @@
 <!DOCTYPE html>
-<!--TODO
-- Make messages list scrollable independently of rest
-- Sort contacts/rooms/people list in order of time since last message sent/received
-  - Store a Date() object with room? Or pull messages from messages collection (db access heavy)
-
-- one to one functionality
-  - finalise room naming convention - DONE
-  - functionality for allowing one user to make another user join a room
-    - Broadcast username of recipient, if broadcasted username matches own username, join specified room
-    - Emit (room) to user's id's room, prompting that user to emit to joinRoom(room) - thus establishing connection
-    - Provide a global function
-    - When called, redirects user to chat page
-    - Prompts their socket to initiate chat, after handshake
-    - E.g. send them to SERVERURL/chat.html?contact=USERNAME
--->
-
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -23,17 +7,16 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="Group Project Assignment" content="">
     <meta name="6System7" content="">
-
     <title>SCRUM - Food sharing app</title>
     <!-- jQuery -->
     <script type="text/javascript" src="/jquery/jquery.min.js"></script>
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="/css/scrumFormat.css" rel="stylesheet">
-     </head>
+    <link href="scrumFormat.css" rel="stylesheet">
+  </head>
 
-  <body>
+  <body style="overflow: hidden;">
     <!--Bootstrap Navigation Bar-->
     <nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
       <div class="container">
@@ -50,9 +33,9 @@
         </div>
         <div id="navbarContent" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-
-            <li class="dropdown dropdown-notifications" >
+              <li class="dropdown dropdown-notifications" >
                 <!--Todo: want to make it pull left. -->
+<<<<<<< HEAD
                     <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton"><span class="badge badge-error" id="notificationsBadge">
                             <i class="glyphicon glyphicon-bell"></i>
                             <div id = "counter">
@@ -60,25 +43,39 @@
                             </div>
                             </span>
                     </a>
+=======
+            <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton"><span class="badge badge-error" id="notificationsBadge">
+              <i class="glyphicon glyphicon-bell"></i>
+                <div id = "counter">
+                            
+                </div>
+              </span>  
+            </a>
+
+>>>>>>> origin/master
               <ul class = "dropdown-menu" id = "notificationsPanel">
                 <div class="container" id = "allNotifs">
                   <h3>Notifications</h3>
+
+                    <div class="panel-group" id ="groupNotifPanels">
                     <!-- where the notifications will be put -->
+<<<<<<< HEAD
                     <ul class="list-unstyled" id="notificationList">
 
+=======
+                   <ul class="list-unstyled" id="notificationList">
+                                        
+>>>>>>> origin/master
                                     </ul>
+                    </div>
                 </div><!--/.nav-collapse -->
                 </ul>
-            </li>
             <li><a href="home.html">Home</a></li>
             <li><a href="postManagement.html">Manage Posts</a></li>
             <li><a href="findfood.html">Find Food</a></li>
             <li><a href="loginAndRegister.html">Login &amp; Register</a></li>
-              <li><a href="account.html">Account Settings</a></li>
+            <li><a href="account.html">Account Settings</a></li>
             <li class="active"><a href="chat.html">Messages</a></li>
-
-
-
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a id="navBarUsername" href="loginAndRegister.html"></a></li>
@@ -88,9 +85,11 @@
       </div>
     </nav>
 
-
+<!--TODO
+  - Sort contacts/rooms/people list in order of time since last message sent/received
+  - Store a Date() object with room? Or pull messages from messages collection (db access heavy)
+-->
     <div class="container-fluid">
-<!--        TODO: Make People list scrollable-->
         <style>
           form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 83%; }
           form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
@@ -99,22 +98,17 @@
           #messages li { padding: 5px 10px; }
           #messages li:nth-child(odd) { background: #eee; }
           #messages { margin-bottom: 40px }
-          #messages { max-height: 100%}
         </style>
       <div class="row">
-            <div class="col-md-2"><h1>People</h1></div>
-            <div class="col-md-10"><h1>Messages</h1></div>
-
+        <div class="col-md-2"><h1>People</h1></div>
+        <div class="col-md-10"><h1>Messages</h1></div>
       </div>
       <div class="row">
         <div class="col-md-2">
           <!--div class to be filled with chat rooms once they've been loaded-->
-          <div class="list-group" id="rooms">
-          </div><div>Note: capitalisation of usernames <strong>does</strong> matter.</div><input id="connectInput" autocomplete="off" />
-          <button class="btn btn-primary" type="submit" id="connectButton">Connect with this user</button>
-<!--          <button class="btn" type="submit" id="updateRooms">update Rooms</button>-->
+          <div class="list-group" id="rooms" style="overflow-y: auto; height: 86.4vh;"></div>
         </div>
-        <div class="col-md-10" style="position:relative">
+        <div class="col-md-10" style="position:relative; height: 82.5vh; overflow-y: auto;" id="messages_div">
           <!--div class to be filled with chat messages once they've been loaded-->
           <ul id="messages"></ul> <!-- List that holds messages displayed on screen -->
           <form action="">
@@ -122,7 +116,6 @@
           </form>
         </div>
       </div>
-
     </div><!-- /.container -->
 
     <script type="text/javascript">
@@ -150,7 +143,6 @@
       }
 
     </script>
-
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
