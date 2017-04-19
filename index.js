@@ -9,7 +9,6 @@ var ObjectID = require("mongodb").ObjectID;
 var fs = require("fs");
 var app = express();
 var path = __dirname + "/";
-var savedRes;
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
@@ -650,6 +649,47 @@ app.post("/addRoom", function(req, res) {
                 }
             });
         });
+    });
+});
+
+// PREDICTIONS
+
+app.post("/addPrediction", function(req, res) {
+    var prediction = {};
+    prediction.username = req.body.user;
+    prediction.predicition = req.body.prediction;
+
+    db.collection("predictions").remove({
+        username: req.body.user
+    }, function(err, results) {
+        if (err) {
+            console.log("Deleting prediction failed: " + err.toString());
+        } else {
+            console.log("Deleted prediction successfully");
+        }
+    });
+
+    db.collection("predictions").save(prediction, function(err, results) {
+        if (err) {
+            res.send(err.toString());
+            console.log("Saving prediction template failed: " + err.toString());
+        } else {
+            res.send(results);
+            console.log("Saved prediction successfully");
+        }
+    });
+});
+
+app.get("/getPredictions", function(req, res) {
+    db.collection("predictions").find().toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
+        } else {
+            res.send(JSON.stringify(results));
+        }
     });
 });
 

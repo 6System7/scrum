@@ -3,7 +3,6 @@ window.onload = pageLoad();
 function pageLoad(){
     getUsername();
     redirectCheck();
-    loadRecommendations(localStorage.username);
 }
 
 function redirectCheck(){
@@ -29,6 +28,7 @@ function getUsername(){
     if(username !== undefined){
         $("#navBarUsername").text(username);
         $("#btnlogOut").show();
+        loadRecommendations(localStorage.username);
     } else {
         $("#navBarUsername").text("Not Logged In");
         $("#btnlogOut").hide();

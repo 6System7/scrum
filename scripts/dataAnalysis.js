@@ -30,7 +30,13 @@ function loadRecommendations(username){
                 }
             }
 
-            var prediction = "This user is more likely to give away food with types: \"" + topFoodType.hr + "\" and/or \"" + topMealType.hr + "\"."
+            var prediction = "more likely to give away food with types: \"" + topFoodType.hr + "\" and/or \"" + topMealType.hr + "\".";
+
+            $.ajax({
+                type: "POST",
+                url: "/addPrediction",
+                data: {user: username, prediction: prediction}
+            });
 
             for(var i in recommendations.foodTypes){
                 addToNotificationList(recommendations.foodTypes[i]);
