@@ -93,7 +93,7 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
         var foodPost = dataPass[foodPostElem];  
         var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, currentLang, currentLong)
         var title = foodPost.title; 
-                    console.log(dist + "   " + userDistance);
+                   // console.log(dist + "   " + userDistance);
 
         if (dist < userDistance && localStorage.username != foodPost.username){
             // NOW CHECK WHETHERS ITS ALREADY THERE
@@ -101,7 +101,7 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
                 
                 counter++;
                 notifsCurrentlySeen.push(foodPost._id); 
-                    console.log("create  xw Post");
+                   // console.log("create  xw Post");
 
                 createNearbyPost(foodPost, dist);
             }
@@ -115,7 +115,7 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
     // So it goes through and only adds it if its NOT
     // in the list. 
     }
-     console.log(oldPosts.length);
+  //   console.log(oldPosts.length);
 
     // CHANGE NOTIFCAITON NUMBER
     // use counter to check against:
@@ -180,7 +180,7 @@ function createNearbyPost(foodPost, dist){
                 seePostButton.attr("href","findFood.html");
                 //seePostButton.attr("onClick", "return openModal()")
                 seePostButton.click(function(){
-                    alert(foodPost.title);
+                   // alert(foodPost.title);
                     //window.location = "findFood.html";
                     //openModal();
                    //seePost(foodPost);
