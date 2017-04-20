@@ -26,7 +26,7 @@
 
 ### NFR0 - Security
   * ~~NFR0.1 Encryption~~
-  * NFR0.2 Access Control  
+  * ~~NFR0.2 Access Control~~  
 
 ### NFR1 - Usability - Web Page Design
   * NFR1.1 Accommodating for those with additional needs.
@@ -34,7 +34,7 @@
 
 ### NFR2 - Reliability - Server Uptime
   * NFR2.1 Crash Recovery
-  * NFR2.2 Server Backup
+  * ~~NFR2.2 Server Backup~~
 
 ## Descriptions
 

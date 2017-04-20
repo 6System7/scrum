@@ -188,6 +188,7 @@ app.post("/addUser", function(req, res) {
     user.realname = req.body.realName;
     user.email = req.body.email;
     user.settings = req.body.settings;
+    user.trustedIPs = req.body.trustedIPs;
 
     db.collection("users").save(user, function(err, results) {
         if (err) {
@@ -689,6 +690,80 @@ app.get("/getPredictions", function(req, res) {
             }));
         } else {
             res.send(JSON.stringify(results));
+        }
+    });
+});
+
+// IP Auth
+
+// RESET TOKENS
+
+app.post("/addIPAuthToken", function(req, res) {
+    var tokenData = {};
+    tokenData.IPToken = req.body.IPToken;
+    tokenData.username = req.body.username;
+    tokenData.ip = req.body.ip;
+
+    db.collection("IPTokens").find().toArray(function(err, results) {
+
+        var tokenExists = false;
+        for (var i = 0; i < results.length; i++) {
+            var jsonResult = results[i];
+            if (jsonResult.username === tokenData.username) {
+                tokenExists = true;
+            }
+        }
+
+        if (tokenExists) {
+            db.collection("IPTokens").remove({
+                username: tokenData.username
+            }, function(err, results) {
+                if (err) {
+                    console.log("Deleting token failed: " + err.toString());
+                } else {
+                    console.log("Deleted pre-existing token successfully");
+                }
+            });
+        }
+
+        db.collection("IPTokens").save(tokenData, function(err, results) {
+            if (err) {
+                res.send(err.toString());
+                console.log("Saving IP token failed: " + err.toString());
+            } else {
+                res.send(results);
+                console.log("Saved IP token successfully");
+            }
+        });
+    });
+
+});
+
+app.get("/getIPAuthTokens", function(req, res) {
+    db.collection("IPTokens").find().toArray(function(err, results) {
+        res.setHeader("Content-Type", "application/json");
+        if (err) {
+            res.send(JSON.stringify({
+                "error": err
+            }));
+        } else {
+            res.send(JSON.stringify(results));
+        }
+    });
+});
+
+app.post("/deleteIPAuthToken", function(req, res) {
+    var IPToken = req.body.IPToken;
+
+    db.collection("IPTokens").remove({
+        IPToken: IPToken
+    }, function(err, results) {
+        if (err) {
+            res.send(err.toString());
+            console.log("Deleting token failed: " + err.toString());
+        } else {
+            res.send(results);
+            console.log("Deleted token successfully");
         }
     });
 });
