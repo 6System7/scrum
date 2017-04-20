@@ -8,16 +8,25 @@ $(document).ready(function(){
     var currentLong;
     var currentLang;
     navigator.geolocation.getCurrentPosition(function(pos) {
-                try {
+        currentLang = pos.coords.latitude;
+        currentLong = pos.coords.longitude;
+    }, function(error) {
+        currentLang = 54.767230;
+        currentLong = 1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
+    });
+        /*   try {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+         
             currentLang = pos.coords.latitude;
             currentLong = pos.coords.longitude;
+               })
     
         }
         catch(err) {
             currentLang =54.767004;
             currentLong = -1.570840 ;
             
-        }
+        }*/
        
         $.getJSON("/getUsers", function(jsonData){
             for (var i=0; i<jsonData.length; i++){
@@ -53,7 +62,7 @@ $(document).ready(function(){
 
     }) 
      
-})
+
 
 
 // TODOeventually pass in distance as parameter?
