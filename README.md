@@ -34,7 +34,7 @@
 
 ### NFR2 - Reliability - Server Uptime
   * NFR2.1 Crash Recovery
-  * NFR2.2 Server Backup
+  * ~~NFR2.2 Server Backup~~
 
 ## Descriptions
 
