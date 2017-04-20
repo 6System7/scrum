@@ -5,7 +5,7 @@
 ### FR0 - Web Page Functionality  
   * ~~FR0.1 Registration / Login System~~  
   * ~~FR0.2 Posting and Editing Listing~~
-  * FR0.3 Filtering Results
+  * ~~FR0.3 Filtering Results
   * FR0.4 Account Modification
   * ~~FR0.5 Barcode Scanning~~
   * ~~FR0.6 Navigation/Links~~
@@ -14,8 +14,8 @@
   * FR0.9 Point System
   * ~~FR0.10 User Rating System~~
   * ~~FR0.11 Password Control~~
-  * FR0.12 Notifications
-  * FR0.13 Server-side Post Filtering
+  * ~~FR0.12 Notifications
+  * ~~FR0.13 Server-side Post Filtering
   * FR0.14 Advanced Filtering Results
 
 ### FR1 - Back-End Server Functionality  

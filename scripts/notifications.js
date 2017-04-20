@@ -7,10 +7,12 @@ var thisUserData;
 $(document).ready(function(){
     var currentLong;
     var currentLang;
-    navigator.geolocation.getCurrentPosition(function(pos) {
-                try {
+           try {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+         
             currentLang = pos.coords.latitude;
             currentLong = pos.coords.longitude;
+               })
     
         }
         catch(err) {
@@ -53,7 +55,7 @@ $(document).ready(function(){
 
     }) 
      
-})
+
 
 
 // TODOeventually pass in distance as parameter?

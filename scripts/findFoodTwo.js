@@ -2,12 +2,14 @@ var currentLang;
 var currentLong;
 $(document).ready(function(){
     var dataPass;
-    navigator.geolocation.getCurrentPosition(function(pos) {
-        try {
+           try {
+               navigator.geolocation.getCurrentPosition(function(pos) {
+ 
             currentLang = pos.coords.latitude;
             currentLong = pos.coords.longitude;
     
-        }
+        })}
+    
         catch(err) {
             currentLang =54.767004;
             currentLong = -1.570840 ;
@@ -68,7 +70,7 @@ $(document).ready(function(){
    //     seePost();
    // })
 })
-})
+
 
 function getPostedFoods(xx){
     $("#column0").html("");
