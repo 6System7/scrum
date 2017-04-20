@@ -8,8 +8,17 @@ $(document).ready(function(){
     var currentLong;
     var currentLang;
     navigator.geolocation.getCurrentPosition(function(pos) {
-        currentLang = pos.coords.latitude;
-        currentLong = pos.coords.longitude;
+                try {
+            currentLang = pos.coords.latitude;
+            currentLong = pos.coords.longitude;
+    
+        }
+        catch(err) {
+            currentLang =54.767004;
+            currentLong = -1.570840 ;
+            
+        }
+       
         $.getJSON("/getUsers", function(jsonData){
             for (var i=0; i<jsonData.length; i++){
                 

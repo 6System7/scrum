@@ -3,8 +3,17 @@ var currentLong;
 $(document).ready(function(){
     var dataPass;
     navigator.geolocation.getCurrentPosition(function(pos) {
-        currentLang = pos.coords.latitude;
-        currentLong = pos.coords.longitude;
+        try {
+            currentLang = pos.coords.latitude;
+            currentLong = pos.coords.longitude;
+    
+        }
+        catch(err) {
+            currentLang =54.767004;
+            currentLong = -1.570840 ;
+            
+        }
+                
 
     $.ajax({
         url: "/getPosts",
@@ -119,6 +128,7 @@ function getPostedFoods(xx){
                         // CREATE CONTAINER
                         var container = $('<div>');
                         container.addClass("w3-container w3-center");
+                        container.appendTo(divEl);
                         container.appendTo(divEl);
 
                         // CREATE TITLE
