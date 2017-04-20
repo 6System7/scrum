@@ -46,6 +46,8 @@ $(document).ready(function(){
             }
             setStorage(foodsToPost);
             getPostedFoods(foodsToPost);
+            var iframe = document.getElementById('mapIframe');
+			iframe.src = iframe.src;
         }
     });
     $("#btnClearAll").click(function(){
@@ -74,18 +76,11 @@ function getPostedFoods(xx){
         success: function(data){
             var toPrint = 0;
             dataReturned = JSON.parse(JSON.stringify(data));
-            /*for(var property=0; property < dataReturned.length; property++) {
-                var x = dataReturned[property];
-                for (y in checkArray){
-                    if ((x._id).toString() == checkArray[y]){
-                        if(x.collected != "true"){
-                        toPrint++;
-*/
             for (y in checkArray){
                 for (var property = 0; property < dataReturned.length; property++){
                     x = dataReturned[property];
                     if (checkArray[y] == (x._id).toString()){
-                        console.log(x.title);
+                        
                         if (x.collected != "true"){
                             toPrint++
 
@@ -192,73 +187,55 @@ function filterFoods(dataPass){
     var data = dataPass;
     foodsToPost = []
     var filters = loadFilters();
-
     var whatToPrint = filters.usefilters;
-
         for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
             var visibility = false;
             var foodPost = dataPass[foodPostElem];
-
+            
             // CALCULATE DISTANCE AND CHECK ITS CORRECT
             var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
             if (parseInt(dist) <= filters.distance){
+               
                 // TAKE ALL POSTS IN THIS DISTANCE
-
                 if (whatToPrint == "false"){
                     visibility = true;
                     foodsToPost.push(foodPost._id);
                 }
                 else {
-                // COMPARE DESCRIPTION AND KEYWORDS
-
+                
+                    // COMPARE DESCRIPTION AND KEYWORDS
                     var description = foodPost.description;
                     description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
                     var filterDesc = filters.description;
-                    //console.log(foodPost.title);
                     for (var word = 0; word< filterDesc.length; word++){
-
                         var wordStr = (filterDesc[word]);
                         if (wordStr !=""){
-
                             if (description.indexOf(wordStr) !== -1){
-
                                 visibility = true;
                                 if (whatToPrint == "falseButdescription"){
-
                                     foodsToPost.push(foodPost._id);
                                 }
-
                             }
                         }
                     }
-                    }
-                    if (whatToPrint == "true") {
-
+                }
+                if (whatToPrint == "true") {
                     for (var category = 0; category < Object.keys(filters).length; category++){
-
                     var checkAgain = (Object.keys(filters)[category]).toString();
                     var postCheck = foodPost[checkAgain]; //grab it from post
                         var xox = filters[Object.keys(filters)[category]];
                         for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
-                                if (xox[listInCategory] == postCheck){
-                                    visibility = true;
-
-                                    }
-                                }
+                            if (xox[listInCategory] == postCheck){
+                                visibility = true;
                             }
-
+                        }
+                    }
                     if (visibility == true){
-
                         foodsToPost.push(foodPost._id);
                     }
-
-
-                     }
+                }
+            }
         }
-        }
-    //sortFoodsToPost(foodsToPost,dataPass);
-    //foodsToPost = sortFoodsToPost(foodsToPost,dataPass);// MADELEINE DOES THIS GO HEREE???
-    //console.log(foodsToPost[0]);
     return foodsToPost;
 }
 
@@ -266,28 +243,23 @@ function filterFoods(dataPass){
 function loadFilters(){
     var checkHowMany = 0;
     var filters =  {
-        /* TODO
-        keywords??
-        */
         usefilters: "true",
         mealtype: " ",
         mealtypecountry: " ",
         mealtypefood: " ",
         mealweight: " ",
         mealexpires: " ",
-        mealTypeDietary: " ", //captails??
+        mealTypeDietary: " ", 
         collectionbusiness: " ",
         distance: " ",
         description: "none"
     };
-
-
     // MEAL TYPE
     var mealtypeList = [];
     $("#collapseMealType input:checked").each(function(){
 
         mealtypeList.push($(this).attr('name'))
-    }) // put in mealtype if its not empty?? TODO
+    }) 
     if (mealtypeList.length != 0){
         checkHowMany++
     }
@@ -448,7 +420,7 @@ function seePost(x){
     imgDiv.addClass("text-center");
     var img2 = $('<img>');
     img = (x.image).toString();
-    console.log(img);
+   
     if (img == ""){
         img2 = $('<span>');
         img2.addClass("glyphicon glyphicon-picture");
@@ -670,7 +642,7 @@ function seePost(x){
 
 function sortFoodsToPost(idList, dataReturned, sortBy){
     sortArray = [];
-    console.log("HERE");
+
     for(var property=0; property < dataReturned.length; property++) {
                 var x = dataReturned[property];
                 for (y in idList){
@@ -694,15 +666,11 @@ function sortFoodsToPost(idList, dataReturned, sortBy){
         });
      }
 
-    for (var xox in sortArray){
-        console.log(sortArray[xox][0] + "  : " + sortArray[xox][1]);
-    }
     newFoodsToPostList =[];
     for (var post = 0; post<sortArray.length;post++){
         newFoodsToPostList.push(sortArray[post][0]);
 
     }
-    console.log(newFoodsToPostList[0]);
     return newFoodsToPostList;
 
 
@@ -711,8 +679,24 @@ function sortFoodsToPost(idList, dataReturned, sortBy){
 }
 
 
-function openModal(){
-    alert("hey");
+function openModal(id){
+    //loop through and find
+    $.ajax({
+        url: "/getPosts",
+        type: "GET",
+        dataType: "json",
+        success: function(data){
+            dataReturned = JSON.parse(JSON.stringify(data));
+                for (var property = 0; property < dataReturned.length; property++){
+                    x = dataReturned[property];
+                    if (x._id == (id)){
+                        // send to cards
+                        $("#seePostsModal").modal("toggle");
+                        seePost(x);
+                    }
+                }
+        }
+    })
 }
 
 
@@ -722,7 +706,6 @@ function setStorage(array){
 	localStorage.setItem("GetData" , mapData);
 	return;
 }
-
 
 
 // TODO user button: pass in new value for the button with the username and send offff??

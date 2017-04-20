@@ -122,6 +122,10 @@ body {
     padding-left: 3px;
 }
 
+#btnlogOut:hover {
+    cursor: pointer;
+}
+
 .starRating:not(old) {
     display: inline-block;
     width: 7.5em;

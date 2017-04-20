@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <!-- Bootstrap core CSS -->
     <link href="/css/bootstrap.min.css" rel="stylesheet">
-       
+
     <!-- Custom styles for this template -->
     <link href="scrumFormat.css" rel="stylesheet">
     <link href="findFoodCSSTest.css" rel="stylesheet">
@@ -39,15 +39,15 @@
             </div>
             <div id="navbarContent" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                          
+
                     <li class="dropdown dropdown-notifications">
                         <!--Todo: want to make it pull left. -->
                         <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton"><span class="badge badge-error" id="notificationsBadge">
                             <i class="glyphicon glyphicon-bell"></i>
                             <div id = "counter">
-                            
+
                             </div>
-                            </span>  
+                            </span>
                         </a>
 
                         <ul class="dropdown-menu" id="notificationsPanel">
@@ -57,7 +57,7 @@
                                 <div class="panel-group" id="groupNotifPanels">
                                     <!-- where the notifications will be put -->
                                     <ul class="list-unstyled" id="notificationList">
-                                        
+
                                     </ul>
                                 </div>
                             </div>
@@ -75,6 +75,7 @@
                     <li>
                         <a id="navBarUsername" href="loginAndRegister.html"></a>
                     </li>
+                    <li><a id="btnlogOut" onclick="logOut();" style="display:none;">Log Out</a></li>
                 </ul>
             </div>
         </div>
@@ -84,7 +85,7 @@
 
         <!--Initial data when landing on page-->
         <div class="scrumFormat" id="testing">
-            <h1>Find Food Posts</h1>
+            <h1>Find Food Posts<br><h5> Click Search to see Posts on the Map! Click <span class="glyphicon glyphicon-eye-open"></span> to see more detail</h5></h1>
 
 
             <!-- Load results by location (done by gps?) -->
@@ -102,7 +103,7 @@
             <button id="btnUpdate" type="button" class="btn btn-default">
                 <h4 class="panel-title">Search</h4>
             </button>
-     
+
             <button id="btnClearAll" type="button" class="btn btn-default">
                 <h5 class="panel-title">Clear all</h5>
             </button>
@@ -125,15 +126,15 @@
                         <!-- TODO -->
                         <label for="trcDistanceSlider" id="distLabel">Search radius(km): 1000</label>
                         <input type="range" id="trcDistanceSlider" id="points" value="1000" min="0" max="1000" data-show-value="true" onchange="updateSlider(this.value)">
-                       
-                      
+
+
                             Sort By:
                             <select name="sortByOptions" id="sortByOptions">
                                 <option value="options">See Options</option>
                                 <option value="proximityClosest">Proximity - closest</option>
                                 <option value="proximityFurthest">Proximity - furthest</option>
                             </select>
-                       
+
 
                     </div>
                 </div>
@@ -282,7 +283,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id = "iframediv" class ="text-center">
             <iframe id = "mapIframe" src="maps_prototype.html"></iframe>
         </div>
@@ -302,12 +303,12 @@
                         <div class="row">
                             <!-- COLUMN 1-->
                             <div class="col-md-6" id = "modalLeftColumn">
-                            
+
                             </div>  <!-- End of column 1-->
                              <!-- COLUMN 2-->
                             <div class="col-md-6" id = "modalRightColumn">
-                                
-                                
+
+
                                <!-- <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title">
@@ -318,11 +319,11 @@
                                     </div>
                                     <div id="panel1" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                
+
                                             </div>
                                         </div>
                                     </div>-->
-                           
+
                             </div>  <!-- End of column 2-->
                         </div>
                     </div>
@@ -353,10 +354,11 @@
     </div>
     <!-- Bootstrap core JS -->
     <script src="/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="findFoodTwo.js"></script>
-    <script type="text/javascript" src="globalFunctions.js"></script>
+    <script type="text/javascript" src="dataAnalysis.js"></script>
     <script type="text/javascript" src="notifications.js"></script>
-   <!-- <script type="text/javascript" src="mapScripts.js"></script>-->
+        <script type="text/javascript" src="findFoodTwo.js"></script>
+
+    <script type="text/javascript" src="globalFunctions.js"></script>
 </body>
 
 </html>

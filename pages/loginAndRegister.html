@@ -41,9 +41,9 @@
             <a href="#notifications-panel" class="dropdown-toggle" data-toggle="dropdown" id="notificationsButton"><span class="badge badge-error" id="notificationsBadge">
                             <i class="glyphicon glyphicon-bell"></i>
                             <div id = "counter">
-                            
+
                             </div>
-                            </span>  
+                            </span>
                         </a>
 
               <ul class = "dropdown-menu" id = "notificationsPanel">
@@ -53,7 +53,7 @@
                     <div class="panel-group" id ="groupNotifPanels">
                     <!-- where the notifications will be put -->
                     <ul class="list-unstyled" id="notificationList">
-                                        
+
                                     </ul>
                     </div>
                 </div><!--/.nav-collapse -->
@@ -67,6 +67,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a id="navBarUsername" href="loginAndRegister.html"></a></li>
+            <li><a id="btnlogOut" onclick="logOut();" style="display:none;">Log Out</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -188,6 +189,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="loginAndRegister.js"></script>
+    <script type="text/javascript" src="dataAnalysis.js"></script>
     <script type="text/javascript" src="notifications.js"></script>
     <script type="text/javascript" src="globalFunctions.js"></script>
   </body>
