@@ -2,20 +2,13 @@ var currentLang;
 var currentLong;
 $(document).ready(function(){
     var dataPass;
-           try {
-               navigator.geolocation.getCurrentPosition(function(pos) {
- 
-            currentLang = pos.coords.latitude;
-            currentLong = pos.coords.longitude;
-    
-        })}
-    
-        catch(err) {
-            currentLang =54.767004;
-            currentLong = -1.570840 ;
-            
-        }
-                
+      navigator.geolocation.getCurrentPosition(function(pos) {
+        currentLang = pos.coords.latitude;
+        currentLong = pos.coords.longitude;
+    }, function(error) {
+        currentLang = 54.767230;
+        currentLong = 1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
+    });   
 
     $.ajax({
         url: "/getPosts",

@@ -7,7 +7,14 @@ var thisUserData;
 $(document).ready(function(){
     var currentLong;
     var currentLang;
-           try {
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        currentLang = pos.coords.latitude;
+        currentLong = pos.coords.longitude;
+    }, function(error) {
+        currentLang = 54.767230;
+        currentLong = 1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
+    });
+        /*   try {
             navigator.geolocation.getCurrentPosition(function(pos) {
          
             currentLang = pos.coords.latitude;
@@ -19,7 +26,7 @@ $(document).ready(function(){
             currentLang =54.767004;
             currentLong = -1.570840 ;
             
-        }
+        }*/
        
         $.getJSON("/getUsers", function(jsonData){
             for (var i=0; i<jsonData.length; i++){
