@@ -23,8 +23,40 @@ $(document).on("click", "#loginButton", function() {
                 if(inputPasswordSha1 === userData.passwordsha1){
                     console.log("Valid Password");
                     validPassword = true;
-                    processLogin(username, password);
-                    break;
+                    var trustedIPs = [];
+                    if(userData.hasOwnProperty("trustedIPs")) {
+                        trustedIPs = userData.trustedIPs;
+                    }
+                    if(checkIP(trustedIPs)) {
+                        processLogin(username, trustedIPs);
+                        break;
+                    } else {
+                        var alertCode = $.ajax({
+                            type: "GET",
+                            url: "/getUUID",
+                            async: false
+                        }).responseText;
+                        var authIPCode = $.ajax({
+                            type: "GET",
+                            url: "/sha1",
+                            data: {string: alertCode},
+                            async: false
+                        }).responseText;
+                        var ip = $.ajax({
+                            type: "GET",
+                            url: "/getIP",
+                            async: false
+                        }).responseText;
+                        $.ajax({
+                            type: "POST",
+                            url: "/addIPAuthToken",
+                            data: {username: username, IPToken: authIPCode, ip: ip}
+                        });
+                        sendSuspectIPEmail(username, userData.email, alertCode ,authIPCode);
+                        alert("You seem to be logging in from a new IP. \n " +
+                            "You have been sent an authlink via email to confirm your indentity. \n" +
+                            "Your alert code is: " + alertCode);
+                    }
                 }
             }
         }
@@ -67,10 +99,55 @@ function saveAuthKey(username){
 
 }
 
+function checkIP(trustedIPs){
+    var userIP = $.ajax({
+        type: "GET",
+        url: "/getIP",
+        async: false
+    }).responseText;
+
+    var trustedIPList = trustedIPs;
+
+    var ipTrusted = false;
+    for(var i = 0; i < trustedIPList.length; i++){
+        if(trustedIPList[i] === userIP){
+            ipTrusted = true;
+        }
+    }
+
+    return ipTrusted;
+
+}
+
+function sendSuspectIPEmail(username, email, alertCode, authIPCode){
+
+    var subject = "Scrum App - New IP Alert";
+    var message = "Dear " + username + '\n' +
+        "We have had a suspicious login to your account from an unknown IP" + '\n ' +
+        "You will have been alerted with a code upon the attempted login which should match the code below" + '\n\n' +
+        "Code: " + alertCode + '\n' +
+        '\n' +
+        "Accept Link: scrum7.herokuapp.com/loginAndRegister.html?token=" + authIPCode + '\n' +
+        '\n' +
+        "If the code doesn't match then this then do NOT use the above link! " + '\n'+
+        "If you didn't request this email then just ignore it" + '\n'+
+        "Best wishes," + '\n' +
+        "Scrum Bot";
+
+    console.log("ajax call to send email...");
+    $.ajax({
+        type: "POST",
+        url: "/sendEmail",
+        data: {toAddress: email, subject: subject, message: message}
+    });
+
+    console.log("Username Recovery Email Sent");
+
+}
+
 /* REGISTER SYSTEM **/
 $(document).on("click", "#registerButton", function() {
 
-    console.log("Register Button Pressed");
     var username = $("#usernameRegisterInput").val();
     var password = $("#passwordRegisterInput").val();
     var confirmPassword = $("#confirmPasswordRegisterInput").val();
@@ -253,7 +330,14 @@ function registerUser(username, password, authKey, rating, realName, email){
 
     console.log("Sending user registration request...");
     var defaultSettings = {notifsSeen: "", notifDistance: 20}; //Maddy add to this object
-    var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email, settings: defaultSettings};
+    var userIP = $.ajax({
+        type: "GET",
+        url: "/getIP",
+        async: false
+    }).responseText;
+    var trustedIPs = [];
+    trustedIPs.push(userIP);
+    var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email, settings: defaultSettings, trustedIPs: trustedIPs};
 
     $.ajax({
         type: "POST",
@@ -455,3 +539,66 @@ $(document).ready(function() {
         }
     });
 });
+
+$(document).ready(checkURL());
+
+function getTokenFromURL(){
+    console.log("Getting token from url...");
+    var query = window.location.search;
+    return query.split("=")[1];
+}
+
+function checkURL(){
+    $.getJSON("/getIPAuthTokens", function(authTokens){
+        var token;
+        if(window.location.search !== "") {
+            token = getTokenFromURL();
+
+            var tokenValid = false;
+            var validTokenData;
+            for (var i = 0; i < authTokens.length; i++) {
+                var tokenData = authTokens[i];
+                if (tokenData.IPToken === token) {
+                    tokenValid = true;
+                    validTokenData = tokenData;
+                    break;
+                }
+            }
+            if (tokenValid) {
+
+                $.getJSON("/getUsers", function (jsonData) {
+                    var userData;
+                    for (var i = 0; i < jsonData.length; i++) {
+                        if (validTokenData.username === jsonData[i].username) {
+                            userData = jsonData[i];
+                            break;
+                        }
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/deleteIPAuthToken",
+                        data: {IPToken: validTokenData.IPToken}
+                    });
+
+                    var newTrustedIPList = userData.trustedIPs;
+                    newTrustedIPList.push(validTokenData.ip);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/editUser",
+                        data: {username: validTokenData.username, field: "trustedIPs", newValue: newTrustedIPList}
+                    });
+
+                    alert("IP Authenticated successfully");
+                    window.open("/loginAndRegister.html", "_self");
+                });
+
+            } else {
+                alert("Invalid Token");
+                window.open("/loginAndRegister.html", "_self");
+            }
+        }
+
+    });
+
+}
