@@ -10,9 +10,6 @@ $(document).ready(function(){
     navigator.geolocation.getCurrentPosition(function(pos) {
         currentLang = pos.coords.latitude;
         currentLong = pos.coords.longitude;
-        //console.log(currentLong);
-    
-  //  console.log(currentLong);
         $.getJSON("/getUsers", function(jsonData){
             for (var i=0; i<jsonData.length; i++){
                 
@@ -42,6 +39,9 @@ $(document).ready(function(){
            // $("#notificationsBadge").text("");
             $("#counter").text("");
         })
+        $('#openFromMap').click(function(){     //MyFunction(); return false; 
+        });
+
     }) 
      
 })
@@ -73,28 +73,22 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
         if (dist < userDistance && localStorage.username != foodPost.username){
             // NOW CHECK WHETHERS ITS ALREADY THERE
             if (notifsCurrentlySeen.includes(foodPost._id) == false){
-                console.log("HERE");
                 counter++;
                 notifsCurrentlySeen.push(foodPost._id); 
                 createNearbyPost(foodPost, dist);
             }
             else{
                 oldPosts.push(foodPost._id);
-                console.log("HEEEYY");
             }
             // Now go through old posts  
         }
     // So it goes through and only adds it if its NOT
     // in the list. 
     }
-    
-    
     // CHANGE NOTIFCAITON NUMBER
     // use counter to check against:
     var newSettings = thisUserData.settings;
     newSettings.notifsSeen = notifsCurrentlySeen;
-    console.log("OLD SETTINGS");
-    console.log(counter);
     if (counter == 0){
         $("#counter").text(" ");
         $(".badge-error").css("background-color", "grey");
@@ -113,7 +107,6 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
 
     }
     createFiveOldPosts(oldPosts, dataPass, currentLang, currentLong);
-    console.log(thisUserData.settings.notifDistance);
     // SEND UPDATED DATA TO DATABASE
     var updateData = {username: localStorage.username, field: "settings", newValue: newSettings};
     $.ajax({
@@ -152,11 +145,12 @@ function createNearbyPost(foodPost, dist){
                 seePostButton.attr("href","findFood.html");
                 //seePostButton.attr("onClick", "return openModal()")
                 seePostButton.click(function(){
-                  //  alert(foodPost.title);
-                    window.location = "findFood.html";
-                    openModal();
-                  //  var food = $(this).data('foodJson');
-                  //  $('#seePostsModal').modal('show');
+                    alert(foodPost.title);
+                    //window.location = "findFood.html";
+                    //openModal();
+                   //seePost(foodPost);
+                    var food = $(this).data('foodJson');
+                    $('#seePostsModal').modal('toggle');
                    // window.location = "findFood.html";
                     seePost(food);
                    // $('#seePostsModal').modal('show');

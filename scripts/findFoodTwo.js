@@ -679,8 +679,24 @@ function sortFoodsToPost(idList, dataReturned, sortBy){
 }
 
 
-function openModal(){
-    alert("hey");
+function openModal(id){
+    //loop through and find
+    $.ajax({
+        url: "/getPosts",
+        type: "GET",
+        dataType: "json",
+        success: function(data){
+            dataReturned = JSON.parse(JSON.stringify(data));
+                for (var property = 0; property < dataReturned.length; property++){
+                    x = dataReturned[property];
+                    if (x._id == (id)){
+                        // send to cards
+                        $("#seePostsModal").modal("toggle");
+                        seePost(x);
+                    }
+                }
+        }
+    })
 }
 
 

@@ -8,6 +8,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
 }).addTo(mymap);
 
 function setUp() {
+    var id = [];
     var lat = [];
     var lon = [];
     var type = [];
@@ -30,9 +31,10 @@ function setUp() {
                 var x = allData[j];
                 for (i in mapData) {
                     if ((x._id).toString() == parsed[i]) {
+                        id[c] = x._id;
                         lat[c] = x.latitude;
                         lon[c] = x.longitude;
-                        type[c] = x.mealtype;
+                        type[c] = x.title;
                         foodType[c] = x.mealtypefood;
                         foodCountry[c] = x.mealtypecountry;
                         description[c] = x.description;
@@ -41,24 +43,23 @@ function setUp() {
                 }
             }
             if (lat.length != 0) {
-                placePointer(lat, lon, type, foodType, foodCountry, description);
+                placePointer(id, lat, lon, type, foodType, foodCountry, description);
             }
         }
     });
     return;
 }
 
-function placePointer(x, y, type, fType, fCountry, desc) {
+function placePointer(id, x, y, type, fType, fCountry, desc) {
     var i;
     var markers = new L.LayerGroup();
     markers.clearLayers();
     markers.addTo(mymap);
     console.log(x, y);
     for (i = 0; i < x.length; i++) {
-        marker = new L.marker([x[i], y[i]]).bindPopup("Meal Type: " + type[i] +
-            "<br>" + "Type of food: " + fType[i] +
-            ", " + fCountry[i] +
-            "<br>" + "Further Details: " + desc[i]);
+        marker = new L.marker([x[i], y[i]]).bindPopup(
+            
+            "<b>" + type[i] + "</b>"+ "<br>" + "Type of food: " +  fType[i] + ", " + fCountry[i] + "<br>" + "Further Details: " + desc[i] + "<br> <a onclick='window.parent.openModal(\"" + id[i].toString() +"\")' href='#'> See More! </a>");
         markers.addLayer(marker);
     }
     return;
@@ -68,3 +69,7 @@ function clearMap() {
     mymap.removeLayer(markers);
     return;
 }
+
+
+
+
