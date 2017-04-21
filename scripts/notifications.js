@@ -178,7 +178,7 @@ function createNearbyPost(foodPost, dist){
                 seePostButton.text("See Post");
                 seePostButton.attr("style","float:right;padding-top:0px;postion:absolute; background-color: transparent; border-color: transparent");
                 seePostButton.data("foodJson",foodPost);
-                seePostButton.attr("href","findFood.html");
+                seePostButton.attr("href","findfood.html");
                 //seePostButton.attr("onClick", "return openModal()")
                 seePostButton.click(function(){
                    // alert(foodPost.title);
