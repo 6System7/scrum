@@ -60,10 +60,12 @@ function genAuthKey(username){
     var d = new Date();
     var formattedDate = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate();
 
-    var userIP = $.ajax({
-        url: "/getIP",
+    var ipString = $.ajax({
+        type: "GET",
+        url: "//freegeoip.net/json/",
         async: false
     }).responseText;
+    var userIP = JSON.parse(ipString).ip;
 
     // return authKey
     return $.ajax({
