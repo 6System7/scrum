@@ -5,6 +5,7 @@ var userLang;
 var thisUserData;
 
 $(document).ready(function(){
+    delete localStorage.foodPostToShow;
     
     var currentLong;
     var currentLang;
