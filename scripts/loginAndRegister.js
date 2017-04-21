@@ -444,7 +444,7 @@ $(document).on("click", "#resetPasswordButton", function() {
 
         if(usernameValid){
             var resetToken = genResetPasswordLink(username);
-            var resetLink = "scrumfun.herokuapp.com/resetPassword.html?token=" + resetToken;
+            var resetLink = "scrum7.herokuapp.com/resetPassword.html?token=" + resetToken;
             sendResetPasswordEmail(email, username, resetLink);
             $("#resetPasswordFeedback").append("<p class='text-success'>Email sent with Reset Link to address registered with given username (assuming address is valid)</p>");
         } else {
