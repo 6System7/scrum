@@ -11,6 +11,7 @@
 + Statistic generation
 + User recommendations
 + User predictions
++ External IP based Access Control
 + Mobile responsiveness (management)
 + General testing and QA (Quality Assurance)
 + General bug fixing
