@@ -2,17 +2,20 @@ var currentLang;
 var currentLong;
 $(document).ready(function(){
     var dataPass;
+
+    // Moved BEFORE geolocation as that is a callback system, so is delayed, this way it's more deterministic
+    if (currentLang == undefined && currentLong == undefined){
+        currentLang = 54.767230;
+        currentLong = -1.570390;
+    }
       navigator.geolocation.getCurrentPosition(function(pos) {
         currentLang = pos.coords.latitude;
         currentLong = pos.coords.longitude;
     }, function(error) {
         currentLang = 54.767230;
-        currentLong = 1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
-    });   
-    if (currentLang == undefined && currentLong == undefined){
-        currentLang = 54.767230;
-        currentLong = 1.570390;
-    }
+        currentLong = -1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
+    });
+
 
     $.ajax({
         url: "/getPosts",
@@ -56,11 +59,11 @@ $(document).ready(function(){
             iframe.src = iframe.src;
         }
     });
-        
+
     $("#btnClearAll").click(function(){
         clearAll();
     })
-   
+
     if (localStorage.foodPostToShow) {
         var post = JSON.parse(localStorage.foodPostToShow);
         seePost(post);
@@ -90,7 +93,7 @@ function getPostedFoods(xx){
                 for (var property = 0; property < dataReturned.length; property++){
                     x = dataReturned[property];
                     if (checkArray[y] == (x._id).toString()){
-                        
+
                         if (x.collected != "true"){
                             toPrint++
 
@@ -202,11 +205,11 @@ function filterFoods(dataPass){
         for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
             var visibility = false;
             var foodPost = dataPass[foodPostElem];
-            
+
             // CALCULATE DISTANCE AND CHECK ITS CORRECT
             var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
             if (parseInt(dist) <= filters.distance){
-               
+
                 // TAKE ALL POSTS IN THIS DISTANCE
                 if (whatToPrint == "false"){
                     firstRound = true;
@@ -235,7 +238,7 @@ function filterFoods(dataPass){
                     }
                 }
                 else {
-                
+
                     // COMPARE DESCRIPTION AND KEYWORDS
                     var description = foodPost.description;
                     var description = description + foodPost.title;
@@ -253,13 +256,13 @@ function filterFoods(dataPass){
                         }
                     }
                 }
-                if (whatToPrint == "true") {                  
+                if (whatToPrint == "true") {
                     // check whether only show descriptions is true
                     var firstRound = true;
                     if (filters.onlyShowDescriptions == "true"){
                         if (foodPost.description != ""){
                             firstRound = true;
-                            
+
                         }
                         else{
                             firstRound = false;
@@ -292,7 +295,7 @@ function filterFoods(dataPass){
                         }
                     }
                 }
-            }         
+            }
         }
     return foodsToPost;
 }
@@ -307,7 +310,7 @@ function loadFilters(){
         mealtypefood: " ",
         mealweight: " ",
         mealexpires: " ",
-        mealTypeDietary: " ", 
+        mealTypeDietary: " ",
         collectionbusiness: " ",
         distance: " ",
         description: "none",
@@ -319,7 +322,7 @@ function loadFilters(){
     $("#collapseMealType input:checked").each(function(){
 
         mealtypeList.push($(this).attr('name'))
-    }) 
+    })
     if (mealtypeList.length != 0){
         checkHowMany++
     }
@@ -419,10 +422,10 @@ function loadFilters(){
         if ($(this).attr('value') == "pictures"){
             filters["onlyShowImages"] = "true";
         }
-        
+
     })
-    
-    
+
+
     return filters;
 }
 
@@ -484,7 +487,7 @@ function seePost(x){
     imgDiv.addClass("text-center");
     var img2 = $('<img>');
     img = (x.image).toString();
-   
+
     if (img == ""){
         img2 = $('<span>');
         img2.addClass("glyphicon glyphicon-picture");
@@ -726,4 +729,3 @@ function setStorage(array){
 	localStorage.setItem("GetData" , mapData);
 	return;
 }
-
