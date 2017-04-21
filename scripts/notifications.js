@@ -14,6 +14,10 @@ $(document).ready(function(){
         currentLang = 54.767230;
         currentLong = 1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
     });
+    if (currentLang == undefined && currentLong == undefined){
+        currentLang = 54.767230;
+        currentLong = 1.570390;
+    }
         /*   try {
             navigator.geolocation.getCurrentPosition(function(pos) {
          
@@ -67,8 +71,9 @@ $(document).ready(function(){
 
 // TODOeventually pass in distance as parameter?
 function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
+    console.log(thisUserData.settings);
     var notifsCurrentlySeen = thisUserData.settings.notifsSeen;
-    if (notifsCurrentlySeen == ""){
+    if (notifsCurrentlySeen == "" || notifsCurrentlySeen == undefined || notifsCurrentlySeen == "none"){
         console.log("Creating first list of notifcations ")
         notifsCurrentlySeen = [];
     }
@@ -87,22 +92,31 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
     for (var foodPostElem = 0; foodPostElem < dataPass.length; foodPostElem++){ //iterate through posts
         var foodPost = dataPass[foodPostElem];  
         var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, currentLang, currentLong)
-        var title = foodPost.title;            
+        var title = foodPost.title; 
+                   // console.log(dist + "   " + userDistance);
+
         if (dist < userDistance && localStorage.username != foodPost.username){
             // NOW CHECK WHETHERS ITS ALREADY THERE
             if (notifsCurrentlySeen.includes(foodPost._id) == false){
+                
                 counter++;
                 notifsCurrentlySeen.push(foodPost._id); 
+                   // console.log("create  xw Post");
+
                 createNearbyPost(foodPost, dist);
             }
             else{
                 oldPosts.push(foodPost._id);
+            console.log("adding oldposts");
+
             }
             // Now go through old posts  
         }
     // So it goes through and only adds it if its NOT
     // in the list. 
     }
+  //   console.log(oldPosts.length);
+
     // CHANGE NOTIFCAITON NUMBER
     // use counter to check against:
     var newSettings = thisUserData.settings;
@@ -124,7 +138,9 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
         $(".badge-error").css("background-color", "red");
 
     }
+    console.log(oldPosts);
     createFiveOldPosts(oldPosts, dataPass, currentLang, currentLong);
+    console.log("HERE");
     // SEND UPDATED DATA TO DATABASE
     var updateData = {username: localStorage.username, field: "settings", newValue: newSettings};
     $.ajax({
@@ -138,6 +154,7 @@ function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
 }
     
 function createNearbyPost(foodPost, dist){
+    console.log("creating posts");
      /***** CREATE NEARBY POST *****/
                 // CREATE LIST
                 var title = foodPost.title;  
@@ -163,7 +180,7 @@ function createNearbyPost(foodPost, dist){
                 seePostButton.attr("href","findFood.html");
                 //seePostButton.attr("onClick", "return openModal()")
                 seePostButton.click(function(){
-                    alert(foodPost.title);
+                   // alert(foodPost.title);
                     //window.location = "findFood.html";
                     //openModal();
                    //seePost(foodPost);
@@ -190,6 +207,7 @@ function createNearbyPost(foodPost, dist){
 }
 
 function createFiveOldPosts(oldPosts, dataPass, currentLang, currentLong){
+    console.log("create five old Post");
     var oldNotifNotice = $('<div>');
     oldNotifNotice.addClass('panel panel-default');    
     var bodyDiv = $('<h4>');
@@ -200,15 +218,22 @@ function createFiveOldPosts(oldPosts, dataPass, currentLang, currentLong){
     $("#notificationList").append(oldNotifNotice);
     
     var foodPostElem = 0; 
+            console.log("HEREEYAY");
+
     var checkNum = oldPosts.length;
     if (checkNum > 5){
         checkNum = 5;
     }
-    while (foodPostElem < checkNum){ 
+    console.log(oldPosts.length);
+
+    while (foodPostElem < checkNum){
+        console.log("HEREEYAY");
             var foodPost = dataPass[foodPostElem];  
                 // NOW CHECK WHETHERS ITS ALREADY THERE
                 if (oldPosts.includes(foodPost._id) == true){
                         var dist = getDistanceFromLatLonInKm(foodPost.latitude, foodPost.longitude, currentLang, currentLong);
+                        console.log("create fiveee old Post");
+
                         createNearbyPost(foodPost, dist);
                 }
         foodPostElem++
@@ -217,6 +242,8 @@ function createFiveOldPosts(oldPosts, dataPass, currentLang, currentLong){
 }
     
 function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+                console.log(lat1,lon1,lat2,lon2);
+
   var R = 6371; // Radius of the earth in km
   var dLat = deg2rad(lat2-lat1);  // deg2rad below
   var dLon = deg2rad(lon2-lon1); 
@@ -227,7 +254,7 @@ function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
     ; 
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c; // Distance in km
-   
+   console.log("DIST : " + d);
   return d;
 }
 
