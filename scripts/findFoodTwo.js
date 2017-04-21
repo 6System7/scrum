@@ -31,39 +31,31 @@ $(document).ready(function(){
             getPostedFoods(foodsToShow);
         }
     });
-
-    
-        
-
-
-    
-
-
-        $("#btnUpdate").click(function(){
-            var foodsToPost = filterFoods(dataPass);
-            if (foodsToPost.length == 0){
-                $("#column0").html("");
-                $("#column1").html("");
-                $("#column2").html("");
-                divEl = "<div ><img src = 'sorry.png'><br><br><h5><i><b> No posts match your search</b></i> </h5></div>"
-                $("#column1").append(divEl);
+    $("#btnUpdate").click(function(){
+        var foodsToPost = filterFoods(dataPass);
+        if (foodsToPost.length == 0){
+            $("#column0").html("");
+            $("#column1").html("");
+            $("#column2").html("");
+            divEl = "<div ><img src = 'sorry.png'><br><br><h5><i><b> No posts match your search</b></i> </h5></div>"
+            $("#column1").append(divEl);
+        }
+        else {
+            if ($("#sortByOptions").val() == "proximityClosest") {
+                var sortBy = "ascending";
+                foodsToPost = sortFoodsToPost(foodsToPost, dataPass, sortBy);
             }
-            else {
-                if ($("#sortByOptions").val() == "proximityClosest") {
-                    var sortBy = "ascending";
-                    foodsToPost = sortFoodsToPost(foodsToPost, dataPass, sortBy);
-                }
-                if($("#sortByOptions").val() == "proximityFurthest"){
-                    var sortBy = "descending";
+            if($("#sortByOptions").val() == "proximityFurthest"){
+                var sortBy = "descending";
 
-                    foodsToPost = sortFoodsToPost(foodsToPost,dataPass,sortBy);
-                }
-                setStorage(foodsToPost);
-                getPostedFoods(foodsToPost);
-                var iframe = document.getElementById('mapIframe');
-                iframe.src = iframe.src;
+                foodsToPost = sortFoodsToPost(foodsToPost,dataPass,sortBy);
             }
-        });
+            setStorage(foodsToPost);
+            getPostedFoods(foodsToPost);
+            var iframe = document.getElementById('mapIframe');
+            iframe.src = iframe.src;
+        }
+    });
         
     $("#btnClearAll").click(function(){
         clearAll();
@@ -359,15 +351,6 @@ function loadFilters(){
 
     // CHECK WHETHER ANY HAVE VALUES AND IF NO JUST DO DISTANCE
     justDistance = false;
-    /*checkHowMany = 0;
-    for (var category = 0; category < Object.keys(filters).length; category++){
-        if (Object.keys(filters)[category] != "distance" || Object.keys(filters)[category] != "description"){
-            if (Object.keys(filters)[category] != " " || Object.keys(filters)[category] != []){
-                checkHowMany++
-            }
-        }
-    }*/
-
     if (checkHowMany == 0){
             //justDistance = true;
         if (filters["description"] != "" && filters["description"] != ","){
@@ -504,46 +487,6 @@ function seePost(x){
     }
     dietaryRequirements.text(add);
     $("#modalRightColumn").append(add);
-   /*
-    //MEAL TYPE
-    var mealTypeDiv1 = $('div');
-    mealTypeDiv1.addClass("panel panel-default");
-    var mealTypeDivHeader = $('div');
-    mealTypeDivHeader.addClass("panel-heading");
-    mealTypeDivHeader.text("Meal Type");
-    //  var mealTypeHeader = ('<h4');
-    // mealTypeHeader.text("Meal Type")
-    //mealTypeDiv1.append(mealTypeDivHeader);
-    var mealTypeDivBody = $('div');
-    mealTypeDivBody.addClass("panel-body");
-    // var mealTypeHeader = ('<h4');
-    //mealTypeHeader.text("Meal Type")
-    mealTypeDivBody.text(x.mealtypefood)
-    //mealTypeDiv1.append(mealTypeDivBody);
-    $("#test").append(mealTypeDiv1);
-
-    */
-
-   /* <div class="panel-group">
-  <div class="panel panel-default">
-    <div class="panel-body">Panel Content</div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-body">Panel Content</div>
-  </div>
-</div>*/
-   /* var testGroup = $("div");
-    testGroup.addClass("panel-group");
-    var test= $("div");
-    test.addClass("panel panel-primary");
-    var test1= $("div");
-    test1.addClass("panel-body");
-    test1.text("TEST");
-    test.append(test1);
-    testGroup.append(test);
-    $("#modalRightColumn").append(testGroup);
-    */
-
     var mealType = $('<p>');
     var mealTypeLabel = "<br><i>Meal Type: </i>"
     mealType.text(x.mealtypefood);
@@ -684,22 +627,16 @@ function sortFoodsToPost(idList, dataReturned, sortBy){
             return b[1] - a[1];
         });
      }
-
     newFoodsToPostList =[];
     for (var post = 0; post<sortArray.length;post++){
         newFoodsToPostList.push(sortArray[post][0]);
-
     }
     return newFoodsToPostList;
-
-
-
-
 }
 
 
 function openModal(id){
-    //loop through and find
+    //loop through and find the correct data
     $.ajax({
         url: "/getPosts",
         type: "GET",
@@ -728,8 +665,3 @@ function setStorage(array){
 	return;
 }
 
-
-// TODO user button: pass in new value for the button with the username and send offff??
-
-
-// TODO has to loop every noe and then. Set timer??
