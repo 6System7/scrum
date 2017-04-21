@@ -1,8 +1,10 @@
 var mymap;
 navigator.geolocation.getCurrentPosition(function(pos) {
         initialiseMapLocation(pos.coords.latitude, pos.coords.longitude);
+        setUp();
     }, function(error) {
         initialiseMapLocation(54.767230, -1.570390); // <--- school of engineering // center of durham --> 54.77525, -1.584852
+        setUp();
     });
 
 function initialiseMapLocation(myLat, myLong) {
