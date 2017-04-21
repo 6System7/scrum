@@ -28,40 +28,50 @@ $(document).ready(function(){
         }
     });
 
+    
+        
 
-    $("#btnUpdate").click(function(){
-        var foodsToPost = filterFoods(dataPass);
-        if (foodsToPost.length == 0){
-            $("#column0").html("");
-            $("#column1").html("");
-            $("#column2").html("");
-            divEl = "<div ><img src = 'sorry.png'><br><br><h5><i><b> No posts match your search</b></i> </h5></div>"
-            $("#column1").append(divEl);
-        }
-        else {
-            if ($("#sortByOptions").val() == "proximityClosest") {
-                var sortBy = "ascending";
-                foodsToPost = sortFoodsToPost(foodsToPost, dataPass, sortBy);
-            }
-            if($("#sortByOptions").val() == "proximityFurthest"){
-                var sortBy = "descending";
 
-                foodsToPost = sortFoodsToPost(foodsToPost,dataPass,sortBy);
+    
+
+
+        $("#btnUpdate").click(function(){
+            var foodsToPost = filterFoods(dataPass);
+            if (foodsToPost.length == 0){
+                $("#column0").html("");
+                $("#column1").html("");
+                $("#column2").html("");
+                divEl = "<div ><img src = 'sorry.png'><br><br><h5><i><b> No posts match your search</b></i> </h5></div>"
+                $("#column1").append(divEl);
             }
-            setStorage(foodsToPost);
-            getPostedFoods(foodsToPost);
-            var iframe = document.getElementById('mapIframe');
-			iframe.src = iframe.src;
-        }
-    });
+            else {
+                if ($("#sortByOptions").val() == "proximityClosest") {
+                    var sortBy = "ascending";
+                    foodsToPost = sortFoodsToPost(foodsToPost, dataPass, sortBy);
+                }
+                if($("#sortByOptions").val() == "proximityFurthest"){
+                    var sortBy = "descending";
+
+                    foodsToPost = sortFoodsToPost(foodsToPost,dataPass,sortBy);
+                }
+                setStorage(foodsToPost);
+                getPostedFoods(foodsToPost);
+                var iframe = document.getElementById('mapIframe');
+                iframe.src = iframe.src;
+            }
+        });
+        
     $("#btnClearAll").click(function(){
         clearAll();
     })
+   
+    if (localStorage.foodPostToShow) {
+        var post = JSON.parse(localStorage.foodPostToShow);
+        seePost(post);
+        $('#seePostsModal').modal('show');
+        delete localStorage.foodPostToShow;
+    }
 
-    //$("#btnSeePosts").click(function(){
-   //     $("#seePostsModal").modal('show');
-   //     seePost();
-   // })
 })
 
 
@@ -697,7 +707,9 @@ function openModal(id){
                     if (x._id == (id)){
                         // send to cards
                         $("#seePostsModal").modal("toggle");
+                        window.location = "findFood.html";
                         seePost(x);
+
                     }
                 }
         }

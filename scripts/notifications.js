@@ -5,6 +5,7 @@ var userLang;
 var thisUserData;
 
 $(document).ready(function(){
+    
     var currentLong;
     var currentLang;
     navigator.geolocation.getCurrentPosition(function(pos) {
@@ -184,10 +185,12 @@ function createNearbyPost(foodPost, dist){
                     //window.location = "findFood.html";
                     //openModal();
                    //seePost(foodPost);
-                    var food = $(this).data('foodJson');
-                    $('#seePostsModal').modal('toggle');
-                   // window.location = "findFood.html";
-                    seePost(food);
+                   var food = JSON.stringify($(this).data('foodJson'));
+                  
+                    localStorage.foodPostToShow = food;
+                    //$('#seePostsModal').modal('toggle');
+                   window.location.replace("/findFood.html");
+                   // seePost(food);
                    // $('#seePostsModal').modal('show');
                 })
                 seePostButton.appendTo(headerDiv);
