@@ -42,15 +42,16 @@ $(document).on("click", "#loginButton", function() {
                             data: {string: alertCode},
                             async: false
                         }).responseText;
-                        var ip = $.ajax({
+                        var ipString = $.ajax({
                             type: "GET",
-                            url: "/getIP",
+                            url: "//freegeoip.net/json/",
                             async: false
                         }).responseText;
+                        var userIP = JSON.parse(ipString).ip;
                         $.ajax({
                             type: "POST",
                             url: "/addIPAuthToken",
-                            data: {username: username, IPToken: authIPCode, ip: ip}
+                            data: {username: username, IPToken: authIPCode, ip: userIP}
                         });
                         sendSuspectIPEmail(username, userData.email, alertCode ,authIPCode);
                         alert("You seem to be logging in from a new IP. \n " +
@@ -100,11 +101,12 @@ function saveAuthKey(username){
 }
 
 function checkIP(trustedIPs){
-    var userIP = $.ajax({
+    var ipString = $.ajax({
         type: "GET",
-        url: "/getIP",
+        url: "//freegeoip.net/json/",
         async: false
     }).responseText;
+    var userIP = JSON.parse(ipString).ip
 
     var trustedIPList = trustedIPs;
 
@@ -330,11 +332,12 @@ function registerUser(username, password, authKey, rating, realName, email){
 
     console.log("Sending user registration request...");
     var defaultSettings = {notifsSeen: "", notifDistance: 20}; //Maddy add to this object
-    var userIP = $.ajax({
+    var ipString = $.ajax({
         type: "GET",
-        url: "/getIP",
+        url: "//freegeoip.net/json/",
         async: false
     }).responseText;
+    var userIP = JSON.parse(ipString).ip;
     var trustedIPs = [];
     trustedIPs.push(userIP);
     var userData = {username: username, password: password, authKey: authKey, rating: rating, realName: realName, email: email, settings: defaultSettings, trustedIPs: trustedIPs};

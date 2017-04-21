@@ -316,10 +316,6 @@ app.get("/sha1", function(req, res) {
     }
 });
 
-app.get("/getIP", function(req, res) {
-    res.send(ip.address());
-});
-
 app.get("/getUUID", function(req, res) {
     res.send(uuidV4());
 });
