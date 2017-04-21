@@ -189,7 +189,7 @@ function createNearbyPost(foodPost, dist){
                   
                     localStorage.foodPostToShow = food;
                     //$('#seePostsModal').modal('toggle');
-                   window.location.replace("/findFood.html");
+                   window.location.replace("/findfood.html");
                    // seePost(food);
                    // $('#seePostsModal').modal('show');
                 })
