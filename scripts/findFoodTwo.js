@@ -118,7 +118,7 @@ function getPostedFoods(xx){
                             img2.attr("style", "height:160px; width:auto");
                             img2.on("error", function() {
                                 var parentDiv = $("#" + $(this).data("parentDivId"))[0];
-                                console.log("Error loading image for post " + $(this).data("parentDivId") + " - Switching to gylphicon");
+                                //console.log("Error loading image for post " + $(this).data("parentDivId") + " - Switching to gylphicon");
                                 var newimg2 = $('<span>');
                                 newimg2.addClass("glyphicon glyphicon-picture");
                                 newimg2.attr("style","margin-top:20px");
@@ -221,7 +221,7 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
-                    console.log("HEEEERREEEEE " + foodPost.image);
+                    // console.log("HEEEERREEEEE " + foodPost.image);
                     if (filters.onlyShowImages == "true"){
                         if (foodPost.image != "" && foodPost.image != undefined){
                             if (firstRound != false){
@@ -268,7 +268,7 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
-                    console.log("HEEEERREEEEE " + foodPost.image);
+                    // console.log("HEEEERREEEEE " + foodPost.image);
                     if (filters.onlyShowImages == "true"){
                         if (foodPost.image != "" && foodPost.image != undefined){
                             if (firstRound != false){

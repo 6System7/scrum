@@ -64,7 +64,7 @@ function placePointer(id, x, y, type, fType, fCountry, desc) {
     var markers = new L.LayerGroup();
     markers.clearLayers();
     markers.addTo(mymap);
-    console.log(x, y);
+    // console.log(x, y);
     for (i = 0; i < x.length; i++) {
         marker = new L.marker([x[i], y[i]]).bindPopup(
 
