@@ -707,7 +707,7 @@ function openModal(id){
                     if (x._id == (id)){
                         // send to cards
                         $("#seePostsModal").modal("toggle");
-                        window.location = "findFood.html";
+                        window.location = "findfood.html";
                         seePost(x);
 
                     }
