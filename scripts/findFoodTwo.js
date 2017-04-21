@@ -209,13 +209,36 @@ function filterFoods(dataPass){
                
                 // TAKE ALL POSTS IN THIS DISTANCE
                 if (whatToPrint == "false"){
-                    visibility = true;
-                    foodsToPost.push(foodPost._id);
+                    firstRound = true;
+                    if (filters.onlyShowDescriptions == "true"){
+                        if (foodPost.description != ""){
+                            firstRound = true;
+                        }
+                        else{
+                            firstRound = false;
+                        }
+                    }
+                    console.log("HEEEERREEEEE " + foodPost.image);
+                    if (filters.onlyShowImages == "true"){
+                        if (foodPost.image != "" && foodPost.image != undefined){
+                            if (firstRound != false){
+                                firstRound = true;
+                            }
+                        }
+                        else {
+                            firstRound = false;
+                        }
+                    }
+                    if (firstRound == true){
+                        visibility = true;
+                        foodsToPost.push(foodPost._id);
+                    }
                 }
                 else {
                 
                     // COMPARE DESCRIPTION AND KEYWORDS
                     var description = foodPost.description;
+                    var description = description + foodPost.title;
                     description = description.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"").replace(/\s{2,}/g," ").toLowerCase();
                     var filterDesc = filters.description;
                     for (var word = 0; word< filterDesc.length; word++){
@@ -230,22 +253,46 @@ function filterFoods(dataPass){
                         }
                     }
                 }
-                if (whatToPrint == "true") {
-                    for (var category = 0; category < Object.keys(filters).length; category++){
-                    var checkAgain = (Object.keys(filters)[category]).toString();
-                    var postCheck = foodPost[checkAgain]; //grab it from post
-                        var xox = filters[Object.keys(filters)[category]];
-                        for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
-                            if (xox[listInCategory] == postCheck){
-                                visibility = true;
-                            }
+                if (whatToPrint == "true") {                  
+                    // check whether only show descriptions is true
+                    var firstRound = true;
+                    if (filters.onlyShowDescriptions == "true"){
+                        if (foodPost.description != ""){
+                            firstRound = true;
+                            
+                        }
+                        else{
+                            firstRound = false;
                         }
                     }
-                    if (visibility == true){
-                        foodsToPost.push(foodPost._id);
+                    console.log("HEEEERREEEEE " + foodPost.image);
+                    if (filters.onlyShowImages == "true"){
+                        if (foodPost.image != "" && foodPost.image != undefined){
+                            if (firstRound != false){
+                                firstRound = true;
+                            }
+                        }
+                        else {
+                            firstRound = false;
+                        }
+                    }
+                    if (firstRound == true){
+                        for (var category = 0; category < Object.keys(filters).length; category++){
+                        var checkAgain = (Object.keys(filters)[category]).toString();
+                        var postCheck = foodPost[checkAgain]; //grab it from post
+                            var xox = filters[Object.keys(filters)[category]];
+                            for (var listInCategory = 0; listInCategory < xox.length; listInCategory++){
+                                if (xox[listInCategory] == postCheck){
+                                    visibility = true;
+                                }
+                            }
+                        }
+                        if (visibility == true){
+                            foodsToPost.push(foodPost._id);
+                        }
                     }
                 }
-            }
+            }         
         }
     return foodsToPost;
 }
@@ -263,7 +310,9 @@ function loadFilters(){
         mealTypeDietary: " ", 
         collectionbusiness: " ",
         distance: " ",
-        description: "none"
+        description: "none",
+        onlyShowImages: "false",
+        onlyShowDescriptions: "false"
     };
     // MEAL TYPE
     var mealtypeList = [];
@@ -361,6 +410,19 @@ function loadFilters(){
             filters["usefilters"] = fil;
         }
     }
+    // ONLY SHOW DESCRIPTIONS + IMAGES
+    $("#collapseOnlyShow input:checked").each(function(){
+            //mealtypedietarylist.push($(this).attr('value'))
+        if ($(this).attr('value') == "description"){
+            filters["onlyShowDescriptions"] = "true";
+        }
+        if ($(this).attr('value') == "pictures"){
+            filters["onlyShowImages"] = "true";
+        }
+        
+    })
+    
+    
     return filters;
 }
 

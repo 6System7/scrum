@@ -16,7 +16,7 @@
   * ~~FR0.11 Password Control~~
   * ~~FR0.12 Notifications
   * ~~FR0.13 Server-side Post Filtering
-  * FR0.14 Advanced Filtering Results
+  *~~ FR0.14 Advanced Filtering Results (half-completed)
 
 ### FR1 - Back-End Server Functionality  
   * ~~FR1.1 Database Management~~  
