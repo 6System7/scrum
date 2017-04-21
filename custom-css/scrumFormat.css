@@ -29,12 +29,16 @@ body {
     width: calc(100% - 18px);
 }
 
+#navbar-header {
+    padding-top: 2px;
+}
+
 #navbar-logo {
     max-width: 45px;
     max-height: 45px;
-    padding-top: 0px;
+    /*padding-top: 0px;
     position: absolute;
-    top: 5%;
+    top: 5%;*/
     /* 50% of your logo width */
     /*background-color: #fff2e6;*/
 }
