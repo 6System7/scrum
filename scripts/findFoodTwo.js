@@ -9,6 +9,10 @@ $(document).ready(function(){
         currentLang = 54.767230;
         currentLong = 1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
     });   
+    if (currentLang == undefined && currentLong == undefined){
+        currentLang = 54.767230;
+        currentLong = 1.570390;
+    }
 
     $.ajax({
         url: "/getPosts",
