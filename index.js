@@ -73,6 +73,9 @@ app.post("/addPost", function(req, res) {
 
     // Save attached images to disk if not already saved
     if (post.image && post.saveImage) {
+        // TODO Mike - Use AWS so images persist through re-deploys without cluttering the repo -
+        // https://devcenter.heroku.com/articles/s3-upload-node
+        // https://www.npmjs.com/package/s3-uploader
         var regex = /^data:.+\/(.+);base64,(.*)$/;
         var matches = post.image.match(regex);
         var ext = "." + matches[1];
