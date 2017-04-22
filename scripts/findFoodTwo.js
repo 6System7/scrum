@@ -232,10 +232,34 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
+                    if (filters.onlyShowUsersThree){
+                        var rating;
+                        $.ajax({
+                            type: "GET",
+                            url: "/getUserRating",
+                            data: {
+                                username: foodPost.username
+                            },
+                            success: function(data) {
+                                rating = data.rating
+                            }
+                        });
+                        if (rating => 3){
+                            firstRound = true;
+                        }
+                        else{ 
+                            firstRound = false;
+                        }
+                            
+                        
+                        
+                    }
+                    
                     if (firstRound == true){
                         visibility = true;
                         foodsToPost.push(foodPost._id);
                     }
+                    
                 }
                 else {
 
@@ -315,7 +339,8 @@ function loadFilters(){
         distance: " ",
         description: "none",
         onlyShowImages: "false",
-        onlyShowDescriptions: "false"
+        onlyShowDescriptions: "false",
+        onlyShowUsersThree: "false"
     };
     // MEAL TYPE
     var mealtypeList = [];
@@ -413,7 +438,7 @@ function loadFilters(){
             filters["usefilters"] = fil;
         }
     }
-    // ONLY SHOW DESCRIPTIONS + IMAGES
+    // ONLY SHOW DESCRIPTIONS + IMAGES + 3.5 USER RATING
     $("#collapseOnlyShow input:checked").each(function(){
             //mealtypedietarylist.push($(this).attr('value'))
         if ($(this).attr('value') == "description"){
@@ -421,6 +446,9 @@ function loadFilters(){
         }
         if ($(this).attr('value') == "pictures"){
             filters["onlyShowImages"] = "true";
+        }
+        if($(this).attr('value') == "userRating"){
+            filters["onlyShowUsersThree"] = "true";
         }
 
     })
