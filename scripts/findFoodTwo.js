@@ -301,7 +301,7 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
-                    alert(filtesr.onlyShowPostsWeek);
+                    alert(filters.onlyShowPostsWeek);
                     if (filters.onlyShowPostsWeek == "true"){
                         var date2 = new Date(serverDateTime);
                         var date1 = foodPost.datePosted;
