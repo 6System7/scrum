@@ -399,9 +399,6 @@ $(function() {
       // Only send if time since last email is more than 5 minutes
       if(notified_users[user].getTime() - now.getTime() < 300000) {
         send = false;
-      } else {
-        // Remove the current entry for this user so it can be replaced with an updated time
-        delete notified_users.user;
       }
     }
     if(send) {
