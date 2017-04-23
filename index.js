@@ -560,6 +560,9 @@ app.post("/saveMessage", function(req, res) {
         if (err) {
             return;
         } else if (results[0]) {
+            res.send(JSON.stringify({
+                status: 'success'
+            }));
             if (results[0].messages.length > 100) {
                 // Sort the messages list by date (ascending), and remove the oldest one (i.e. last, i.e. just pop() it)
                 var messages = results[0].messages;
