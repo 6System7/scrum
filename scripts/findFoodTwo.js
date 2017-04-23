@@ -301,14 +301,14 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
-                    alert(filters.onlyShowPostsWeek);
+                    console.log(filters.onlyShowPostsWeek);
                     if (filters.onlyShowPostsWeek == "true"){
                         var date2 = new Date(serverDateTime);
                         var date1 = foodPost.datePosted;
                         if (date1 != undefined){
                             var timeDiff = Math.abs(date2.getTime() - date1.getTime());
                             var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                            alert(diffDays);
+                            console.log(diffDays);
                             if (diffDays < 8){
                                 firstRound = true;
                             }
