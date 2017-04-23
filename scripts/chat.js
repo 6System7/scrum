@@ -249,30 +249,35 @@ $(function() {
   
   // Joins a room and prompts the given user to join it as well
   function connectWithUser(user, callback) {
-    var lower_user = user.toLowerCase();
-    var lower_self = username.toLowerCase();
-    var room;
-    // Name the room with the usernames in alphabetical order
-    if(lower_user < lower_self) {
-      room = user + '-' + username;
-    } else {
-      room = username + '-' + user;
-    }
-    // Join the room
-    socket.emit('joinRoom', room);
-    // Store this in the database
-    $.post("addRoom", {
-      user: username,
-      room: room
-    }, function() {
-        // Add the other user as well
-        $.post("addRoom", {
-        user: user,
+    // Don't allow creating a chat room to chat with yourself
+    if( user !== username) {
+      var lower_user = user.toLowerCase();
+      var lower_self = username.toLowerCase();
+      var room;
+      // Name the room with the usernames in alphabetical order
+      if(lower_user < lower_self) {
+       room = user + '-' + username;
+      } else {
+       room = username + '-' + user;
+      }
+      // Join the room
+      socket.emit('joinRoom', room);
+      // Store this in the database
+     $.post("addRoom", {
+        user: username,
         room: room
-      }, function() {
-          callback();
-        });
-    });
+     }, function() {
+          // Add the other user as well
+         $.post("addRoom", {
+          user: user,
+         room: room
+       }, function() {
+            callback();
+          });
+      });
+    } else {
+      callback();
+    }
   }
   
   function sendChatNotificationEmail(target_username){
@@ -401,7 +406,7 @@ $(function() {
     }
     if(send) {
       sendChatNotificationEmail(user);
-      notified_users.push(user: now);
+      notified_users.push({user: now});
     }
   });
   
