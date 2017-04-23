@@ -96,7 +96,7 @@
                 </div>
                 <div id="collapseNotifications" class="panel-collapse collapse in">
                     <div class="panel-body">
-                            <p style="font-style:italic" id = "showDistanceNearby"> Currently showing distances up to 20km </p>
+                            <p style="font-style:italic" id = "showDistanceNearby"> </p>
                             <label for="distanceNearby">Set "nearby foods" distance</label>
                         <div id="distanceValidate" class="input-group">
                              <input id = "distanceNearby" type="number" class="form-control" placeholder="Enter new distance" >
@@ -108,6 +108,27 @@
                     </div>
             </div>
         </div>
+      <script>
+        
+          $(document).ready(function(){
+            var userDistance
+                      console.log(userDistance);
+
+            $.getJSON("/getUsers", function(jsonData){
+                for (var i=0; i<jsonData.length; i++){
+
+                    if (jsonData[i].username == localStorage.username){
+                        thisUserData = (jsonData[i]);
+                        userDistance = thisUserData.settings.notifDistance;
+                    }
+                }
+        })
+              
+              document.getElementById("showDistanceNearby").innerHTML = ("Currently showing distances up to " + userDistance.toString() + "km");
+
+
+
+      </script>
         
 
 
