@@ -298,6 +298,7 @@ $(function() {
             url: "/sendEmail",
             data: {toAddress: userData.email, subject: subject, message: message}
           });
+          console.log("Chat notification email sent to user " + target_username + " at email " + userData.email);
           break;
         }
       }
