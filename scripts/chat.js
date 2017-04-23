@@ -347,7 +347,7 @@ $(function() {
   socket.on('login', function() {
     connected = true;
     // Display the welcome message
-    var message = 'Welcome to the messaging service of SCRUM. To send messages, please select a user from the list on the left. To message a new user, enter their username into the form on the left.';
+    var message = 'Welcome to the messaging service of SCRUM. To send messages, please select a user from the list on the left. To message a new user, click the \'Message User\' button on a food post.';
     log(message, {
       prepend: true
     });
