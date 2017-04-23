@@ -7,6 +7,7 @@ var uuidV4 = require('uuid/v4');
 var MongoClient = require("mongodb").MongoClient;
 var ObjectID = require("mongodb").ObjectID;
 var fs = require("fs");
+var enforce = require('express-sslify');
 var app = express();
 var path = __dirname + "/";
 var bodyParser = require('body-parser');
@@ -32,6 +33,9 @@ MongoClient.connect(db_URI, function(err, database_object) {
         db = database_object;
     }
 });
+
+// FORCE HTTPS
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 //Send initial files to use such as bootstrap
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
@@ -73,6 +77,9 @@ app.post("/addPost", function(req, res) {
 
     // Save attached images to disk if not already saved
     if (post.image && post.saveImage) {
+        // TODO Mike - Use AWS so images persist through re-deploys without cluttering the repo -
+        // https://devcenter.heroku.com/articles/s3-upload-node
+        // https://www.npmjs.com/package/s3-uploader
         var regex = /^data:.+\/(.+);base64,(.*)$/;
         var matches = post.image.match(regex);
         var ext = "." + matches[1];
@@ -557,6 +564,9 @@ app.post("/saveMessage", function(req, res) {
         if (err) {
             return;
         } else if (results[0]) {
+            res.send(JSON.stringify({
+                status: 'success'
+            }));
             if (results[0].messages.length > 100) {
                 // Sort the messages list by date (ascending), and remove the oldest one (i.e. last, i.e. just pop() it)
                 var messages = results[0].messages;

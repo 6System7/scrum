@@ -2,17 +2,20 @@ var currentLang;
 var currentLong;
 $(document).ready(function(){
     var dataPass;
+
+    // Moved BEFORE geolocation as that is a callback system, so is delayed, this way it's more deterministic
+    if (currentLang == undefined && currentLong == undefined){
+        currentLang = 54.767230;
+        currentLong = -1.570390;
+    }
       navigator.geolocation.getCurrentPosition(function(pos) {
         currentLang = pos.coords.latitude;
         currentLong = pos.coords.longitude;
     }, function(error) {
         currentLang = 54.767230;
-        currentLong = 1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
-    });   
-    if (currentLang == undefined && currentLong == undefined){
-        currentLang = 54.767230;
-        currentLong = 1.570390;
-    }
+        currentLong = -1.570390; // <--- school of engineering // center of durham --> 54.77525, -1.584852
+    });
+
 
     $.ajax({
         url: "/getPosts",
@@ -56,11 +59,11 @@ $(document).ready(function(){
             iframe.src = iframe.src;
         }
     });
-        
+
     $("#btnClearAll").click(function(){
         clearAll();
     })
-   
+
     if (localStorage.foodPostToShow) {
         var post = JSON.parse(localStorage.foodPostToShow);
         seePost(post);
@@ -90,7 +93,7 @@ function getPostedFoods(xx){
                 for (var property = 0; property < dataReturned.length; property++){
                     x = dataReturned[property];
                     if (checkArray[y] == (x._id).toString()){
-                        
+
                         if (x.collected != "true"){
                             toPrint++
 
@@ -115,7 +118,7 @@ function getPostedFoods(xx){
                             img2.attr("style", "height:160px; width:auto");
                             img2.on("error", function() {
                                 var parentDiv = $("#" + $(this).data("parentDivId"))[0];
-                                console.log("Error loading image for post " + $(this).data("parentDivId") + " - Switching to gylphicon");
+                                //console.log("Error loading image for post " + $(this).data("parentDivId") + " - Switching to gylphicon");
                                 var newimg2 = $('<span>');
                                 newimg2.addClass("glyphicon glyphicon-picture");
                                 newimg2.attr("style","margin-top:20px");
@@ -202,11 +205,11 @@ function filterFoods(dataPass){
         for (var foodPostElem = 0; foodPostElem < data.length; foodPostElem++){
             var visibility = false;
             var foodPost = dataPass[foodPostElem];
-            
+
             // CALCULATE DISTANCE AND CHECK ITS CORRECT
             var dist = calculateDistance(foodPost.latitude, foodPost.longitude);
             if (parseInt(dist) <= filters.distance){
-               
+
                 // TAKE ALL POSTS IN THIS DISTANCE
                 if (whatToPrint == "false"){
                     firstRound = true;
@@ -218,7 +221,7 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
-                    console.log("HEEEERREEEEE " + foodPost.image);
+                    // console.log("HEEEERREEEEE " + foodPost.image);
                     if (filters.onlyShowImages == "true"){
                         if (foodPost.image != "" && foodPost.image != undefined){
                             if (firstRound != false){
@@ -229,13 +232,37 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
+                    if (filters.onlyShowUsersThree){
+                        var rating;
+                        $.ajax({
+                            type: "GET",
+                            url: "/getUserRating",
+                            data: {
+                                username: foodPost.username
+                            },
+                            success: function(data) {
+                                rating = data.rating
+                            }
+                        });
+                        if (rating => 3){
+                            firstRound = true;
+                        }
+                        else{ 
+                            firstRound = false;
+                        }
+                            
+                        
+                        
+                    }
+                    
                     if (firstRound == true){
                         visibility = true;
                         foodsToPost.push(foodPost._id);
                     }
+                    
                 }
                 else {
-                
+
                     // COMPARE DESCRIPTION AND KEYWORDS
                     var description = foodPost.description;
                     var description = description + foodPost.title;
@@ -253,19 +280,19 @@ function filterFoods(dataPass){
                         }
                     }
                 }
-                if (whatToPrint == "true") {                  
+                if (whatToPrint == "true") {
                     // check whether only show descriptions is true
                     var firstRound = true;
                     if (filters.onlyShowDescriptions == "true"){
                         if (foodPost.description != ""){
                             firstRound = true;
-                            
+
                         }
                         else{
                             firstRound = false;
                         }
                     }
-                    console.log("HEEEERREEEEE " + foodPost.image);
+                    // console.log("HEEEERREEEEE " + foodPost.image);
                     if (filters.onlyShowImages == "true"){
                         if (foodPost.image != "" && foodPost.image != undefined){
                             if (firstRound != false){
@@ -292,7 +319,7 @@ function filterFoods(dataPass){
                         }
                     }
                 }
-            }         
+            }
         }
     return foodsToPost;
 }
@@ -307,19 +334,20 @@ function loadFilters(){
         mealtypefood: " ",
         mealweight: " ",
         mealexpires: " ",
-        mealTypeDietary: " ", 
+        mealTypeDietary: " ",
         collectionbusiness: " ",
         distance: " ",
         description: "none",
         onlyShowImages: "false",
-        onlyShowDescriptions: "false"
+        onlyShowDescriptions: "false",
+        onlyShowUsersThree: "false"
     };
     // MEAL TYPE
     var mealtypeList = [];
     $("#collapseMealType input:checked").each(function(){
 
         mealtypeList.push($(this).attr('name'))
-    }) 
+    })
     if (mealtypeList.length != 0){
         checkHowMany++
     }
@@ -410,7 +438,7 @@ function loadFilters(){
             filters["usefilters"] = fil;
         }
     }
-    // ONLY SHOW DESCRIPTIONS + IMAGES
+    // ONLY SHOW DESCRIPTIONS + IMAGES + 3.5 USER RATING
     $("#collapseOnlyShow input:checked").each(function(){
             //mealtypedietarylist.push($(this).attr('value'))
         if ($(this).attr('value') == "description"){
@@ -419,10 +447,13 @@ function loadFilters(){
         if ($(this).attr('value') == "pictures"){
             filters["onlyShowImages"] = "true";
         }
-        
+        if($(this).attr('value') == "userRating"){
+            filters["onlyShowUsersThree"] = "true";
+        }
+
     })
-    
-    
+
+
     return filters;
 }
 
@@ -484,7 +515,7 @@ function seePost(x){
     imgDiv.addClass("text-center");
     var img2 = $('<img>');
     img = (x.image).toString();
-   
+
     if (img == ""){
         img2 = $('<span>');
         img2.addClass("glyphicon glyphicon-picture");
@@ -726,4 +757,3 @@ function setStorage(array){
 	localStorage.setItem("GetData" , mapData);
 	return;
 }
-

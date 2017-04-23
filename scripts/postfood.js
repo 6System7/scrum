@@ -99,7 +99,7 @@ function scanBarcode() {
                     });
                 },
                 handleError: function(err) {
-                    console.log(err);
+                    console.log("Barcode scanner encountered an error", err);
                 },
                 initCameraSelection: function() {
                     var streamLabel = Quagga.CameraAccess.getActiveStreamLabel();

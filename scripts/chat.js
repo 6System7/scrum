@@ -336,9 +336,7 @@ $(function() {
       message: message,
       room: room
     }
-    console.log("message data", data);
     // Only display the message if this room is currently selected
-    console.log("room comparison:", data.room, currentRoom);
     if(data.room == currentRoom) {
       addChatMessage(data);
     }
@@ -347,7 +345,7 @@ $(function() {
   socket.on('login', function() {
     connected = true;
     // Display the welcome message
-    var message = 'Welcome to the messaging service of SCRUM. To send messages, please select a user from the list on the left. To message a new user, enter their username into the form on the left.';
+    var message = 'Welcome to the messaging service of SCRUM. To send messages, please select a user from the list on the left. To message a new user, click the \'Message User\' button on a food post.';
     log(message, {
       prepend: true
     });
@@ -366,14 +364,6 @@ $(function() {
   // When the server emits 'notify', send a notification to the given user
   socket.on('notify', function(user, msg) {
     //TODO - call a function from notification.js/globalFunction.js
-  });
-
-  $(document).on('click', '#connectButton', function(){
-    // Call the global function to connect with user "Tester_One"
-    var target = $('#connectInput').val();
-    $('#connectInput').val('');
-    console.log('Connecting with user', target);
-    startChat(target);
   });
   
   // When the user clicks a room in the list, update the currentRoom value and retrieve the messages for the selected room

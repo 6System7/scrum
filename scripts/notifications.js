@@ -28,21 +28,19 @@ $(document).ready(function(){
                 console.log("USER DATA DEFINED");
             }
         }
-    });
+    })
     $.ajax({
         url: "/getPosts",
         type: "GET",
         dataPassType: "json",
         success: function(dataPass){
             var dataPassReturned = JSON.parse(JSON.stringify(dataPass));
-            if(thisUserData !== undefined) {
-                checkNearbyFoods(dataPassReturned, currentLang, currentLong);
-            }
+            checkNearbyFoods(dataPassReturned, currentLang, currentLong);
         }
-    });
+    })
     $("#changeNearbyDistance").click(function(){
         changeDistance();
-    });
+    })
     $("#notificationsButton").click(function(){
         $(".badge-error").css("background-color", "grey");
         $("#counter").text("");
