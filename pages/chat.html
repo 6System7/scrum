@@ -87,16 +87,14 @@
           #messages { margin-bottom: 40px }
         </style>
       <div class="row">
-        <div class="col-md-2"><h1>People</h1></div>
-        <div class="col-md-10"><h1>Messages</h1></div>
-      </div>
-      <div class="row">
         <div class="col-md-2">
+          <div><h1>People</h1></div>
           <!--div class to be filled with chat rooms once they've been loaded-->
-          <div class="list-group" id="rooms" style="overflow-y: auto; height: 86.4vh;"></div>
+          <div class="list-group" id="rooms" style="overflow-y: auto; max-height: 86.4vh;"></div>
         </div>
         <!-- TODO - TEST MISSING MESSAGES IN PHONE MODE -->
-        <div class="col-md-10" style="position:relative; height: 82.5vh; overflow-y: auto;" id="messages_div">
+        <div class="col-md-10" style="position:relative; max-height: 82.5vh; overflow-y: auto;" id="messages_div">
+          <div><h1>Messages</h1></div>
           <!--div class to be filled with chat messages once they've been loaded-->
           <ul id="messages"></ul> <!-- List that holds messages displayed on screen -->
           <form action="">
