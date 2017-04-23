@@ -28,27 +28,29 @@ $(document).ready(function(){
                 console.log("USER DATA DEFINED");
             }
         }
-    })
+    });
     $.ajax({
         url: "/getPosts",
         type: "GET",
         dataPassType: "json",
         success: function(dataPass){
             var dataPassReturned = JSON.parse(JSON.stringify(dataPass));
-            checkNearbyFoods(dataPassReturned, currentLang, currentLong);
+            if(thisUserData !== undefined) {
+                checkNearbyFoods(dataPassReturned, currentLang, currentLong);
+            }
         }
-    })
+    });
     $("#changeNearbyDistance").click(function(){
         changeDistance();
-    })
+    });
     $("#notificationsButton").click(function(){
         $(".badge-error").css("background-color", "grey");
         $("#counter").text("");
-    })
+    });
     $('#openFromMap').click(function(){     //MyFunction(); return false; 
     });
 
-}) 
+});
 
 function checkNearbyFoods(dataPassReturned, currentLang, currentLong){
     var notifsCurrentlySeen = thisUserData.settings.notifsSeen;
