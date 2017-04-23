@@ -5,13 +5,13 @@
 ### FR0 - Web Page Functionality  
   * ~~FR0.1 Registration / Login System~~  
   * ~~FR0.2 Posting and Editing Listing~~
-  * ~~FR0.3 Filtering Results
-  * FR0.4 Account Modification
+  * ~~FR0.3 Filtering Results~~
+  * **FR0.4 Account Modification (Planned for future release)**
   * ~~FR0.5 Barcode Scanning~~
   * ~~FR0.6 Navigation/Links~~
   * ~~FR0.7 Integrated Map (With Markers)~~
   * ~~FR0.8 Chat Service~~
-  * FR0.9 Point System
+  * **FR0.9 Point System (Planned for future release)**
   * ~~FR0.10 User Rating System~~
   * ~~FR0.11 Password Control~~
   * ~~FR0.12 Notifications~~
@@ -29,11 +29,11 @@
   * ~~NFR0.2 Access Control~~  
 
 ### NFR1 - Usability - Web Page Design
-  * NFR1.1 Accommodating for those with additional needs.
+  * ~~NFR1.1 Accommodating for those with additional needs~~
   * ~~NFR1.2 Device Compatibility~~  
 
 ### NFR2 - Reliability - Server Uptime
-  * NFR2.1 Crash Recovery
+  * **NFR2.1 Crash Recovery (Planned for future release)**
   * ~~NFR2.2 Server Backup~~
 
 ## Descriptions
