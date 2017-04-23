@@ -331,6 +331,7 @@ $(function() {
           }
           // Update the page
           updateRooms(rooms);
+          // TODO - SIMULATE CLICK ON THE USER JUST CONNECTED WITH
         }
       });
     });
@@ -350,7 +351,6 @@ $(function() {
       }
     });
   }
-  
   
   $('form').submit(function(){
     sendMessage();
