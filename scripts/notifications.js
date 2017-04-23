@@ -25,6 +25,8 @@ $(document).ready(function(){
             if (jsonData[i].username == localStorage.username){
                 thisUserData = (jsonData[i]);
                 userDistance = thisUserData.settings.notifDistance;
+                    var newone = "Currently showing distances up to " + userDistance + "km";
+              document.getElementById("showDistanceNearby").innerHTML = newone;
                 console.log("USER DATA DEFINED");
             }
         }
@@ -49,6 +51,7 @@ $(document).ready(function(){
     });
     $('#openFromMap').click(function(){     //MyFunction(); return false; 
     });
+
 
 });
 
