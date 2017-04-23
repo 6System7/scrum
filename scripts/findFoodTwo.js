@@ -249,17 +249,15 @@ function filterFoods(dataPass){
                         }
                         else{ 
                             firstRound = false;
-                        }
-                            
-                        
-                        
+                        }  
                     }
+                    if (filters.onlyShowPostsThree)
+                    
                     
                     if (firstRound == true){
                         visibility = true;
                         foodsToPost.push(foodPost._id);
-                    }
-                    
+                    } 
                 }
                 else {
 
@@ -303,6 +301,26 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
+                    if (filters.onlyShowPostsWeek == "true"){
+                        var date2 = new Date(serverDateTime);
+                        var date1 = foodPost.datePosted;
+
+                        var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+                        var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                        if (diffDays < 8){
+                            firstRound = true;
+                        }
+                        else {
+                            firstRound = false;
+                        }
+
+
+                    //    if (foodPost)
+                            
+                            
+                    
+                        
+                    }
                     if (firstRound == true){
                         for (var category = 0; category < Object.keys(filters).length; category++){
                         var checkAgain = (Object.keys(filters)[category]).toString();
@@ -314,6 +332,8 @@ function filterFoods(dataPass){
                                 }
                             }
                         }
+        
+                        
                         if (visibility == true){
                             foodsToPost.push(foodPost._id);
                         }
@@ -340,7 +360,8 @@ function loadFilters(){
         description: "none",
         onlyShowImages: "false",
         onlyShowDescriptions: "false",
-        onlyShowUsersThree: "false"
+        onlyShowUsersThree: "false",
+        onlyShowPostsWeek: "false"
     };
     // MEAL TYPE
     var mealtypeList = [];
@@ -450,7 +471,9 @@ function loadFilters(){
         if($(this).attr('value') == "userRating"){
             filters["onlyShowUsersThree"] = "true";
         }
-
+        if($(this).attr('value') == "showFromOneWeek"){
+            filters["onlyShowPostsWeek"] = "true";
+        }
     })
 
 
