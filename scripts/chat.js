@@ -286,7 +286,7 @@ $(function() {
         var userData = jsonData[i];
         if(username === userData.username){
           var subject = "Scrum App - New Message";
-          var message = "Dear " + target_username + '\n' +
+          var message = "Dear " + target_username + ',\n' +
                         "You have received a new message from " + username + '.' + '\n ' +
                         "Please log in to Scrum to read this and reply:" + '\n\n' +
                         "scrum7.herokuapp.com/chat.html" + '\n' +
