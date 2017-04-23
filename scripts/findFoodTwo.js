@@ -739,9 +739,7 @@ function openModal(id){
                 for (var property = 0; property < dataReturned.length; property++){
                     x = dataReturned[property];
                     if (x._id == (id)){
-                        // send to cards
                         $("#seePostsModal").modal("toggle");
-                        window.location = "findfood.html";
                         seePost(x);
 
                     }
