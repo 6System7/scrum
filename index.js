@@ -7,6 +7,7 @@ var uuidV4 = require('uuid/v4');
 var MongoClient = require("mongodb").MongoClient;
 var ObjectID = require("mongodb").ObjectID;
 var fs = require("fs");
+var enforce = require('express-sslify');
 var app = express();
 var path = __dirname + "/";
 var bodyParser = require('body-parser');
@@ -32,6 +33,9 @@ MongoClient.connect(db_URI, function(err, database_object) {
         db = database_object;
     }
 });
+
+// FORCE HTTPS
+app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 //Send initial files to use such as bootstrap
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
