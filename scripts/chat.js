@@ -315,7 +315,7 @@ $(function() {
   // Check the URL to see if a new chat connection should be established
   
   var contact = getUrlParameter('contact');
-  if(contact !== undefined) {
+  if(contact !== undefined && contact != username) {
     // Start a chat connection with this user
     console.log('Connecting with user', contact);
     connectWithUser(contact, function() {
