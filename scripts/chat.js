@@ -9,6 +9,7 @@ $(function() {
   var connected = false;
   var date; // Used to add timestamp to messages
   var currentRoom;
+  var notified_users = {}; // Used to keep track of which users have been notified, and when they were last notified (to prevent email spamming)
   
   // Functions
   
@@ -274,19 +275,27 @@ $(function() {
     });
   }
   
-  function sendChatNotificationEmail(target_username, email){
-    var subject = "Scrum App - New Message";
-    var message = "Dear " + target_username + '\n' +
-        "You have received a new message from " + username + '.' + '\n ' +
-        "Please log in to Scrum to read this and reply:" + '\n\n' +
-        "scrum7.herokuapp.com/chat.html" + '\n' +
-        '\n' +
-        "Best wishes," + '\n' +
-        "Scrum Bot";
-    $.ajax({
-        type: "POST",
-        url: "/sendEmail",
-        data: {toAddress: email, subject: subject, message: message}
+  function sendChatNotificationEmail(target_username){
+    $.getJSON("/getUsers", function(jsonData){
+      for(var i = 0; i < jsonData.length; i++) {
+        var userData = jsonData[i];
+        if(username === userData.username){
+          var subject = "Scrum App - New Message";
+          var message = "Dear " + target_username + '\n' +
+                        "You have received a new message from " + username + '.' + '\n ' +
+                        "Please log in to Scrum to read this and reply:" + '\n\n' +
+                        "scrum7.herokuapp.com/chat.html" + '\n' +
+                        '\n' +
+                        "Best wishes," + '\n' +
+                        "Scrum Bot";
+          $.ajax({
+            type: "POST",
+            url: "/sendEmail",
+            data: {toAddress: userData.email, subject: subject, message: message}
+          });
+          break;
+        }
+      }
     });
   }
   
@@ -378,8 +387,22 @@ $(function() {
   });
   
   // When the server emits 'notify', send a notification to the given user
-  socket.on('notify', function(user, email) {
-    sendChatNotificationEmail(username, user, email);
+  socket.on('notify', function(user) {
+    var send = True;
+    var now = Date();
+    if(user in notified_users.keys()) {
+      // Only send if time since last email is more than 5 minutes
+      if(notified_users.user.getTime() - now.getTime() < 300000) {
+        send = False;
+      } else {
+        // Remove the current entry for this user so it can be replaced with an updated time
+        delete notified_users.user;
+      }
+    }
+    if(send) {
+      sendChatNotificationEmail(user);
+      notified_users.push(user: now);
+    }
   });
   
   // When the user clicks a room in the list, update the currentRoom value and retrieve the messages for the selected room
