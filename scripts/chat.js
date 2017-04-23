@@ -274,6 +274,22 @@ $(function() {
     });
   }
   
+  function sendChatNotificationEmail(target_username, email){
+    var subject = "Scrum App - New Message";
+    var message = "Dear " + target_username + '\n' +
+        "You have received a new message from " + username + '.' + '\n ' +
+        "Please log in to Scrum to read this and reply:" + '\n\n' +
+        "scrum7.herokuapp.com/chat.html" + '\n' +
+        '\n' +
+        "Best wishes," + '\n' +
+        "Scrum Bot";
+    $.ajax({
+        type: "POST",
+        url: "/sendEmail",
+        data: {toAddress: email, subject: subject, message: message}
+    });
+  }
+  
   // Initialize the socket connection
   
   var socket = io();
@@ -362,8 +378,8 @@ $(function() {
   });
   
   // When the server emits 'notify', send a notification to the given user
-  socket.on('notify', function(user, msg) {
-    //TODO - call a function from notification.js/globalFunction.js
+  socket.on('notify', function(user, email) {
+    sendChatNotificationEmail(username, user, email);
   });
   
   // When the user clicks a room in the list, update the currentRoom value and retrieve the messages for the selected room
