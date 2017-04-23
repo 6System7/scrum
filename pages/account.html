@@ -108,29 +108,7 @@
                     </div>
             </div>
         </div>
-      <script>
-        
-          $(document).ready(function(){
-            var userDistance
-                      console.log(userDistance);
-
-            $.getJSON("/getUsers", function(jsonData){
-                for (var i=0; i<jsonData.length; i++){
-
-                    if (jsonData[i].username == localStorage.username){
-                        thisUserData = (jsonData[i]);
-                        userDistance = thisUserData.settings.notifDistance;
-                    }
-                }
-        })
-              alert(userDistance);
-              var newone = "Currently showing distances up to " + userDistance + "km";
-              document.getElementById("showDistanceNearby").innerHTML = newone;
-
-
-
-      </script>
-        
+   
 
 
     

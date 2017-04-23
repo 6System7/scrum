@@ -49,6 +49,8 @@ $(document).ready(function(){
     });
     $('#openFromMap').click(function(){     //MyFunction(); return false; 
     });
+    var newone = "Currently showing distances up to " + userDistance + "km";
+              document.getElementById("showDistanceNearby").innerHTML = newone;
 
 });
 
