@@ -54,7 +54,7 @@ function getBarcodeInfo(code) {
             dataType: "json",
             success: function(data) {
                 if (data.status == 0) {
-                    alert("No product info available for barcode" + code);
+                    alert("No product info available for barcode " + code);
                 } else {
                     useBarcodeInfo(data.product);
                 }
@@ -320,9 +320,12 @@ function validInputs() {
     var valid = true;
     $("#frmPost :input[type=text], textarea").each(function() {
         if (valid) {
-            if ($.trim($(this).val()) == "" && $(this).attr("readonly") != "yes") {
-                valid = false;
-                alert($(this).attr("data-hr") + " cannot be empty!");
+            // Don't force description
+            if ($(this).attr("id") !== "txtDescription") {
+                if ($.trim($(this).val()) == "" && $(this).attr("readonly") != "yes") {
+                    valid = false;
+                    alert($(this).attr("data-hr") + " cannot be empty!");
+                }
             }
         }
     });
@@ -360,6 +363,10 @@ function sendPostData() {
                 indexedArray[key] = n['value'];
             }
         });
+
+        if (!indexedArray.description) {
+            indexedArray.description = "";
+        }
 
         indexedArray.image = $("#imgPreview").attr("src");
         if (imageSelected) {
