@@ -34,8 +34,11 @@ MongoClient.connect(db_URI, function(err, database_object) {
     }
 });
 
-// FORCE HTTPS
-app.use(enforce.HTTPS({ trustProtoHeader: true }));
+// If on heroku
+if(process.env.PORT) {
+    // FORCE HTTPS
+    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+}
 
 //Send initial files to use such as bootstrap
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
