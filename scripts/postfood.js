@@ -59,7 +59,9 @@ function getBarcodeInfo(code) {
                     useBarcodeInfo(data.product);
                 }
             },
-            error: function() {}
+            error: function() {
+                alert("Product info is unavailable at this time");
+            }
         });
     }
 }

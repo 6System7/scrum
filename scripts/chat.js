@@ -284,9 +284,9 @@ $(function() {
     $.getJSON("/getUsers", function(jsonData){
       for(var i = 0; i < jsonData.length; i++) {
         var userData = jsonData[i];
-        if(username === userData.username){
+        if(target_username === userData.username){
           var subject = "Scrum App - New Message";
-          var message = "Dear " + target_username + '\n' +
+          var message = "Dear " + target_username + ',\n' +
                         "You have received a new message from " + username + '.' + '\n ' +
                         "Please log in to Scrum to read this and reply:" + '\n\n' +
                         "scrum7.herokuapp.com/chat.html" + '\n' +
@@ -315,7 +315,7 @@ $(function() {
   // Check the URL to see if a new chat connection should be established
   
   var contact = getUrlParameter('contact');
-  if(contact !== undefined) {
+  if(contact !== undefined && contact != username) {
     // Start a chat connection with this user
     console.log('Connecting with user', contact);
     connectWithUser(contact, function() {
@@ -331,6 +331,7 @@ $(function() {
           }
           // Update the page
           updateRooms(rooms);
+          // TODO - SIMULATE CLICK ON THE USER JUST CONNECTED WITH
         }
       });
     });
@@ -350,7 +351,6 @@ $(function() {
       }
     });
   }
-  
   
   $('form').submit(function(){
     sendMessage();
@@ -394,14 +394,11 @@ $(function() {
   // When the server emits 'notify', send a notification to the given user
   socket.on('notify', function(user) {
     var send = true;
-    var now = Date();
+    var now = new Date();
     if(notified_users[user] !== undefined) {
       // Only send if time since last email is more than 5 minutes
       if(notified_users[user].getTime() - now.getTime() < 300000) {
         send = false;
-      } else {
-        // Remove the current entry for this user so it can be replaced with an updated time
-        delete notified_users.user;
       }
     }
     if(send) {
