@@ -35,7 +35,6 @@ $(document).ready(function(){
         dataPassType: "json",
         success: function(dataPass){
             var dataPassReturned = JSON.parse(JSON.stringify(dataPass));
-            console.log(thisUserData);
             if(thisUserData !== undefined) {
                 checkNearbyFoods(dataPassReturned, currentLang, currentLong);
             }
