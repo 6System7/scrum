@@ -47,7 +47,7 @@ function getBarcodeInfo(code) {
     if (productsNotYetInAPI.hasOwnProperty(code)) {
         useBarcodeInfo(productsNotYetInAPI[code]);
     } else {
-        var apiURL = "http://world.openfoodfacts.org/api/v0/product/" + code + ".json";
+        var apiURL = "https://world.openfoodfacts.org/api/v0/product/" + code + ".json";
         $.ajax({
             type: "GET",
             url: apiURL,
