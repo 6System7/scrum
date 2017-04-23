@@ -284,7 +284,7 @@ $(function() {
     $.getJSON("/getUsers", function(jsonData){
       for(var i = 0; i < jsonData.length; i++) {
         var userData = jsonData[i];
-        if(username === userData.username){
+        if(target_username === userData.username){
           var subject = "Scrum App - New Message";
           var message = "Dear " + target_username + ',\n' +
                         "You have received a new message from " + username + '.' + '\n ' +
