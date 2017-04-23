@@ -35,12 +35,14 @@ $(document).ready(function(){
         dataPassType: "json",
         success: function(dataPass){
             var dataPassReturned = JSON.parse(JSON.stringify(dataPass));
-            checkNearbyFoods(dataPassReturned, currentLang, currentLong);
+            if(thisUserData !== undefined) {
+                checkNearbyFoods(dataPassReturned, currentLang, currentLong);
+            }
         }
-    })
+    });
     $("#changeNearbyDistance").click(function(){
         changeDistance();
-    })
+    });
     $("#notificationsButton").click(function(){
         $(".badge-error").css("background-color", "grey");
         $("#counter").text("");
