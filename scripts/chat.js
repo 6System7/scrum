@@ -394,10 +394,10 @@ $(function() {
   // When the server emits 'notify', send a notification to the given user
   socket.on('notify', function(user) {
     var send = true;
-    var now = Date();
+    var now = Date().getTime();
     if(notified_users[user] !== undefined) {
       // Only send if time since last email is more than 5 minutes
-      if(notified_users[user].getTime() - now.getTime() < 300000) {
+      if(notified_users[user] - now < 300000) {
         send = false;
       }
     }
