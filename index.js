@@ -75,6 +75,10 @@ app.post("/addPost", function(req, res) {
         post._id = ObjectID.createFromHexString(post._id);
     }
 
+    if (!post.datePosted) {
+        post.datePosted = new Date();
+    }
+
     // Save attached images to disk if not already saved
     if (post.image && post.saveImage) {
         // TODO Mike - Use AWS so images persist through re-deploys without cluttering the repo -
