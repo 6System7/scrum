@@ -406,7 +406,7 @@ $(function() {
     }
     if(send) {
       sendChatNotificationEmail(user);
-      notified_users.push({user: now});
+      notified_users[user]= now;
     }
   });
   
