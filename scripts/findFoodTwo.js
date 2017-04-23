@@ -251,7 +251,7 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }  
                     }
-                    if (filters.onlyShowPostsThree)
+                  //  if (filters.onlyShowPostsThree)
                     
                     
                     if (firstRound == true){
@@ -301,6 +301,7 @@ function filterFoods(dataPass){
                             firstRound = false;
                         }
                     }
+                    alert(filtesr.onlyShowPostsWeek);
                     if (filters.onlyShowPostsWeek == "true"){
                         var date2 = new Date(serverDateTime);
                         var date1 = foodPost.datePosted;
